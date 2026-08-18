@@ -382,6 +382,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
         let subtotal = 0;
 
+        let itemCount = 0;
+
 
         cart.forEach(function (item) {
 
@@ -394,7 +396,28 @@ document.addEventListener("DOMContentLoaded", function () {
             subtotal +=
                 price * quantity;
 
+            itemCount +=
+                quantity;
+
         });
+
+
+        /* =========================================
+           UPDATE ORDER SUMMARY ITEM COUNT
+        ========================================= */
+
+        const summaryItemCount =
+            document.getElementById(
+                "summaryItemCount"
+            );
+
+
+        if (summaryItemCount) {
+
+            summaryItemCount.textContent =
+                itemCount;
+
+        }
 
 
         if (subtotalElement) {
