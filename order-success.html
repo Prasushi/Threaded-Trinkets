@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Order Confirmed | Threaded Trinkets</title>
+
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
+
+    <style>
+
+        .success-page {
+            min-height: 70vh;
+            padding: 80px 20px;
+        }
+
+        .success-card {
+            max-width: 700px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 50px 35px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 35px rgba(0,0,0,0.08);
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 25px;
+            border-radius: 50%;
+            background: #e8f8ed;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 42px;
+            color: #2e8b57;
+            font-weight: bold;
+        }
+
+        .success-card h1 {
+            margin-bottom: 12px;
+        }
+
+        .success-message {
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        .order-id-box {
+            background: #f8f5f1;
+            padding: 18px;
+            border-radius: 12px;
+            margin: 25px 0;
+        }
+
+        .order-id-box span {
+            display: block;
+            font-size: 13px;
+            color: #777;
+            margin-bottom: 6px;
+        }
+
+        .order-id-box strong {
+            font-size: 20px;
+        }
+
+        .success-details {
+            margin-top: 25px;
+            text-align: left;
+            padding: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .success-detail-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 10px 0;
+        }
+
+        .success-detail-row span {
+            color: #777;
+        }
+
+        .success-detail-row strong {
+            text-align: right;
+        }
+
+        .success-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .success-btn {
+            display: inline-block;
+            padding: 13px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .primary-success-btn {
+            background: #222;
+            color: #fff;
+        }
+
+        .secondary-success-btn {
+            border: 1px solid #ddd;
+            color: #222;
+            background: #fff;
+        }
+
+        .success-error {
+            color: #b00020;
+            background: #fff0f2;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        @media (max-width: 600px) {
+
+            .success-page {
+                padding: 50px 15px;
+            }
+
+            .success-card {
+                padding: 35px 20px;
+            }
+
+            .success-detail-row {
+                flex-direction: column;
+                gap: 3px;
+            }
+
+            .success-detail-row strong {
+                text-align: left;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================
+     HEADER
+========================================= -->
+
+<header class="site-header">
+
+    <div class="container nav">
+
+        <a
+            href="index.html"
+            class="logo"
+        >
+            Threaded <span>Trinkets</span>
+        </a>
+
+
+        <nav class="navigation">
+
+            <a href="index.html">
+                Home
+            </a>
+
+            <a href="products.html">
+                Shop
+            </a>
+
+            <a href="index.html#categories">
+                Categories
+            </a>
+
+            <a href="index.html#about">
+                About
+            </a>
+
+            <a href="index.html#contact">
+                Contact
+            </a>
+
+        </nav>
+
+
+        <div class="nav-actions">
+
+            <a
+                href="cart.html"
+                class="cart-icon"
+                aria-label="Shopping Cart"
+            >
+                🛒
+
+                <span id="cartCount">
+                    0
+                </span>
+
+            </a>
+
+
+            <button
+                class="menu-btn"
+                id="menuBtn"
+                type="button"
+                aria-label="Open Menu"
+            >
+                ☰
+            </button>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+
+<!-- =========================================
+     SUCCESS PAGE
+========================================= -->
+
+<main class="success-page">
+
+    <div class="container">
+
+        <div class="success-card">
+
+
+            <!-- SUCCESS ICON -->
+
+            <div class="success-icon">
+                ✓
+            </div>
+
+
+            <!-- TITLE -->
+
+            <h1>
+                Order Confirmed!
+            </h1>
+
+
+            <p class="success-message">
+                Thank you for shopping with Threaded Trinkets.
+                Your order has been successfully placed.
+            </p>
+
+
+            <!-- ORDER ID -->
+
+            <div class="order-id-box">
+
+                <span>
+                    ORDER ID
+                </span>
+
+                <strong id="successOrderId">
+                    —
+                </strong>
+
+            </div>
+
+
+            <!-- ORDER DETAILS -->
+
+            <div class="success-details">
+
+
+                <!-- CUSTOMER -->
+
+                <div class="success-detail-row">
+
+                    <span>
+                        Customer
+                    </span>
+
+                    <strong id="successCustomer">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <!-- PHONE -->
+
+                <div class="success-detail-row">
+
+                    <span>
+                        Phone
+                    </span>
+
+                    <strong id="successPhone">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <!-- TOTAL -->
+
+                <div class="success-detail-row">
+
+                    <span>
+                        Total
+                    </span>
+
+                    <strong id="successTotal">
+                        ₹0
+                    </strong>
+
+                </div>
+
+
+                <!-- PAYMENT -->
+
+                <div class="success-detail-row">
+
+                    <span>
+                        Payment
+                    </span>
+
+                    <strong id="successPayment">
+                        UPI
+                    </strong>
+
+                </div>
+
+
+                <!-- STATUS -->
+
+                <div class="success-detail-row">
+
+                    <span>
+                        Status
+                    </span>
+
+                    <strong id="successStatus">
+                        Order Placed
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- ERROR MESSAGE -->
+
+            <div
+                id="successError"
+                class="success-error"
+            >
+                Order information could not be loaded.
+            </div>
+
+
+            <!-- BUTTONS -->
+
+            <div class="success-buttons">
+
+                <a
+                    href="products.html"
+                    class="success-btn primary-success-btn"
+                >
+                    Continue Shopping
+                </a>
+
+
+                <a
+                    href="index.html"
+                    class="success-btn secondary-success-btn"
+                >
+                    Back to Home
+                </a>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</main>
+
+
+
+<!-- =========================================
+     FOOTER
+========================================= -->
+
+<footer class="site-footer">
+
+    <div class="container footer-grid">
+
+
+        <!-- BRAND -->
+
+        <div class="footer-brand">
+
+            <h2>
+                Threaded <span>Trinkets</span>
+            </h2>
+
+            <p>
+                Handmade accessories created
+                with love and creativity.
+            </p>
+
+        </div>
+
+
+        <!-- QUICK LINKS -->
+
+        <div class="footer-column">
+
+            <h3>
+                Quick Links
+            </h3>
+
+            <a href="index.html">
+                Home
+            </a>
+
+            <a href="products.html">
+                Shop
+            </a>
+
+            <a href="cart.html">
+                Cart
+            </a>
+
+        </div>
+
+
+        <!-- CATEGORIES -->
+
+        <div class="footer-column">
+
+            <h3>
+                Categories
+            </h3>
+
+            <a href="products.html?category=Bangles">
+                Bangles
+            </a>
+
+            <a href="products.html?category=Kundan%20Clips">
+                Kundan Clips
+            </a>
+
+            <a href="products.html?category=Hair%20Accessories">
+                Hair Accessories
+            </a>
+
+            <a href="products.html?category=Jewellery">
+                Jewellery
+            </a>
+
+        </div>
+
+
+        <!-- CONTACT -->
+
+        <div class="footer-column">
+
+            <h3>
+                Contact
+            </h3>
+
+            <p>
+                📧 hello@threadedtrinkets.com
+            </p>
+
+            <p>
+                📱 +91 XXXXX XXXXX
+            </p>
+
+            <p>
+                📍 India
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- FOOTER BOTTOM -->
+
+    <div class="footer-bottom">
+
+        <p>
+            © 2026 Threaded Trinkets.
+            All rights reserved.
+        </p>
+
+    </div>
+
+</footer>
+
+
+
+<!-- =========================================
+     JAVASCRIPT
+========================================= -->
+
+<script src="js/main.js"></script>
+
+<script src="js/order-success.js"></script>
+
+
+</body>
+
+</html>

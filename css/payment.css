@@ -1,0 +1,286 @@
+/* =========================================
+   THREADed TRINKETS
+   PAYMENT PAGE
+========================================= */
+
+.payment-page {
+    padding: 70px 0 100px;
+    min-height: 700px;
+}
+
+.payment-heading {
+    text-align: center;
+    margin-bottom: 45px;
+}
+
+.payment-heading p {
+    color: #b66b75;
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    letter-spacing: 2px;
+    font-weight: bold;
+}
+
+.payment-heading h1 {
+    font-size: 44px;
+    margin: 8px 0 12px;
+}
+
+.payment-heading span {
+    color: #806f6c;
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+}
+
+
+/* LAYOUT */
+
+.payment-layout {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 40px;
+    align-items: start;
+}
+
+
+/* PAYMENT CARD */
+
+.payment-card {
+    background: white;
+    border: 1px solid #eee1dd;
+    padding: 40px;
+    text-align: center;
+}
+
+.payment-card h2 {
+    font-size: 26px;
+    margin-bottom: 8px;
+}
+
+.payment-instruction {
+    color: #806f6c;
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+}
+
+
+/* QR */
+
+.qr-container {
+    display: flex;
+    justify-content: center;
+    margin: 30px 0 15px;
+}
+
+.qr-placeholder {
+    width: 230px;
+    height: 230px;
+
+    background:
+        linear-gradient(45deg, #111 25%, transparent 25%),
+        linear-gradient(-45deg, #111 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #111 75%),
+        linear-gradient(-45deg, transparent 75%, #111 75%);
+
+    background-size: 40px 40px;
+    background-position:
+        0 0,
+        0 20px,
+        20px -20px,
+        -20px 0;
+
+    border: 12px solid white;
+    box-shadow: 0 0 0 1px #ddd;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.qr-placeholder span {
+    background: white;
+    padding: 12px 16px;
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.qr-note {
+    color: #806f6c;
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+}
+
+
+/* AMOUNT */
+
+.payment-amount {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    border-top: 1px solid #eadedb;
+    border-bottom: 1px solid #eadedb;
+
+    padding: 18px 5px;
+    margin-top: 25px;
+
+    font-family: Arial, sans-serif;
+}
+
+.payment-amount strong {
+    color: #b66b75;
+    font-size: 20px;
+}
+
+
+.upi-note {
+    color: #806f6c;
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+    margin: 20px 0;
+}
+
+
+/* BUTTON */
+
+.payment-done-btn {
+    width: 100%;
+
+    border: none;
+
+    background: #b66b75;
+    color: white;
+
+    padding: 15px;
+
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+
+    cursor: pointer;
+    border-radius: 3px;
+
+    transition: 0.3s;
+}
+
+.payment-done-btn:hover {
+    background: #94545d;
+}
+
+
+/* SUMMARY */
+
+.payment-summary {
+    background: white;
+    border: 1px solid #eee1dd;
+
+    padding: 30px;
+
+    position: sticky;
+    top: 100px;
+}
+
+.payment-summary h2 {
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+
+.payment-item {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+
+    padding: 14px 0;
+
+    border-bottom: 1px solid #f0e5e2;
+
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+}
+
+
+.payment-item-quantity {
+    color: #806f6c;
+    font-size: 11px;
+    margin-top: 4px;
+}
+
+
+.payment-line {
+    border-top: 1px solid #eadedb;
+    margin: 20px 0;
+}
+
+
+.payment-summary-row {
+    display: flex;
+    justify-content: space-between;
+
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+
+    margin-bottom: 15px;
+}
+
+
+.payment-summary-row span {
+    color: #75635f;
+}
+
+
+.payment-total {
+    display: flex;
+    justify-content: space-between;
+
+    font-family: Arial, sans-serif;
+    font-size: 19px;
+}
+
+
+.payment-total strong {
+    color: #b66b75;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 850px) {
+
+    .payment-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .payment-summary {
+        position: static;
+        order: -1;
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .payment-page {
+        padding: 50px 0 70px;
+    }
+
+    .payment-heading h1 {
+        font-size: 35px;
+    }
+
+    .payment-card {
+        padding: 25px 18px;
+    }
+
+    .payment-summary {
+        padding: 22px;
+    }
+
+    .qr-placeholder {
+        width: 190px;
+        height: 190px;
+    }
+
+}

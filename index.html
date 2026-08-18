@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Threaded Trinkets | Handmade Accessories
+    </title>
+
+
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/home.css"
+    >
+
+</head>
+
+
+<body>
+
+
+<!-- ================================
+     HEADER
+================================ -->
+
+<header class="site-header">
+
+    <div class="container nav">
+
+        <a
+            href="index.html"
+            class="logo"
+        >
+            Threaded <span>Trinkets</span>
+        </a>
+
+
+        <nav class="navigation">
+
+            <a
+                href="index.html"
+                class="active"
+            >
+                Home
+            </a>
+
+            <a href="products.html">
+                Shop
+            </a>
+
+            <a href="#categories">
+                Categories
+            </a>
+
+            <a href="#about">
+                About
+            </a>
+
+            <a href="#contact">
+                Contact
+            </a>
+
+        </nav>
+
+
+        <div class="nav-actions">
+
+            <a
+                href="products.html"
+                class="cart-icon"
+                aria-label="Shopping cart"
+            >
+
+                🛒
+
+                <span id="cartCount">
+                    0
+                </span>
+
+            </a>
+
+
+            <button
+                class="menu-btn"
+                id="menuBtn"
+                type="button"
+                aria-label="Open menu"
+                aria-expanded="false"
+            >
+                ☰
+            </button>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+
+
+<!-- ================================
+     HERO
+================================ -->
+
+<section class="hero">
+
+    <div class="container">
+
+        <div class="hero-content">
+
+            <p class="small-heading">
+                HANDMADE • UNIQUE • BEAUTIFUL
+            </p>
+
+
+            <h1>
+
+                Little Things
+
+                <span>
+                    Made With Love
+                </span>
+
+            </h1>
+
+
+            <p class="hero-text">
+
+                Discover beautiful handmade accessories crafted
+                to add a little sparkle to your everyday moments.
+
+            </p>
+
+
+            <div class="hero-buttons">
+
+                <a
+                    href="products.html"
+                    class="btn primary-btn"
+                >
+                    Shop Now
+                </a>
+
+
+                <a
+                    href="#categories"
+                    class="btn secondary-btn"
+                >
+                    Explore Collection
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- ================================
+     FEATURES
+================================ -->
+
+<section class="features">
+
+    <div class="container feature-grid">
+
+
+        <div class="feature">
+
+            <div class="feature-icon">
+                ✨
+            </div>
+
+            <h3>
+                Handcrafted
+            </h3>
+
+            <p>
+                Made with care and attention to every detail.
+            </p>
+
+        </div>
+
+
+        <div class="feature">
+
+            <div class="feature-icon">
+                💖
+            </div>
+
+            <h3>
+                Made With Love
+            </h3>
+
+            <p>
+                Beautiful little pieces created especially for you.
+            </p>
+
+        </div>
+
+
+        <div class="feature">
+
+            <div class="feature-icon">
+                🎁
+            </div>
+
+            <h3>
+                Perfect Gifts
+            </h3>
+
+            <p>
+                Find something special for someone special.
+            </p>
+
+        </div>
+
+
+        <div class="feature">
+
+            <div class="feature-icon">
+                🚚
+            </div>
+
+            <h3>
+                Easy Delivery
+            </h3>
+
+            <p>
+                Simple and convenient delivery to your doorstep.
+            </p>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- ================================
+     CATEGORIES / FAVOURITES
+================================ -->
+
+<section
+    class="categories-section"
+    id="categories"
+>
+
+    <div class="container">
+
+
+        <div class="section-heading">
+
+            <p>
+                SHOP BY CATEGORY
+            </p>
+
+            <h2>
+                Find Your Favourite
+            </h2>
+
+            <span class="category-subtitle">
+                Explore our collections
+            </span>
+
+        </div>
+
+
+        <div class="category-carousel-wrapper">
+
+
+            <button
+                type="button"
+                class="category-arrow category-prev"
+                id="categoryPrev"
+                aria-label="Previous categories"
+            >
+                ←
+            </button>
+
+
+            <div
+                class="category-carousel"
+                id="categoryCarousel"
+            >
+            </div>
+
+
+            <button
+                type="button"
+                class="category-arrow category-next"
+                id="categoryNext"
+                aria-label="Next categories"
+            >
+                →
+            </button>
+
+
+        </div>
+
+
+        <div
+            id="categoryEmpty"
+            class="category-empty"
+            style="display: none;"
+        >
+
+            <div>
+                📂
+            </div>
+
+            <h3>
+                No Categories Yet
+            </h3>
+
+            <p>
+                Categories added from the Admin Panel
+                will appear here.
+            </p>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- ================================
+     ABOUT
+================================ -->
+
+<section
+    class="about-section"
+    id="about"
+>
+
+    <div class="container about-content">
+
+
+        <!-- BEAUTIFUL LOGO CARD -->
+
+        <div class="about-image">
+
+            <div class="about-placeholder">
+
+                <img
+                    src="images/logo-about.png"
+                    alt="Threaded Trinkets Logo"
+                >
+
+            </div>
+
+        </div>
+
+
+        <div class="about-text">
+
+            <p class="section-label">
+                OUR STORY
+            </p>
+
+
+            <h2>
+
+                Crafted With<br>
+
+                <span>
+                    Heart & Creativity
+                </span>
+
+            </h2>
+
+
+            <p>
+
+                At Threaded Trinkets, we believe that the smallest
+                details can make the biggest difference.
+
+            </p>
+
+
+            <p>
+
+                Each piece is thoughtfully selected and crafted
+                to bring beauty, colour and a little happiness
+                into your everyday life.
+
+            </p>
+
+
+            <a
+                href="products.html"
+                class="btn primary-btn"
+            >
+                Discover More
+            </a>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- ================================
+     CALL TO ACTION
+================================ -->
+
+<section class="cta-section">
+
+    <div class="container">
+
+        <p>
+            READY TO FIND YOUR NEXT FAVOURITE?
+        </p>
+
+
+        <h2>
+
+            Something Beautiful<br>
+
+            Is Waiting For You
+
+        </h2>
+
+
+        <a
+            href="products.html"
+            class="btn white-btn"
+        >
+            Shop Collection
+        </a>
+
+    </div>
+
+</section>
+
+
+
+<!-- ================================
+     FOOTER
+================================ -->
+
+<footer
+    class="site-footer"
+    id="contact"
+>
+
+
+    <div class="container footer-main">
+
+
+        <div class="footer-brand">
+
+            <h2>
+                Threaded <span>Trinkets</span>
+            </h2>
+
+            <p>
+                Handmade accessories created
+                with love and creativity.
+            </p>
+
+        </div>
+
+
+        <div class="footer-column">
+
+            <h3>
+                Quick Links
+            </h3>
+
+
+            <a href="index.html">
+                Home
+            </a>
+
+
+            <a href="products.html">
+                Shop
+            </a>
+
+
+            <a href="#categories">
+                Categories
+            </a>
+
+
+            <a href="#about">
+                About Us
+            </a>
+
+        </div>
+
+
+        <div class="footer-column">
+
+            <h3>
+                Categories
+            </h3>
+
+
+            <div id="footerCategories">
+            </div>
+
+        </div>
+
+
+        <div class="footer-column">
+
+            <h3>
+                Follow Us
+            </h3>
+
+
+            <a
+                href="https://www.instagram.com/threaded__trinkets/"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                📸 Instagram
+            </a>
+
+
+            <a
+                href="https://www.youtube.com/@threadedtrinkets"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                ▶️ YouTube
+            </a>
+
+
+            <a
+                href="https://chat.whatsapp.com/BIkOKe0i99t2z4WcLZFfZQ"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                💬 WhatsApp
+            </a>
+
+
+            <div class="footer-contact">
+
+                <p>
+
+                    📧
+
+                    <a
+                        href="mailto:threadedtrinkets246@gmail.com"
+                    >
+                        threadedtrinkets246@gmail.com
+                    </a>
+
+                </p>
+
+
+                <p>
+
+                    📱
+
+                    <a
+                        href="tel:+917842391877"
+                    >
+                        +91 7842391877
+                    </a>
+
+                </p>
+
+
+                <p>
+                    📍 India
+                </p>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <div class="footer-bottom">
+
+        <p>
+            © 2026 Threaded Trinkets.
+            All rights reserved.
+        </p>
+
+    </div>
+
+
+</footer>
+
+
+
+<!-- ================================
+     JAVASCRIPT
+================================ -->
+
+<script src="js/cart.js"></script>
+
+<script src="js/home.js"></script>
+
+
+</body>
+
+</html>

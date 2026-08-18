@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Shop | Threaded Trinkets</title>
+
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/products.css"
+    >
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================
+     HEADER
+========================================== -->
+
+<header class="site-header">
+
+    <div class="container nav">
+
+        <a
+            href="index.html"
+            class="logo"
+        >
+            Threaded <span>Trinkets</span>
+        </a>
+
+
+        <nav class="navigation">
+
+            <a href="index.html">
+                Home
+            </a>
+
+            <a
+                href="products.html"
+                class="active"
+            >
+                Shop
+            </a>
+
+            <a href="index.html#categories">
+                Categories
+            </a>
+
+            <a href="index.html#about">
+                About
+            </a>
+
+            <a href="index.html#contact">
+                Contact
+            </a>
+
+        </nav>
+
+
+        <div class="nav-actions">
+
+            <a
+                href="cart.html"
+                class="cart-icon"
+                aria-label="Shopping Cart"
+            >
+
+                🛒
+
+                <span id="cartCount">
+                    0
+                </span>
+
+            </a>
+
+
+            <button
+                class="menu-btn"
+                id="menuBtn"
+                type="button"
+                aria-label="Open Menu"
+            >
+                ☰
+            </button>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+
+<!-- =========================================
+     SHOP PAGE
+========================================== -->
+
+<main>
+
+    <section class="products-page">
+
+        <div class="container">
+
+
+            <div class="products-heading">
+
+                <p>
+                    THREADED TRINKETS COLLECTION
+                </p>
+
+
+                <h1>
+                    Shop Our Collection
+                </h1>
+
+
+                <p class="products-description">
+
+                    Discover beautiful handmade accessories
+                    created to add a little sparkle to your style.
+
+                </p>
+
+            </div>
+
+
+
+            <div class="shop-controls">
+
+
+                <div
+                    class="categories-filter"
+                    id="categoriesFilter"
+                >
+
+                </div>
+
+
+
+                <select
+                    id="sortProducts"
+                    aria-label="Sort Products"
+                >
+
+                    <option value="default">
+                        Sort: Featured
+                    </option>
+
+                    <option value="low-high">
+                        Price: Low to High
+                    </option>
+
+                    <option value="high-low">
+                        Price: High to Low
+                    </option>
+
+                    <option value="name">
+                        Name: A-Z
+                    </option>
+
+                </select>
+
+            </div>
+
+
+
+            <div class="product-result">
+
+                <p>
+
+                    Showing
+
+                    <strong id="productCount">
+                        0
+                    </strong>
+
+                    products
+
+                </p>
+
+            </div>
+
+
+
+            <div
+                id="productsGrid"
+                class="products-grid"
+            >
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+</main>
+
+
+
+<!-- =========================================
+     FOOTER
+========================================== -->
+
+<footer class="footer">
+
+    <div class="container footer-main">
+
+
+        <div class="footer-brand">
+
+            <h2>
+                Threaded <span>Trinkets</span>
+            </h2>
+
+            <p>
+                Handmade accessories created
+                with love and creativity.
+            </p>
+
+        </div>
+
+
+
+        <div class="footer-column">
+
+            <h3>
+                Quick Links
+            </h3>
+
+
+            <a href="index.html">
+                Home
+            </a>
+
+
+            <a href="products.html">
+                Shop
+            </a>
+
+
+            <a href="index.html#categories">
+                Categories
+            </a>
+
+
+            <a href="index.html#about">
+                About Us
+            </a>
+
+        </div>
+
+
+
+        <div class="footer-column">
+
+            <h3>
+                Categories
+            </h3>
+
+            <div id="footerCategories"></div>
+
+        </div>
+
+
+
+        <div class="footer-column">
+
+            <h3>
+                Follow Us
+            </h3>
+
+
+            <a
+                href="https://www.instagram.com/threaded__trinkets/"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                📸 Instagram
+            </a>
+
+
+            <a
+                href="https://www.youtube.com/@threadedtrinkets"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                ▶️ YouTube
+            </a>
+
+
+            <a
+                href="https://chat.whatsapp.com/BIkOKe0i99t2z4WcLZFfZQ"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                💬 WhatsApp
+            </a>
+
+
+            <div class="footer-contact">
+
+                <p>
+                    📧
+                    <a
+                        href="mailto:threadedtrinkets246@gmail.com"
+                    >
+                        threadedtrinkets246@gmail.com
+                    </a>
+                </p>
+
+
+                <p>
+                    📱
+                    <a
+                        href="tel:+917842391877"
+                    >
+                        +91 7842391877
+                    </a>
+                </p>
+
+
+                <p>
+                    📍 India
+                </p>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+
+    <div class="footer-bottom">
+
+        <p>
+            © 2026 Threaded Trinkets.
+            All rights reserved.
+        </p>
+
+    </div>
+
+</footer>
+
+
+
+<!-- =========================================
+     JAVASCRIPT
+========================================== -->
+
+<script src="js/products.js"></script>
+
+
+</body>
+
+</html>

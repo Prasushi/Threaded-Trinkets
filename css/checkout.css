@@ -1,0 +1,287 @@
+/* =========================================
+   THREADed TRINKETS
+   CHECKOUT PAGE
+========================================= */
+
+.checkout-page {
+    padding: 70px 0 100px;
+    min-height: 700px;
+}
+
+.checkout-heading {
+    text-align: center;
+    margin-bottom: 45px;
+}
+
+.checkout-heading p {
+    color: #b66b75;
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    letter-spacing: 2px;
+    font-weight: bold;
+}
+
+.checkout-heading h1 {
+    font-size: 48px;
+    margin-top: 8px;
+}
+
+
+/* LAYOUT */
+
+.checkout-layout {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 40px;
+    align-items: start;
+}
+
+
+/* FORM */
+
+.checkout-form-section {
+    background: white;
+    border: 1px solid #eee1dd;
+    padding: 35px;
+}
+
+.checkout-form-section h2,
+.checkout-summary h2 {
+    font-size: 25px;
+    margin-bottom: 8px;
+}
+
+.form-note {
+    color: #806f6c;
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+    margin-bottom: 30px;
+}
+
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+
+.form-group label {
+    display: block;
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #5f514e;
+}
+
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    box-sizing: border-box;
+
+    border: 1px solid #ddceca;
+    background: #fff;
+
+    padding: 13px 14px;
+
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+
+    outline: none;
+
+    border-radius: 3px;
+}
+
+
+.form-group textarea {
+    resize: vertical;
+}
+
+
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: #b66b75;
+}
+
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: #aaa;
+}
+
+
+/* BUTTON */
+
+.place-order-btn {
+    width: 100%;
+
+    border: none;
+
+    background: #b66b75;
+    color: white;
+
+    padding: 16px;
+
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    border-radius: 3px;
+
+    margin-top: 10px;
+
+    transition: 0.3s;
+}
+
+
+.place-order-btn:hover {
+    background: #94545d;
+}
+
+
+/* ORDER SUMMARY */
+
+.checkout-summary {
+    background: white;
+    border: 1px solid #eee1dd;
+
+    padding: 30px;
+
+    position: sticky;
+    top: 100px;
+}
+
+
+.checkout-item {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+
+    padding: 14px 0;
+
+    border-bottom: 1px solid #f0e5e2;
+}
+
+
+.checkout-item-name {
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+}
+
+
+.checkout-item-quantity {
+    color: #806f6c;
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+
+.checkout-item-price {
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+
+.checkout-line {
+    border-top: 1px solid #eadedb;
+    margin: 20px 0;
+}
+
+
+.checkout-summary-row {
+    display: flex;
+    justify-content: space-between;
+
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+
+    margin-bottom: 15px;
+}
+
+
+.checkout-summary-row span {
+    color: #75635f;
+}
+
+
+.checkout-total {
+    display: flex;
+    justify-content: space-between;
+
+    font-family: Arial, sans-serif;
+
+    font-size: 19px;
+}
+
+
+.checkout-total strong {
+    color: #b66b75;
+}
+
+
+.secure-note {
+    text-align: center;
+
+    margin-top: 25px;
+
+    padding-top: 18px;
+
+    border-top: 1px solid #eadedb;
+
+    color: #806f6c;
+
+    font-family: Arial, sans-serif;
+
+    font-size: 11px;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 850px) {
+
+    .checkout-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .checkout-summary {
+        position: static;
+        order: -1;
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .checkout-page {
+        padding: 50px 0 70px;
+    }
+
+    .checkout-heading h1 {
+        font-size: 38px;
+    }
+
+    .checkout-form-section {
+        padding: 22px;
+    }
+
+    .checkout-summary {
+        padding: 22px;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+}
