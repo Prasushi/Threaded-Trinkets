@@ -28,9 +28,9 @@
 <body>
 
 
-<!-- =========================================
+<!-- =========================================================
      HEADER
-========================================= -->
+========================================================= -->
 
 <header class="header">
 
@@ -62,16 +62,14 @@
 
 
 
-<!-- =========================================
+<!-- =========================================================
      ADMIN
-========================================= -->
+========================================================= -->
 
 <main class="admin-page">
 
     <div class="container">
 
-
-        <!-- ADMIN HEADING -->
 
         <div class="admin-heading">
 
@@ -91,9 +89,9 @@
 
 
 
-        <!-- =========================================
+        <!-- =====================================================
              ADMIN TABS
-        ========================================= -->
+        ===================================================== -->
 
         <div class="admin-tabs">
 
@@ -114,21 +112,27 @@
                 📂 Categories
             </button>
 
+
+            <button
+                type="button"
+                id="ordersTab"
+                class="admin-tab"
+            >
+                📦 Orders
+            </button>
+
         </div>
 
 
 
-        <!-- =========================================
-             PRODUCTS SECTION
-        ========================================= -->
+        <!-- =====================================================
+             PRODUCTS
+        ===================================================== -->
 
         <div
             class="admin-layout"
             id="productsSection"
         >
-
-
-            <!-- PRODUCT FORM -->
 
             <section class="admin-form-card">
 
@@ -138,9 +142,6 @@
 
 
                 <form id="productForm">
-
-
-                    <!-- PRODUCT NAME -->
 
                     <div class="admin-form-group">
 
@@ -157,9 +158,6 @@
 
                     </div>
 
-
-
-                    <!-- CATEGORY -->
 
                     <div class="admin-form-group">
 
@@ -184,9 +182,6 @@
 
                     </div>
 
-
-
-                    <!-- PRICE + STOCK -->
 
                     <div class="admin-form-row">
 
@@ -226,9 +221,6 @@
                     </div>
 
 
-
-                    <!-- PRODUCT IMAGE -->
-
                     <div class="admin-form-group">
 
                         <label for="productImage">
@@ -263,9 +255,6 @@
                     </div>
 
 
-
-                    <!-- DESCRIPTION -->
-
                     <div class="admin-form-group">
 
                         <label for="productDescription">
@@ -280,9 +269,6 @@
 
                     </div>
 
-
-
-                    <!-- BUTTONS -->
 
                     <div class="admin-form-buttons">
 
@@ -311,8 +297,6 @@
             </section>
 
 
-
-            <!-- PRODUCT LIST -->
 
             <section class="admin-products-card">
 
@@ -344,9 +328,7 @@
                 </div>
 
 
-                <div id="adminProducts">
-                    <!-- Products appear here -->
-                </div>
+                <div id="adminProducts"></div>
 
 
                 <div
@@ -374,18 +356,15 @@
 
 
 
-        <!-- =========================================
-             CATEGORIES SECTION
-        ========================================= -->
+        <!-- =====================================================
+             CATEGORIES
+        ===================================================== -->
 
         <section
             class="admin-category-section"
             id="categoriesSection"
             style="display: none;"
         >
-
-
-            <!-- CATEGORY HEADER -->
 
             <div class="admin-category-header">
 
@@ -420,8 +399,6 @@
 
 
 
-            <!-- ADD CATEGORY -->
-
             <div class="category-form-card">
 
                 <h3 id="categoryFormTitle">
@@ -430,9 +407,6 @@
 
 
                 <form id="categoryForm">
-
-
-                    <!-- CATEGORY NAME -->
 
                     <div class="admin-form-group">
 
@@ -449,9 +423,6 @@
 
                     </div>
 
-
-
-                    <!-- CATEGORY ICON -->
 
                     <div class="admin-form-group">
 
@@ -471,9 +442,6 @@
 
                     </div>
 
-
-
-                    <!-- CATEGORY IMAGE -->
 
                     <div class="admin-form-group">
 
@@ -509,9 +477,6 @@
                     </div>
 
 
-
-                    <!-- CATEGORY BUTTONS -->
-
                     <div class="admin-form-buttons">
 
                         <button
@@ -540,8 +505,6 @@
 
 
 
-            <!-- CATEGORY LIST -->
-
             <div class="category-list-card">
 
                 <div class="category-list-header">
@@ -562,9 +525,7 @@
                 </div>
 
 
-                <div id="adminCategories">
-                    <!-- Categories appear here -->
-                </div>
+                <div id="adminCategories"></div>
 
 
                 <div
@@ -590,15 +551,83 @@
 
         </section>
 
+
+
+        <!-- =====================================================
+             ORDERS
+        ===================================================== -->
+
+        <section
+            class="admin-orders-section"
+            id="ordersSection"
+            style="display: none;"
+        >
+
+            <div class="admin-category-header">
+
+                <div>
+
+                    <p>
+                        ORDER MANAGEMENT
+                    </p>
+
+                    <h2>
+                        Customer Orders
+                    </h2>
+
+                    <span>
+                        View customer details, products and payment information.
+                    </span>
+
+                </div>
+
+
+                <div class="category-count">
+
+                    <span id="orderCount">
+                        0
+                    </span>
+
+                    Orders
+
+                </div>
+
+            </div>
+
+
+            <div id="adminOrders"></div>
+
+
+            <div
+                id="noOrders"
+                class="no-products"
+            >
+
+                <div>
+                    📦
+                </div>
+
+                <h3>
+                    No Orders Yet
+                </h3>
+
+                <p>
+                    Customer orders will appear here after an order is confirmed.
+                </p>
+
+            </div>
+
+        </section>
+
     </div>
 
 </main>
 
 
 
-<!-- =========================================
+<!-- =========================================================
      FOOTER
-========================================= -->
+========================================================= -->
 
 <footer class="footer">
 
@@ -646,6 +675,10 @@
                 Products
             </a>
 
+            <a href="admin.html">
+                Orders
+            </a>
+
         </div>
 
     </div>
@@ -663,10 +696,6 @@
 </footer>
 
 
-
-<!-- =========================================
-     JAVASCRIPT
-========================================= -->
 
 <script src="js/admin.js"></script>
 
