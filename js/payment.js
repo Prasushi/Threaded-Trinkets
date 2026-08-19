@@ -1,114 +1,146 @@
-/* =========================================
+/* =========================================================
    THREADED TRINKETS
-   CHECKOUT + UPI PAYMENT
-========================================= */
+   CHECKOUT + UPI PAYMENT + ORDER STORAGE
+========================================================= */
 
 
-/* =========================================
+/* =========================================================
    STORAGE KEYS
-========================================= */
+========================================================= */
 
-const PAYMENT_CART_KEY =
-    "threadedTrinketsCart";
+const PAYMENT_CART_KEY = "threadedTrinketsCart";
+const NORMAL_CART_KEY = "cart";
 
-const CUSTOMER_KEY =
-    "threadedTrinketsCustomer";
+const CUSTOMER_KEY = "threadedTrinketsCustomer";
 
-const LAST_ORDER_KEY =
-    "threadedTrinketsLastOrder";
+const LAST_ORDER_KEY = "threadedTrinketsLastOrder";
+const ORDERS_KEY = "threadedTrinketsOrders";
 
-const PAYMENT_STATUS_KEY =
-    "threadedTrinketsPaymentStatus";
-
-const PAYMENT_AMOUNT_KEY =
-    "threadedTrinketsPaymentAmount";
+const PAYMENT_STATUS_KEY = "threadedTrinketsPaymentStatus";
+const PAYMENT_AMOUNT_KEY = "threadedTrinketsPaymentAmount";
 
 
-/* =========================================
+/* =========================================================
    UPI DETAILS
-========================================= */
+========================================================= */
 
-const UPI_ID =
-    "7842391877@ibl";
-
-const UPI_NAME =
-    "Threaded Trinkets";
+const UPI_ID = "7842391877@ibl";
+const UPI_NAME = "Threaded Trinkets";
 
 
-/* =========================================
+/* =========================================================
    GET CART
-========================================= */
+   Supports both existing cart keys so other website
+   features are not disturbed.
+========================================================= */
 
 function getPaymentCart() {
 
-    const savedCart =
-        localStorage.getItem(
-            PAYMENT_CART_KEY
-        );
+    let cart = [];
 
-    if (!savedCart) {
-        return [];
-    }
+    const keys = [
+        PAYMENT_CART_KEY,
+        NORMAL_CART_KEY
+    ];
 
-    try {
+    for (let i = 0; i < keys.length; i++) {
 
-        const cart =
-            JSON.parse(savedCart);
+        try {
 
-        if (!Array.isArray(cart)) {
-            return [];
+            const savedCart =
+                localStorage.getItem(keys[i]);
+
+            if (!savedCart) {
+                continue;
+            }
+
+            const parsedCart =
+                JSON.parse(savedCart);
+
+            if (
+                Array.isArray(parsedCart) &&
+                parsedCart.length > 0
+            ) {
+
+                cart = parsedCart;
+                break;
+            }
+
+        } catch (error) {
+
+            console.error(
+                "Unable to read cart:",
+                error
+            );
+
         }
 
-        return cart;
-
-    } catch (error) {
-
-        console.error(
-            "Unable to read cart:",
-            error
-        );
-
-        return [];
     }
+
+    return cart;
 }
 
 
-/* =========================================
+/* =========================================================
    GET CUSTOMER
-========================================= */
+========================================================= */
 
 function getCustomerDetails() {
 
-    const savedCustomer =
-        localStorage.getItem(
-            CUSTOMER_KEY
-        );
+    const possibleKeys = [
+        CUSTOMER_KEY,
+        "customer",
+        "checkoutCustomer",
+        "threadedTrinketsCheckoutCustomer"
+    ];
 
-    if (!savedCustomer) {
-        return null;
+    for (
+        let i = 0;
+        i < possibleKeys.length;
+        i++
+    ) {
+
+        try {
+
+            const savedCustomer =
+                localStorage.getItem(
+                    possibleKeys[i]
+                );
+
+            if (!savedCustomer) {
+                continue;
+            }
+
+            const customer =
+                JSON.parse(savedCustomer);
+
+            if (
+                customer &&
+                typeof customer === "object"
+            ) {
+
+                return customer;
+
+            }
+
+        } catch (error) {
+
+            console.error(
+                "Unable to read customer:",
+                error
+            );
+
+        }
+
     }
 
-    try {
-
-        return JSON.parse(
-            savedCustomer
-        );
-
-    } catch (error) {
-
-        console.error(
-            "Unable to read customer:",
-            error
-        );
-
-        return null;
-    }
+    return null;
 }
 
 
-/* =========================================
-   CALCULATE ITEM TOTAL
-========================================= */
+/* =========================================================
+   ITEM TOTAL
+========================================================= */
 
 function getItemTotal(item) {
 
@@ -122,9 +154,9 @@ function getItemTotal(item) {
 }
 
 
-/* =========================================
-   CALCULATE CART TOTAL
-========================================= */
+/* =========================================================
+   CART TOTAL
+========================================================= */
 
 function getPaymentTotal() {
 
@@ -143,9 +175,9 @@ function getPaymentTotal() {
 }
 
 
-/* =========================================
-   FORMAT MONEY
-========================================= */
+/* =========================================================
+   MONEY
+========================================================= */
 
 function formatMoney(amount) {
 
@@ -155,9 +187,9 @@ function formatMoney(amount) {
 }
 
 
-/* =========================================
-   ESCAPE HTML
-========================================= */
+/* =========================================================
+   HTML ESCAPE
+========================================================= */
 
 function escapeHTML(value) {
 
@@ -165,53 +197,51 @@ function escapeHTML(value) {
         document.createElement("div");
 
     div.textContent =
-        String(value);
+        String(value ?? "");
 
     return div.innerHTML;
 }
 
 
-/* =========================================
+/* =========================================================
    DISPLAY ORDER
-========================================= */
+========================================================= */
 
 function displayPaymentOrder() {
 
-    const checkoutItems =
+    const paymentItems =
         document.getElementById(
-            "checkoutItems"
+            "paymentItems"
         );
 
-    const checkoutSubtotal =
+    const paymentSubtotal =
         document.getElementById(
-            "checkoutSubtotal"
+            "paymentSubtotal"
         );
 
-    const checkoutTotal =
+    const paymentTotal =
         document.getElementById(
-            "checkoutTotal"
+            "paymentTotal"
         );
 
-
-    if (!checkoutItems) {
+    if (!paymentItems) {
         return;
     }
-
 
     const cart =
         getPaymentCart();
 
-
-    checkoutItems.innerHTML = "";
-
+    paymentItems.innerHTML = "";
 
     if (cart.length === 0) {
 
-        checkoutItems.innerHTML = `
+        paymentItems.innerHTML = `
 
             <div class="checkout-empty">
 
-                <h3>Your cart is empty</h3>
+                <h3>
+                    Your cart is empty
+                </h3>
 
                 <p>
                     Please add products before
@@ -226,18 +256,15 @@ function displayPaymentOrder() {
 
         `;
 
-
-        if (checkoutSubtotal) {
-            checkoutSubtotal.textContent =
+        if (paymentSubtotal) {
+            paymentSubtotal.textContent =
                 formatMoney(0);
         }
 
-
-        if (checkoutTotal) {
-            checkoutTotal.textContent =
+        if (paymentTotal) {
+            paymentTotal.textContent =
                 formatMoney(0);
         }
-
 
         disablePaymentSection();
 
@@ -248,80 +275,75 @@ function displayPaymentOrder() {
     let subtotal = 0;
 
 
-    cart.forEach(
-        function(item) {
+    cart.forEach(function(item) {
 
-            const itemTotal =
-                getItemTotal(item);
+        const itemTotal =
+            getItemTotal(item);
 
-            const quantity =
-                Number(item.quantity) || 0;
+        const quantity =
+            Number(item.quantity) || 0;
 
-            subtotal += itemTotal;
-
-
-            const itemElement =
-                document.createElement("div");
-
-            itemElement.className =
-                "checkout-item";
+        subtotal += itemTotal;
 
 
-            const itemName =
-                escapeHTML(
-                    item.name || "Product"
-                );
+        const itemElement =
+            document.createElement("div");
+
+        itemElement.className =
+            "checkout-item";
 
 
-            itemElement.innerHTML = `
+        itemElement.innerHTML = `
 
-                <div>
+            <div>
 
-                    <div class="checkout-item-name">
-                        ${itemName}
-                    </div>
-
-                    <div class="checkout-item-quantity">
-                        Quantity: ${quantity}
-                    </div>
-
+                <div class="checkout-item-name">
+                    ${escapeHTML(
+                        item.name || "Product"
+                    )}
                 </div>
 
-                <div class="checkout-item-price">
-                    ${formatMoney(itemTotal)}
+                <div class="checkout-item-quantity">
+                    Quantity: ${quantity}
                 </div>
 
-            `;
+            </div>
+
+            <div class="checkout-item-price">
+                ${formatMoney(itemTotal)}
+            </div>
+
+        `;
 
 
-            checkoutItems.appendChild(
-                itemElement
-            );
+        paymentItems.appendChild(
+            itemElement
+        );
 
-        }
-    );
+    });
 
 
-    if (checkoutSubtotal) {
+    if (paymentSubtotal) {
 
-        checkoutSubtotal.textContent =
+        paymentSubtotal.textContent =
             formatMoney(subtotal);
 
     }
 
 
-    if (checkoutTotal) {
+    if (paymentTotal) {
 
-        checkoutTotal.textContent =
+        paymentTotal.textContent =
             formatMoney(subtotal);
 
     }
+
 }
 
 
-/* =========================================
+/* =========================================================
    CART COUNT
-========================================= */
+========================================================= */
 
 function updatePaymentCartCount() {
 
@@ -329,7 +351,6 @@ function updatePaymentCartCount() {
         document.getElementById(
             "cartCount"
         );
-
 
     if (!cartCount) {
         return;
@@ -346,7 +367,7 @@ function updatePaymentCartCount() {
 
                 return total +
                     (
-                        Number(item.quantity) || 0
+                        Number(item.quantity) || 1
                     );
 
             },
@@ -356,18 +377,18 @@ function updatePaymentCartCount() {
 
     cartCount.textContent =
         count;
+
 }
 
 
-/* =========================================
+/* =========================================================
    CREATE UPI LINK
-========================================= */
+========================================================= */
 
 function createUPILink() {
 
     const amount =
         getPaymentTotal();
-
 
     if (amount <= 0) {
         return "#";
@@ -378,26 +399,10 @@ function createUPILink() {
         new URLSearchParams();
 
 
-    params.set(
-        "pa",
-        UPI_ID
-    );
-
-    params.set(
-        "pn",
-        UPI_NAME
-    );
-
-    params.set(
-        "am",
-        amount.toFixed(2)
-    );
-
-    params.set(
-        "cu",
-        "INR"
-    );
-
+    params.set("pa", UPI_ID);
+    params.set("pn", UPI_NAME);
+    params.set("am", amount.toFixed(2));
+    params.set("cu", "INR");
     params.set(
         "tn",
         "Threaded Trinkets Order"
@@ -408,12 +413,13 @@ function createUPILink() {
         "upi://pay?" +
         params.toString()
     );
+
 }
 
 
-/* =========================================
+/* =========================================================
    DISPLAY UPI ID
-========================================= */
+========================================================= */
 
 function displayUPIId() {
 
@@ -422,20 +428,19 @@ function displayUPIId() {
             "upiIdDisplay"
         );
 
-
     if (!element) {
         return;
     }
 
-
     element.textContent =
         UPI_ID;
+
 }
 
 
-/* =========================================
-   CREATE QR CODE
-========================================= */
+/* =========================================================
+   QR CODE
+========================================================= */
 
 function createQRCode() {
 
@@ -443,7 +448,6 @@ function createQRCode() {
         document.getElementById(
             "upiQRCode"
         );
-
 
     if (!qrElement) {
         return;
@@ -453,46 +457,14 @@ function createQRCode() {
     qrElement.innerHTML = "";
 
 
-    const qrMessage =
-        document.getElementById(
-            "qrMessage"
-        );
-
-
-    if (qrMessage) {
-        qrMessage.textContent = "";
-    }
-
-
     const amount =
         getPaymentTotal();
 
 
-    if (amount <= 0) {
-
-        if (qrMessage) {
-            qrMessage.textContent =
-                "Add products to your cart to generate the payment QR code.";
-        }
-
-        return;
-    }
-
-
     if (
+        amount <= 0 ||
         typeof QRCode === "undefined"
     ) {
-
-        console.error(
-            "QRCode library was not loaded."
-        );
-
-
-        if (qrMessage) {
-            qrMessage.textContent =
-                "QR code library could not be loaded. Please use the UPI ID above.";
-        }
-
         return;
     }
 
@@ -522,330 +494,23 @@ function createQRCode() {
         );
 
 
-        if (qrMessage) {
+        qrElement.innerHTML = `
 
-            qrMessage.textContent =
-                "Unable to generate QR code. Please use the UPI ID above.";
+            <p class="payment-error">
+                Unable to generate QR code.
+                Please use the UPI ID instead.
+            </p>
 
-        }
+        `;
 
     }
+
 }
 
 
-/* =========================================
-   CUSTOMER DETAILS FORM
-========================================= */
-
-function setupCustomerForm() {
-
-    const form =
-        document.getElementById(
-            "customerForm"
-        );
-
-
-    if (!form) {
-        return;
-    }
-
-
-    const customer =
-        getCustomerDetails();
-
-
-    /*
-       Load previously saved details
-    */
-
-    if (customer) {
-
-        setInputValue(
-            "customerName",
-            customer.name
-        );
-
-        setInputValue(
-            "customerPhone",
-            customer.phone
-        );
-
-        setInputValue(
-            "customerEmail",
-            customer.email
-        );
-
-        setInputValue(
-            "customerAddress",
-            customer.address
-        );
-
-        setInputValue(
-            "customerCity",
-            customer.city
-        );
-
-        setInputValue(
-            "customerState",
-            customer.state
-        );
-
-        setInputValue(
-            "customerPincode",
-            customer.pincode
-        );
-
-        setInputValue(
-            "customerLandmark",
-            customer.landmark
-        );
-    }
-
-
-    form.addEventListener(
-        "submit",
-        function(event) {
-
-            event.preventDefault();
-
-
-            const name =
-                getInputValue(
-                    "customerName"
-                );
-
-            const phone =
-                getInputValue(
-                    "customerPhone"
-                );
-
-            const email =
-                getInputValue(
-                    "customerEmail"
-                );
-
-            const address =
-                getInputValue(
-                    "customerAddress"
-                );
-
-            const city =
-                getInputValue(
-                    "customerCity"
-                );
-
-            const state =
-                getInputValue(
-                    "customerState"
-                );
-
-            const pincode =
-                getInputValue(
-                    "customerPincode"
-                );
-
-            const landmark =
-                getInputValue(
-                    "customerLandmark"
-                );
-
-
-            /* =================================
-               VALIDATION
-            ================================= */
-
-            if (
-                !name ||
-                !phone ||
-                !address ||
-                !city ||
-                !state ||
-                !pincode
-            ) {
-
-                showCustomerMessage(
-                    "Please fill in all required customer details.",
-                    "error"
-                );
-
-                return;
-            }
-
-
-            const cleanPhone =
-                phone.replace(
-                    /\D/g,
-                    ""
-                );
-
-
-            if (
-                cleanPhone.length !== 10
-            ) {
-
-                showCustomerMessage(
-                    "Please enter a valid 10-digit phone number.",
-                    "error"
-                );
-
-                return;
-            }
-
-
-            const cleanPincode =
-                pincode.replace(
-                    /\D/g,
-                    ""
-                );
-
-
-            if (
-                cleanPincode.length !== 6
-            ) {
-
-                showCustomerMessage(
-                    "Please enter a valid 6-digit pincode.",
-                    "error"
-                );
-
-                return;
-            }
-
-
-            /* =================================
-               SAVE CUSTOMER
-            ================================= */
-
-            const customerDetails = {
-
-                name:
-                    name,
-
-                phone:
-                    cleanPhone,
-
-                email:
-                    email,
-
-                address:
-                    address,
-
-                city:
-                    city,
-
-                state:
-                    state,
-
-                pincode:
-                    cleanPincode,
-
-                landmark:
-                    landmark
-
-            };
-
-
-            localStorage.setItem(
-                CUSTOMER_KEY,
-                JSON.stringify(
-                    customerDetails
-                )
-            );
-
-
-            showCustomerMessage(
-                "Customer details saved successfully ✓",
-                "success"
-            );
-
-        }
-    );
-}
-
-
-/* =========================================
-   INPUT HELPERS
-========================================= */
-
-function getInputValue(id) {
-
-    const element =
-        document.getElementById(id);
-
-    if (!element) {
-        return "";
-    }
-
-    return element.value.trim();
-}
-
-
-function setInputValue(
-    id,
-    value
-) {
-
-    const element =
-        document.getElementById(id);
-
-    if (!element) {
-        return;
-    }
-
-    element.value =
-        value || "";
-}
-
-
-/* =========================================
-   CUSTOMER MESSAGE
-========================================= */
-
-function showCustomerMessage(
-    message,
-    type
-) {
-
-    const element =
-        document.getElementById(
-            "customerMessage"
-        );
-
-
-    if (!element) {
-        return;
-    }
-
-
-    element.textContent =
-        message;
-
-
-    element.classList.remove(
-        "customer-success",
-        "customer-error"
-    );
-
-
-    if (type === "success") {
-
-        element.classList.add(
-            "customer-success"
-        );
-
-    } else {
-
-        element.classList.add(
-            "customer-error"
-        );
-
-    }
-}
-
-
-/* =========================================
-   PAY WITH UPI
-========================================= */
+/* =========================================================
+   OPEN UPI
+========================================================= */
 
 function setupOpenUPI() {
 
@@ -853,7 +518,6 @@ function setupOpenUPI() {
         document.getElementById(
             "openUpiBtn"
         );
-
 
     if (!button) {
         return;
@@ -870,15 +534,12 @@ function setupOpenUPI() {
             "none";
 
         return;
+
     }
 
 
-    const upiLink =
-        createUPILink();
-
-
     button.href =
-        upiLink;
+        createUPILink();
 
 
     button.addEventListener(
@@ -892,12 +553,13 @@ function setupOpenUPI() {
 
         }
     );
+
 }
 
 
-/* =========================================
+/* =========================================================
    PAYMENT CONFIRMATION
-========================================= */
+========================================================= */
 
 function setupPaymentConfirmation() {
 
@@ -905,7 +567,6 @@ function setupPaymentConfirmation() {
         document.getElementById(
             "paymentSuccessBtn"
         );
-
 
     if (!button) {
         return;
@@ -931,26 +592,6 @@ function setupPaymentConfirmation() {
             }
 
 
-            const customer =
-                getCustomerDetails();
-
-
-            if (!customer) {
-
-                setPaymentMessage(
-                    "Please save your customer details before confirming payment.",
-                    "error"
-                );
-
-                return;
-            }
-
-
-            /*
-               This does NOT automatically
-               verify the UPI transaction.
-            */
-
             localStorage.setItem(
                 PAYMENT_STATUS_KEY,
                 "Customer Confirmed Payment"
@@ -974,21 +615,32 @@ function setupPaymentConfirmation() {
                 status.textContent =
                     "Payment marked as completed ✓";
 
+
                 status.classList.remove(
                     "payment-warning",
                     "payment-error"
                 );
 
+
                 status.classList.add(
                     "payment-success"
                 );
+
             }
 
 
-            setPaymentMessage(
-                "Thank you. You can now confirm your order.",
-                "success"
-            );
+            const message =
+                document.getElementById(
+                    "paymentMessage"
+                );
+
+
+            if (message) {
+
+                message.textContent =
+                    "Thank you. You can now confirm your order.";
+
+            }
 
 
             const openButton =
@@ -1024,12 +676,63 @@ function setupPaymentConfirmation() {
 
         }
     );
+
 }
 
 
-/* =========================================
+/* =========================================================
+   SAVE ORDER TO ALL ORDERS
+========================================================= */
+
+function saveOrderToOrdersList(order) {
+
+    let orders = [];
+
+
+    try {
+
+        const savedOrders =
+            localStorage.getItem(
+                ORDERS_KEY
+            );
+
+
+        if (savedOrders) {
+
+            const parsedOrders =
+                JSON.parse(savedOrders);
+
+
+            if (Array.isArray(parsedOrders)) {
+                orders = parsedOrders;
+            }
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Unable to read previous orders:",
+            error
+        );
+
+    }
+
+
+    orders.unshift(order);
+
+
+    localStorage.setItem(
+        ORDERS_KEY,
+        JSON.stringify(orders)
+    );
+
+}
+
+
+/* =========================================================
    CONFIRM ORDER
-========================================= */
+========================================================= */
 
 function setupConfirmOrder() {
 
@@ -1037,7 +740,6 @@ function setupConfirmOrder() {
         document.getElementById(
             "confirmOrderBtn"
         );
-
 
     if (!button) {
         return;
@@ -1060,10 +762,6 @@ function setupConfirmOrder() {
                 getPaymentTotal();
 
 
-            /* =================================
-               VALIDATION
-            ================================= */
-
             if (cart.length === 0) {
 
                 alert(
@@ -1077,7 +775,7 @@ function setupConfirmOrder() {
             if (!customer) {
 
                 alert(
-                    "Please enter and save your customer details first."
+                    "Customer details were not found. Please return to checkout and enter your details."
                 );
 
                 return;
@@ -1113,14 +811,15 @@ function setupConfirmOrder() {
             }
 
 
-            /* =================================
+            /* =========================================
                CREATE ORDER
-            ================================= */
+            ========================================= */
 
             const order = {
 
                 orderId:
-                    "TT" + Date.now(),
+                    "TT" +
+                    Date.now(),
 
                 customer:
                     customer,
@@ -1155,9 +854,9 @@ function setupConfirmOrder() {
             };
 
 
-            /* =================================
-               SAVE LAST ORDER
-            ================================= */
+            /* =========================================
+               SAVE LATEST ORDER
+            ========================================= */
 
             localStorage.setItem(
                 LAST_ORDER_KEY,
@@ -1165,29 +864,31 @@ function setupConfirmOrder() {
             );
 
 
-            /*
-               Also save order for admin/order
-               systems that use this key.
-            */
+            /* =========================================
+               SAVE ALL ORDERS
+            ========================================= */
 
-            localStorage.setItem(
-                "threadedTrinketsLastOrder",
-                JSON.stringify(order)
+            saveOrderToOrdersList(
+                order
             );
 
 
-            /* =================================
+            /* =========================================
                CLEAR CART
-            ================================= */
+            ========================================= */
 
             localStorage.removeItem(
                 PAYMENT_CART_KEY
             );
 
+            localStorage.removeItem(
+                NORMAL_CART_KEY
+            );
 
-            /* =================================
+
+            /* =========================================
                CLEAR PAYMENT STATE
-            ================================= */
+            ========================================= */
 
             localStorage.removeItem(
                 PAYMENT_STATUS_KEY
@@ -1198,21 +899,22 @@ function setupConfirmOrder() {
             );
 
 
-            /* =================================
-               GO TO SUCCESS PAGE
-            ================================= */
+            /* =========================================
+               SUCCESS PAGE
+            ========================================= */
 
             window.location.href =
                 "order-success.html";
 
         }
     );
+
 }
 
 
-/* =========================================
+/* =========================================================
    PAYMENT MESSAGE
-========================================= */
+========================================================= */
 
 function setPaymentMessage(
     message,
@@ -1260,12 +962,13 @@ function setPaymentMessage(
         );
 
     }
+
 }
 
 
-/* =========================================
-   DISABLE PAYMENT SECTION
-========================================= */
+/* =========================================================
+   DISABLE PAYMENT
+========================================================= */
 
 function disablePaymentSection() {
 
@@ -1286,33 +989,28 @@ function disablePaymentSection() {
 
 
     if (openButton) {
-
         openButton.style.display =
             "none";
-
     }
 
 
     if (successButton) {
-
         successButton.style.display =
             "none";
-
     }
 
 
     if (confirmButton) {
-
         confirmButton.style.display =
             "none";
-
     }
+
 }
 
 
-/* =========================================
-   INITIALIZE CHECKOUT
-========================================= */
+/* =========================================================
+   START
+========================================================= */
 
 document.addEventListener(
     "DOMContentLoaded",
@@ -1325,8 +1023,6 @@ document.addEventListener(
         displayUPIId();
 
         createQRCode();
-
-        setupCustomerForm();
 
         setupOpenUPI();
 
