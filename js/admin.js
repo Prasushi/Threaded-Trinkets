@@ -1,35 +1,62 @@
-const PRODUCTS_KEY = "threadedTrinketsProducts";
-const CATEGORIES_KEY = "threadedTrinketsCategories";
+/* =========================================================
+   THREADED TRINKETS
+   ADMIN PANEL
+   PRODUCTS + CATEGORIES + ORDERS
+========================================================= */
+
+
+/* =========================================================
+   STORAGE KEYS
+========================================================= */
+
+const PRODUCTS_KEY =
+    "threadedTrinketsProducts";
+
+const CATEGORIES_KEY =
+    "threadedTrinketsCategories";
+
+const ORDERS_KEY =
+    "threadedTrinketsOrders";
+
+
+/* =========================================================
+   DATA
+========================================================= */
 
 let products = [];
 let categories = [];
+let orders = [];
 
 let editingProductId = null;
 let editingCategoryId = null;
 
 
-/* =========================================
+/* =========================================================
    FORMS
-========================================= */
+========================================================= */
 
 const productForm =
-    document.getElementById("productForm");
+    document.getElementById(
+        "productForm"
+    );
 
 const categoryForm =
-    document.getElementById("categoryForm");
+    document.getElementById(
+        "categoryForm"
+    );
 
 
-/* =========================================
+/* =========================================================
    IMAGE STORAGE
-========================================= */
+========================================================= */
 
 window.threadedTrinketsProductImage = "";
 window.threadedTrinketsCategoryImage = "";
 
 
-/* =========================================
+/* =========================================================
    LOAD DATA
-========================================= */
+========================================================= */
 
 function loadData() {
 
@@ -37,12 +64,25 @@ function loadData() {
 
         products =
             JSON.parse(
-                localStorage.getItem(PRODUCTS_KEY)
+                localStorage.getItem(
+                    PRODUCTS_KEY
+                )
             ) || [];
+
 
         categories =
             JSON.parse(
-                localStorage.getItem(CATEGORIES_KEY)
+                localStorage.getItem(
+                    CATEGORIES_KEY
+                )
+            ) || [];
+
+
+        orders =
+            JSON.parse(
+                localStorage.getItem(
+                    ORDERS_KEY
+                )
             ) || [];
 
 
@@ -50,8 +90,14 @@ function loadData() {
             products = [];
         }
 
+
         if (!Array.isArray(categories)) {
             categories = [];
+        }
+
+
+        if (!Array.isArray(orders)) {
+            orders = [];
         }
 
     } catch (error) {
@@ -63,14 +109,16 @@ function loadData() {
 
         products = [];
         categories = [];
+        orders = [];
+
     }
 
 }
 
 
-/* =========================================
+/* =========================================================
    SAVE PRODUCTS
-========================================= */
+========================================================= */
 
 function saveProducts() {
 
@@ -82,9 +130,9 @@ function saveProducts() {
 }
 
 
-/* =========================================
+/* =========================================================
    SAVE CATEGORIES
-========================================= */
+========================================================= */
 
 function saveCategories() {
 
@@ -96,9 +144,23 @@ function saveCategories() {
 }
 
 
-/* =========================================
+/* =========================================================
+   SAVE ORDERS
+========================================================= */
+
+function saveOrders() {
+
+    localStorage.setItem(
+        ORDERS_KEY,
+        JSON.stringify(orders)
+    );
+
+}
+
+
+/* =========================================================
    CREATE ID
-========================================= */
+========================================================= */
 
 function createId() {
 
@@ -112,9 +174,9 @@ function createId() {
 }
 
 
-/* =========================================
+/* =========================================================
    HTML ESCAPE
-========================================= */
+========================================================= */
 
 function escapeHTML(value) {
 
@@ -128,9 +190,9 @@ function escapeHTML(value) {
 }
 
 
-/* =========================================
+/* =========================================================
    ATTRIBUTE ESCAPE
-========================================= */
+========================================================= */
 
 function escapeAttribute(value) {
 
@@ -141,9 +203,9 @@ function escapeAttribute(value) {
 }
 
 
-/* =========================================
+/* =========================================================
    CATEGORY DROPDOWN
-========================================= */
+========================================================= */
 
 function updateCategoryDropdown() {
 
@@ -166,7 +228,7 @@ function updateCategoryDropdown() {
 
 
     categories.forEach(
-        function (category) {
+        function(category) {
 
             const option =
                 document.createElement(
@@ -188,12 +250,20 @@ function updateCategoryDropdown() {
 
 
     const other =
-        document.createElement("option");
+        document.createElement(
+            "option"
+        );
 
-    other.value = "Other";
-    other.textContent = "Other";
+    other.value =
+        "Other";
 
-    dropdown.appendChild(other);
+    other.textContent =
+        "Other";
+
+
+    dropdown.appendChild(
+        other
+    );
 
 
     dropdown.value =
@@ -202,9 +272,9 @@ function updateCategoryDropdown() {
 }
 
 
-/* =========================================
+/* =========================================================
    DISPLAY PRODUCTS
-========================================= */
+========================================================= */
 
 function displayProducts() {
 
@@ -247,6 +317,7 @@ function displayProducts() {
         }
 
         return;
+
     }
 
 
@@ -262,12 +333,13 @@ function displayProducts() {
 
 
     products.forEach(
-        function (product) {
+        function(product) {
 
             const card =
                 document.createElement(
                     "div"
                 );
+
 
             card.className =
                 "admin-product-card";
@@ -363,7 +435,9 @@ function displayProducts() {
             `;
 
 
-            container.appendChild(card);
+            container.appendChild(
+                card
+            );
 
         }
     );
@@ -371,9 +445,9 @@ function displayProducts() {
 }
 
 
-/* =========================================
+/* =========================================================
    RESET PRODUCT FORM
-========================================= */
+========================================================= */
 
 function resetProductForm() {
 
@@ -448,15 +522,15 @@ function resetProductForm() {
 }
 
 
-/* =========================================
+/* =========================================================
    EDIT PRODUCT
-========================================= */
+========================================================= */
 
 function editProduct(id) {
 
     const product =
         products.find(
-            function (item) {
+            function(item) {
 
                 return String(item.id) ===
                     String(id);
@@ -547,26 +621,20 @@ function editProduct(id) {
 
 
     if (title) {
-
         title.textContent =
             "Edit Product";
-
     }
 
 
     if (button) {
-
         button.textContent =
             "Update Product";
-
     }
 
 
     if (cancel) {
-
         cancel.style.display =
             "inline-block";
-
     }
 
 
@@ -613,15 +681,15 @@ function editProduct(id) {
 }
 
 
-/* =========================================
+/* =========================================================
    DELETE PRODUCT
-========================================= */
+========================================================= */
 
 function deleteProduct(id) {
 
     const product =
         products.find(
-            function (item) {
+            function(item) {
 
                 return String(item.id) ===
                     String(id);
@@ -648,7 +716,7 @@ function deleteProduct(id) {
 
     products =
         products.filter(
-            function (item) {
+            function(item) {
 
                 return String(item.id) !==
                     String(id);
@@ -664,15 +732,15 @@ function deleteProduct(id) {
 }
 
 
-/* =========================================
+/* =========================================================
    PRODUCT FORM
-========================================= */
+========================================================= */
 
 if (productForm) {
 
     productForm.addEventListener(
         "submit",
-        function (event) {
+        function(event) {
 
             event.preventDefault();
 
@@ -778,7 +846,7 @@ if (productForm) {
 
                 const product =
                     products.find(
-                        function (item) {
+                        function(item) {
 
                             return String(
                                 item.id
@@ -866,9 +934,9 @@ if (productForm) {
 }
 
 
-/* =========================================
+/* =========================================================
    CANCEL PRODUCT EDIT
-========================================= */
+========================================================= */
 
 const cancelEditBtn =
     document.getElementById(
@@ -880,7 +948,7 @@ if (cancelEditBtn) {
 
     cancelEditBtn.addEventListener(
         "click",
-        function () {
+        function() {
 
             resetProductForm();
 
@@ -890,9 +958,9 @@ if (cancelEditBtn) {
 }
 
 
-/* =========================================
+/* =========================================================
    PRODUCT IMAGE UPLOAD
-========================================= */
+========================================================= */
 
 const productImage =
     document.getElementById(
@@ -914,7 +982,7 @@ if (productImage) {
 
     productImage.addEventListener(
         "change",
-        function () {
+        function() {
 
             const file =
                 this.files &&
@@ -934,6 +1002,7 @@ if (productImage) {
                 }
 
                 return;
+
             }
 
 
@@ -943,12 +1012,13 @@ if (productImage) {
             ) {
 
                 alert(
-                    "Please select a valid image file such as JPG, JPEG, PNG or WEBP."
+                    "Please select a valid image file."
                 );
 
                 this.value = "";
 
                 return;
+
             }
 
 
@@ -957,7 +1027,7 @@ if (productImage) {
 
 
             reader.onload =
-                function (event) {
+                function(event) {
 
                     const imageData =
                         event.target.result;
@@ -986,7 +1056,7 @@ if (productImage) {
 
 
             reader.onerror =
-                function () {
+                function() {
 
                     alert(
                         "Unable to read the selected image."
@@ -1003,9 +1073,9 @@ if (productImage) {
 }
 
 
-/* =========================================
+/* =========================================================
    DISPLAY CATEGORIES
-========================================= */
+========================================================= */
 
 function displayCategories() {
 
@@ -1043,13 +1113,12 @@ function displayCategories() {
         container.innerHTML = "";
 
         if (empty) {
-
             empty.style.display =
                 "block";
-
         }
 
         return;
+
     }
 
 
@@ -1065,7 +1134,7 @@ function displayCategories() {
 
 
     categories.forEach(
-        function (category) {
+        function(category) {
 
             const card =
                 document.createElement(
@@ -1156,7 +1225,9 @@ function displayCategories() {
             `;
 
 
-            container.appendChild(card);
+            container.appendChild(
+                card
+            );
 
         }
     );
@@ -1164,9 +1235,9 @@ function displayCategories() {
 }
 
 
-/* =========================================
+/* =========================================================
    RESET CATEGORY FORM
-========================================= */
+========================================================= */
 
 function resetCategoryForm() {
 
@@ -1206,48 +1277,40 @@ function resetCategoryForm() {
 
 
     if (title) {
-
         title.textContent =
             "Add New Category";
-
     }
 
 
     if (button) {
-
         button.textContent =
             "Add Category";
-
     }
 
 
     if (cancel) {
-
         cancel.style.display =
             "none";
-
     }
 
 
     if (preview) {
-
         preview.style.display =
             "none";
-
     }
 
 }
 
 
-/* =========================================
+/* =========================================================
    EDIT CATEGORY
-========================================= */
+========================================================= */
 
 function editCategory(id) {
 
     const category =
         categories.find(
-            function (item) {
+            function(item) {
 
                 return String(item.id) ===
                     String(id);
@@ -1277,18 +1340,14 @@ function editCategory(id) {
 
 
     if (name) {
-
         name.value =
             category.name || "";
-
     }
 
 
     if (icon) {
-
         icon.value =
             category.icon || "";
-
     }
 
 
@@ -1309,26 +1368,20 @@ function editCategory(id) {
 
 
     if (title) {
-
         title.textContent =
             "Edit Category";
-
     }
 
 
     if (button) {
-
         button.textContent =
             "Update Category";
-
     }
 
 
     if (cancel) {
-
         cancel.style.display =
             "inline-block";
-
     }
 
 
@@ -1375,15 +1428,15 @@ function editCategory(id) {
 }
 
 
-/* =========================================
+/* =========================================================
    DELETE CATEGORY
-========================================= */
+========================================================= */
 
 function deleteCategory(id) {
 
     const category =
         categories.find(
-            function (item) {
+            function(item) {
 
                 return String(item.id) ===
                     String(id);
@@ -1399,7 +1452,7 @@ function deleteCategory(id) {
 
     const usedByProducts =
         products.some(
-            function (product) {
+            function(product) {
 
                 return product.category ===
                     category.name;
@@ -1431,7 +1484,7 @@ function deleteCategory(id) {
 
     products =
         products.map(
-            function (product) {
+            function(product) {
 
                 if (
                     product.category ===
@@ -1454,7 +1507,7 @@ function deleteCategory(id) {
 
     categories =
         categories.filter(
-            function (item) {
+            function(item) {
 
                 return String(item.id) !==
                     String(id);
@@ -1476,15 +1529,15 @@ function deleteCategory(id) {
 }
 
 
-/* =========================================
+/* =========================================================
    CATEGORY FORM
-========================================= */
+========================================================= */
 
 if (categoryForm) {
 
     categoryForm.addEventListener(
         "submit",
-        function (event) {
+        function(event) {
 
             event.preventDefault();
 
@@ -1519,7 +1572,7 @@ if (categoryForm) {
 
             const duplicate =
                 categories.some(
-                    function (category) {
+                    function(category) {
 
                         return (
                             category.name
@@ -1559,7 +1612,7 @@ if (categoryForm) {
 
                 const category =
                     categories.find(
-                        function (item) {
+                        function(item) {
 
                             return String(
                                 item.id
@@ -1594,7 +1647,7 @@ if (categoryForm) {
 
                     products =
                         products.map(
-                            function (product) {
+                            function(product) {
 
                                 if (
                                     product.category ===
@@ -1663,9 +1716,9 @@ if (categoryForm) {
 }
 
 
-/* =========================================
+/* =========================================================
    CATEGORY IMAGE UPLOAD
-========================================= */
+========================================================= */
 
 const categoryImage =
     document.getElementById(
@@ -1687,7 +1740,7 @@ if (categoryImage) {
 
     categoryImage.addEventListener(
         "change",
-        function () {
+        function() {
 
             const file =
                 this.files &&
@@ -1707,6 +1760,7 @@ if (categoryImage) {
                 }
 
                 return;
+
             }
 
 
@@ -1716,12 +1770,13 @@ if (categoryImage) {
             ) {
 
                 alert(
-                    "Please select a valid image file such as JPG, JPEG, PNG or WEBP."
+                    "Please select a valid image file."
                 );
 
                 this.value = "";
 
                 return;
+
             }
 
 
@@ -1730,7 +1785,7 @@ if (categoryImage) {
 
 
             reader.onload =
-                function (event) {
+                function(event) {
 
                     const imageData =
                         event.target.result;
@@ -1759,7 +1814,7 @@ if (categoryImage) {
 
 
             reader.onerror =
-                function () {
+                function() {
 
                     alert(
                         "Unable to read the selected image."
@@ -1776,9 +1831,9 @@ if (categoryImage) {
 }
 
 
-/* =========================================
+/* =========================================================
    CANCEL CATEGORY EDIT
-========================================= */
+========================================================= */
 
 const cancelCategoryBtn =
     document.getElementById(
@@ -1790,7 +1845,7 @@ if (cancelCategoryBtn) {
 
     cancelCategoryBtn.addEventListener(
         "click",
-        function () {
+        function() {
 
             resetCategoryForm();
 
@@ -1800,9 +1855,590 @@ if (cancelCategoryBtn) {
 }
 
 
-/* =========================================
+/* =========================================================
+   ORDERS
+========================================================= */
+
+function getCustomerValue(
+    customer,
+    possibleNames
+) {
+
+    if (
+        !customer ||
+        typeof customer !== "object"
+    ) {
+        return "";
+    }
+
+
+    for (
+        let i = 0;
+        i < possibleNames.length;
+        i++
+    ) {
+
+        const value =
+            customer[
+                possibleNames[i]
+            ];
+
+
+        if (
+            value !== undefined &&
+            value !== null &&
+            String(value).trim() !== ""
+        ) {
+
+            return String(value);
+
+        }
+
+    }
+
+
+    return "";
+
+}
+
+
+/* =========================================================
+   DISPLAY ORDERS
+========================================================= */
+
+function displayOrders() {
+
+    const container =
+        document.getElementById(
+            "adminOrders"
+        );
+
+    const count =
+        document.getElementById(
+            "orderCount"
+        );
+
+    const empty =
+        document.getElementById(
+            "noOrders"
+        );
+
+
+    if (!container) {
+        return;
+    }
+
+
+    if (count) {
+
+        count.textContent =
+            orders.length;
+
+    }
+
+
+    if (orders.length === 0) {
+
+        container.innerHTML = "";
+
+        if (empty) {
+            empty.style.display =
+                "block";
+        }
+
+        return;
+
+    }
+
+
+    if (empty) {
+
+        empty.style.display =
+            "none";
+
+    }
+
+
+    container.innerHTML = "";
+
+
+    orders.forEach(
+        function(order) {
+
+            const customer =
+                order.customer || {};
+
+
+            const name =
+                getCustomerValue(
+                    customer,
+                    [
+                        "name",
+                        "fullName",
+                        "customerName"
+                    ]
+                ) ||
+                "Customer";
+
+
+            const phone =
+                getCustomerValue(
+                    customer,
+                    [
+                        "phone",
+                        "mobile",
+                        "phoneNumber",
+                        "contact"
+                    ]
+                ) ||
+                "Not provided";
+
+
+            const email =
+                getCustomerValue(
+                    customer,
+                    [
+                        "email",
+                        "emailAddress"
+                    ]
+                ) ||
+                "Not provided";
+
+
+            const address =
+                getCustomerValue(
+                    customer,
+                    [
+                        "address",
+                        "fullAddress",
+                        "deliveryAddress"
+                    ]
+                ) ||
+                "Not provided";
+
+
+            const city =
+                getCustomerValue(
+                    customer,
+                    [
+                        "city"
+                    ]
+                );
+
+
+            const state =
+                getCustomerValue(
+                    customer,
+                    [
+                        "state"
+                    ]
+                );
+
+
+            const pincode =
+                getCustomerValue(
+                    customer,
+                    [
+                        "pincode",
+                        "pinCode",
+                        "postalCode",
+                        "zip"
+                    ]
+                );
+
+
+            const completeAddress =
+                [
+                    address,
+                    city,
+                    state,
+                    pincode
+                ]
+                .filter(function(value) {
+                    return value;
+                })
+                .join(", ");
+
+
+            const date =
+                order.createdAt
+                    ? new Date(
+                        order.createdAt
+                    ).toLocaleString(
+                        "en-IN"
+                    )
+                    : "Not available";
+
+
+            let itemsHTML = "";
+
+
+            if (
+                Array.isArray(
+                    order.items
+                ) &&
+                order.items.length > 0
+            ) {
+
+                itemsHTML =
+                    order.items.map(
+                        function(item) {
+
+                            const quantity =
+                                Number(
+                                    item.quantity
+                                ) || 1;
+
+
+                            const price =
+                                Number(
+                                    item.price
+                                ) || 0;
+
+
+                            const itemTotal =
+                                price *
+                                quantity;
+
+
+                            return `
+
+                                <div
+                                    style="
+                                        display:flex;
+                                        justify-content:space-between;
+                                        gap:15px;
+                                        padding:8px 0;
+                                        border-bottom:1px solid #eee;
+                                    "
+                                >
+
+                                    <span>
+                                        ${escapeHTML(
+                                            item.name ||
+                                            "Product"
+                                        )}
+                                        ×
+                                        ${quantity}
+                                    </span>
+
+                                    <strong>
+                                        ₹${itemTotal.toLocaleString(
+                                            "en-IN"
+                                        )}
+                                    </strong>
+
+                                </div>
+
+                            `;
+
+                        }
+                    )
+                    .join("");
+
+            } else {
+
+                itemsHTML =
+                    "<p>No product details available.</p>";
+
+            }
+
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+
+            card.className =
+                "admin-order-card";
+
+
+            card.style.cssText = `
+                background:#fff;
+                border:1px solid #e5e5e5;
+                border-radius:14px;
+                padding:22px;
+                margin-bottom:20px;
+                box-shadow:0 5px 18px rgba(0,0,0,0.05);
+            `;
+
+
+            card.innerHTML = `
+
+                <div
+                    style="
+                        display:flex;
+                        justify-content:space-between;
+                        align-items:flex-start;
+                        gap:20px;
+                        flex-wrap:wrap;
+                        margin-bottom:20px;
+                    "
+                >
+
+                    <div>
+
+                        <p
+                            style="
+                                margin:0 0 5px;
+                                font-size:12px;
+                                letter-spacing:1px;
+                                opacity:.65;
+                            "
+                        >
+                            ORDER
+                        </p>
+
+                        <h3
+                            style="
+                                margin:0;
+                            "
+                        >
+                            ${escapeHTML(
+                                order.orderId ||
+                                "Order"
+                            )}
+                        </h3>
+
+                        <small>
+                            ${escapeHTML(date)}
+                        </small>
+
+                    </div>
+
+
+                    <div
+                        style="
+                            text-align:right;
+                        "
+                    >
+
+                        <strong
+                            style="
+                                font-size:20px;
+                            "
+                        >
+                            ₹${Number(
+                                order.total || 0
+                            ).toLocaleString(
+                                "en-IN"
+                            )}
+                        </strong>
+
+                        <br>
+
+                        <span>
+                            ${escapeHTML(
+                                order.paymentMethod ||
+                                "UPI"
+                            )}
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    style="
+                        display:grid;
+                        grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+                        gap:18px;
+                        margin-bottom:20px;
+                    "
+                >
+
+                    <div>
+
+                        <h4>
+                            Customer Details
+                        </h4>
+
+                        <p>
+                            <strong>Name:</strong>
+                            ${escapeHTML(name)}
+                        </p>
+
+                        <p>
+                            <strong>Phone:</strong>
+                            ${escapeHTML(phone)}
+                        </p>
+
+                        <p>
+                            <strong>Email:</strong>
+                            ${escapeHTML(email)}
+                        </p>
+
+                    </div>
+
+
+                    <div>
+
+                        <h4>
+                            Delivery Address
+                        </h4>
+
+                        <p>
+                            ${escapeHTML(
+                                completeAddress ||
+                                "Not provided"
+                            )}
+                        </p>
+
+                    </div>
+
+
+                    <div>
+
+                        <h4>
+                            Payment
+                        </h4>
+
+                        <p>
+                            <strong>Method:</strong>
+                            ${escapeHTML(
+                                order.paymentMethod ||
+                                "UPI"
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>Status:</strong>
+                            ${escapeHTML(
+                                order.paymentStatus ||
+                                "Unknown"
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>UPI ID:</strong>
+                            ${escapeHTML(
+                                order.upiId ||
+                                "Not available"
+                            )}
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div>
+
+                    <h4>
+                        Products Ordered
+                    </h4>
+
+                    ${itemsHTML}
+
+                </div>
+
+
+                <div
+                    style="
+                        display:flex;
+                        justify-content:space-between;
+                        align-items:center;
+                        gap:15px;
+                        flex-wrap:wrap;
+                        margin-top:20px;
+                        padding-top:15px;
+                        border-top:1px solid #eee;
+                    "
+                >
+
+                    <strong>
+                        Total:
+                        ₹${Number(
+                            order.total || 0
+                        ).toLocaleString(
+                            "en-IN"
+                        )}
+                    </strong>
+
+
+                    <button
+                        type="button"
+                        class="admin-cancel-btn"
+                        onclick="deleteOrder('${escapeAttribute(
+                            order.orderId
+                        )}')"
+                    >
+                        Delete Order
+                    </button>
+
+                </div>
+
+            `;
+
+
+            container.appendChild(
+                card
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   DELETE ORDER
+========================================================= */
+
+function deleteOrder(orderId) {
+
+    const order =
+        orders.find(
+            function(item) {
+
+                return String(
+                    item.orderId
+                ) === String(orderId);
+
+            }
+        );
+
+
+    if (!order) {
+        return;
+    }
+
+
+    const confirmed =
+        confirm(
+            `Delete order "${order.orderId}"?`
+        );
+
+
+    if (!confirmed) {
+        return;
+    }
+
+
+    orders =
+        orders.filter(
+            function(item) {
+
+                return String(
+                    item.orderId
+                ) !== String(orderId);
+
+            }
+        );
+
+
+    saveOrders();
+
+    displayOrders();
+
+}
+
+
+/* =========================================================
    TABS
-========================================= */
+========================================================= */
 
 const productsTab =
     document.getElementById(
@@ -1814,6 +2450,12 @@ const categoriesTab =
         "categoriesTab"
     );
 
+const ordersTab =
+    document.getElementById(
+        "ordersTab"
+    );
+
+
 const productsSection =
     document.getElementById(
         "productsSection"
@@ -1824,81 +2466,123 @@ const categoriesSection =
         "categoriesSection"
     );
 
+const ordersSection =
+    document.getElementById(
+        "ordersSection"
+    );
+
+
+/* =========================================================
+   SHOW PRODUCTS
+========================================================= */
+
+function showProducts() {
+
+    if (productsTab) {
+        productsTab.classList.add(
+            "active"
+        );
+    }
+
+
+    if (categoriesTab) {
+        categoriesTab.classList.remove(
+            "active"
+        );
+    }
+
+
+    if (ordersTab) {
+        ordersTab.classList.remove(
+            "active"
+        );
+    }
+
+
+    if (productsSection) {
+
+        productsSection.style.display =
+            "grid";
+
+    }
+
+
+    if (categoriesSection) {
+
+        categoriesSection.style.display =
+            "none";
+
+    }
+
+
+    if (ordersSection) {
+
+        ordersSection.style.display =
+            "none";
+
+    }
+
+}
+
+
+/* =========================================================
+   PRODUCTS TAB
+========================================================= */
 
 if (productsTab) {
 
     productsTab.addEventListener(
         "click",
-        function () {
-
-            productsTab.classList.add(
-                "active"
-            );
-
-
-            if (categoriesTab) {
-
-                categoriesTab.classList.remove(
-                    "active"
-                );
-
-            }
-
-
-            if (productsSection) {
-
-                productsSection.style.display =
-                    "grid";
-
-            }
-
-
-            if (categoriesSection) {
-
-                categoriesSection.style.display =
-                    "none";
-
-            }
-
-        }
+        showProducts
     );
 
 }
 
 
+/* =========================================================
+   CATEGORIES TAB
+========================================================= */
+
 if (categoriesTab) {
 
     categoriesTab.addEventListener(
         "click",
-        function () {
+        function() {
+
+            if (productsTab) {
+                productsTab.classList.remove(
+                    "active"
+                );
+            }
+
 
             categoriesTab.classList.add(
                 "active"
             );
 
 
-            if (productsTab) {
-
-                productsTab.classList.remove(
+            if (ordersTab) {
+                ordersTab.classList.remove(
                     "active"
                 );
-
-            }
-
-
-            if (categoriesSection) {
-
-                categoriesSection.style.display =
-                    "block";
-
             }
 
 
             if (productsSection) {
-
                 productsSection.style.display =
                     "none";
+            }
 
+
+            if (categoriesSection) {
+                categoriesSection.style.display =
+                    "block";
+            }
+
+
+            if (ordersSection) {
+                ordersSection.style.display =
+                    "none";
             }
 
         }
@@ -1907,15 +2591,73 @@ if (categoriesTab) {
 }
 
 
-/* =========================================
+/* =========================================================
+   ORDERS TAB
+========================================================= */
+
+if (ordersTab) {
+
+    ordersTab.addEventListener(
+        "click",
+        function() {
+
+            if (productsTab) {
+                productsTab.classList.remove(
+                    "active"
+                );
+            }
+
+
+            if (categoriesTab) {
+                categoriesTab.classList.remove(
+                    "active"
+                );
+            }
+
+
+            ordersTab.classList.add(
+                "active"
+            );
+
+
+            if (productsSection) {
+                productsSection.style.display =
+                    "none";
+            }
+
+
+            if (categoriesSection) {
+                categoriesSection.style.display =
+                    "none";
+            }
+
+
+            if (ordersSection) {
+                ordersSection.style.display =
+                    "block";
+            }
+
+
+            displayOrders();
+
+        }
+    );
+
+}
+
+
+/* =========================================================
    GLOBAL FUNCTIONS
-========================================= */
+========================================================= */
 
 window.displayProducts =
     displayProducts;
 
 window.displayCategories =
     displayCategories;
+
+window.displayOrders =
+    displayOrders;
 
 window.editProduct =
     editProduct;
@@ -1929,14 +2671,17 @@ window.editCategory =
 window.deleteCategory =
     deleteCategory;
 
+window.deleteOrder =
+    deleteOrder;
 
-/* =========================================
+
+/* =========================================================
    START
-========================================= */
+========================================================= */
 
 document.addEventListener(
     "DOMContentLoaded",
-    function () {
+    function() {
 
         loadData();
 
@@ -1945,6 +2690,8 @@ document.addEventListener(
         displayProducts();
 
         displayCategories();
+
+        displayOrders();
 
     }
 );
