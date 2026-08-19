@@ -198,24 +198,24 @@ function displayPaymentOrder() {
 
 
         itemElement.className =
-            "payment-item";
+            "checkout-item";
 
 
         itemElement.innerHTML = `
 
-            <div class="payment-item-info">
+            <div>
 
-                <div class="payment-item-name">
+                <div class="checkout-item-name">
                     ${item.name}
                 </div>
 
-                <div class="payment-item-quantity">
+                <div class="checkout-item-quantity">
                     Quantity: ${quantity}
                 </div>
 
             </div>
 
-            <div class="payment-item-price">
+            <div class="checkout-item-price">
                 ₹${itemTotal}
             </div>
 
