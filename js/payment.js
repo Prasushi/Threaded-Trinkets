@@ -1,16 +1,6 @@
-```javascript
 /* =========================================
    THREADED TRINKETS
-   CHECKOUT + UPI PAYMENT JAVASCRIPT
-
-   IMPORTANT:
-   This is a FRONTEND payment interface.
-
-   It does NOT automatically verify UPI
-   transactions.
-
-   The customer manually confirms that
-   payment was completed.
+   CHECKOUT + UPI PAYMENT
 ========================================= */
 
 
@@ -117,7 +107,7 @@ function getCustomerDetails() {
 
 
 /* =========================================
-   CALCULATE ITEM PRICE
+   CALCULATE ITEM TOTAL
 ========================================= */
 
 function getItemTotal(item) {
@@ -161,35 +151,49 @@ function formatMoney(amount) {
 
     return "₹" +
         Number(amount || 0)
-            .toLocaleString(
-                "en-IN"
-            );
+            .toLocaleString("en-IN");
 }
 
 
 /* =========================================
-   DISPLAY ORDER ITEMS
+   ESCAPE HTML
+========================================= */
+
+function escapeHTML(value) {
+
+    const div =
+        document.createElement("div");
+
+    div.textContent =
+        String(value);
+
+    return div.innerHTML;
+}
+
+
+/* =========================================
+   DISPLAY ORDER
 ========================================= */
 
 function displayPaymentOrder() {
 
-    const paymentItems =
+    const checkoutItems =
         document.getElementById(
-            "paymentItems"
+            "checkoutItems"
         );
 
-    const paymentSubtotal =
+    const checkoutSubtotal =
         document.getElementById(
-            "paymentSubtotal"
+            "checkoutSubtotal"
         );
 
-    const paymentTotal =
+    const checkoutTotal =
         document.getElementById(
-            "paymentTotal"
+            "checkoutTotal"
         );
 
 
-    if (!paymentItems) {
+    if (!checkoutItems) {
         return;
     }
 
@@ -198,22 +202,16 @@ function displayPaymentOrder() {
         getPaymentCart();
 
 
-    paymentItems.innerHTML = "";
+    checkoutItems.innerHTML = "";
 
-
-    /* =====================================
-       EMPTY CART
-    ===================================== */
 
     if (cart.length === 0) {
 
-        paymentItems.innerHTML = `
+        checkoutItems.innerHTML = `
 
             <div class="checkout-empty">
 
-                <h3>
-                    Your cart is empty
-                </h3>
+                <h3>Your cart is empty</h3>
 
                 <p>
                     Please add products before
@@ -229,14 +227,14 @@ function displayPaymentOrder() {
         `;
 
 
-        if (paymentSubtotal) {
-            paymentSubtotal.textContent =
+        if (checkoutSubtotal) {
+            checkoutSubtotal.textContent =
                 formatMoney(0);
         }
 
 
-        if (paymentTotal) {
-            paymentTotal.textContent =
+        if (checkoutTotal) {
+            checkoutTotal.textContent =
                 formatMoney(0);
         }
 
@@ -247,10 +245,6 @@ function displayPaymentOrder() {
     }
 
 
-    /* =====================================
-       DISPLAY ITEMS
-    ===================================== */
-
     let subtotal = 0;
 
 
@@ -260,22 +254,14 @@ function displayPaymentOrder() {
             const itemTotal =
                 getItemTotal(item);
 
-
             const quantity =
-                Number(
-                    item.quantity
-                ) || 0;
+                Number(item.quantity) || 0;
 
-
-            subtotal +=
-                itemTotal;
+            subtotal += itemTotal;
 
 
             const itemElement =
-                document.createElement(
-                    "div"
-                );
-
+                document.createElement("div");
 
             itemElement.className =
                 "checkout-item";
@@ -283,8 +269,7 @@ function displayPaymentOrder() {
 
             const itemName =
                 escapeHTML(
-                    item.name ||
-                    "Product"
+                    item.name || "Product"
                 );
 
 
@@ -309,7 +294,7 @@ function displayPaymentOrder() {
             `;
 
 
-            paymentItems.appendChild(
+            checkoutItems.appendChild(
                 itemElement
             );
 
@@ -317,42 +302,20 @@ function displayPaymentOrder() {
     );
 
 
-    /* =====================================
-       DISPLAY TOTALS
-    ===================================== */
+    if (checkoutSubtotal) {
 
-    if (paymentSubtotal) {
-
-        paymentSubtotal.textContent =
+        checkoutSubtotal.textContent =
             formatMoney(subtotal);
 
     }
 
 
-    if (paymentTotal) {
+    if (checkoutTotal) {
 
-        paymentTotal.textContent =
+        checkoutTotal.textContent =
             formatMoney(subtotal);
 
     }
-}
-
-
-/* =========================================
-   ESCAPE HTML
-========================================= */
-
-function escapeHTML(value) {
-
-    const div =
-        document.createElement(
-            "div"
-        );
-
-    div.textContent =
-        String(value);
-
-    return div.innerHTML;
 }
 
 
@@ -383,9 +346,7 @@ function updatePaymentCartCount() {
 
                 return total +
                     (
-                        Number(
-                            item.quantity
-                        ) || 0
+                        Number(item.quantity) || 0
                     );
 
             },
@@ -399,7 +360,7 @@ function updatePaymentCartCount() {
 
 
 /* =========================================
-   CREATE UPI PAYMENT LINK
+   CREATE UPI LINK
 ========================================= */
 
 function createUPILink() {
@@ -422,24 +383,20 @@ function createUPILink() {
         UPI_ID
     );
 
-
     params.set(
         "pn",
         UPI_NAME
     );
-
 
     params.set(
         "am",
         amount.toFixed(2)
     );
 
-
     params.set(
         "cu",
         "INR"
     );
-
 
     params.set(
         "tn",
@@ -496,14 +453,46 @@ function createQRCode() {
     qrElement.innerHTML = "";
 
 
+    const qrMessage =
+        document.getElementById(
+            "qrMessage"
+        );
+
+
+    if (qrMessage) {
+        qrMessage.textContent = "";
+    }
+
+
     const amount =
         getPaymentTotal();
 
 
+    if (amount <= 0) {
+
+        if (qrMessage) {
+            qrMessage.textContent =
+                "Add products to your cart to generate the payment QR code.";
+        }
+
+        return;
+    }
+
+
     if (
-        amount <= 0 ||
         typeof QRCode === "undefined"
     ) {
+
+        console.error(
+            "QRCode library was not loaded."
+        );
+
+
+        if (qrMessage) {
+            qrMessage.textContent =
+                "QR code library could not be loaded. Please use the UPI ID above.";
+        }
+
         return;
     }
 
@@ -532,20 +521,330 @@ function createQRCode() {
             error
         );
 
-        qrElement.innerHTML = `
 
-            <p class="payment-error">
-                Unable to generate QR code.
-                Please use the UPI ID instead.
-            </p>
+        if (qrMessage) {
 
-        `;
+            qrMessage.textContent =
+                "Unable to generate QR code. Please use the UPI ID above.";
+
+        }
+
     }
 }
 
 
 /* =========================================
-   SETUP PAY WITH UPI
+   CUSTOMER DETAILS FORM
+========================================= */
+
+function setupCustomerForm() {
+
+    const form =
+        document.getElementById(
+            "customerForm"
+        );
+
+
+    if (!form) {
+        return;
+    }
+
+
+    const customer =
+        getCustomerDetails();
+
+
+    /*
+       Load previously saved details
+    */
+
+    if (customer) {
+
+        setInputValue(
+            "customerName",
+            customer.name
+        );
+
+        setInputValue(
+            "customerPhone",
+            customer.phone
+        );
+
+        setInputValue(
+            "customerEmail",
+            customer.email
+        );
+
+        setInputValue(
+            "customerAddress",
+            customer.address
+        );
+
+        setInputValue(
+            "customerCity",
+            customer.city
+        );
+
+        setInputValue(
+            "customerState",
+            customer.state
+        );
+
+        setInputValue(
+            "customerPincode",
+            customer.pincode
+        );
+
+        setInputValue(
+            "customerLandmark",
+            customer.landmark
+        );
+    }
+
+
+    form.addEventListener(
+        "submit",
+        function(event) {
+
+            event.preventDefault();
+
+
+            const name =
+                getInputValue(
+                    "customerName"
+                );
+
+            const phone =
+                getInputValue(
+                    "customerPhone"
+                );
+
+            const email =
+                getInputValue(
+                    "customerEmail"
+                );
+
+            const address =
+                getInputValue(
+                    "customerAddress"
+                );
+
+            const city =
+                getInputValue(
+                    "customerCity"
+                );
+
+            const state =
+                getInputValue(
+                    "customerState"
+                );
+
+            const pincode =
+                getInputValue(
+                    "customerPincode"
+                );
+
+            const landmark =
+                getInputValue(
+                    "customerLandmark"
+                );
+
+
+            /* =================================
+               VALIDATION
+            ================================= */
+
+            if (
+                !name ||
+                !phone ||
+                !address ||
+                !city ||
+                !state ||
+                !pincode
+            ) {
+
+                showCustomerMessage(
+                    "Please fill in all required customer details.",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            const cleanPhone =
+                phone.replace(
+                    /\D/g,
+                    ""
+                );
+
+
+            if (
+                cleanPhone.length !== 10
+            ) {
+
+                showCustomerMessage(
+                    "Please enter a valid 10-digit phone number.",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            const cleanPincode =
+                pincode.replace(
+                    /\D/g,
+                    ""
+                );
+
+
+            if (
+                cleanPincode.length !== 6
+            ) {
+
+                showCustomerMessage(
+                    "Please enter a valid 6-digit pincode.",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            /* =================================
+               SAVE CUSTOMER
+            ================================= */
+
+            const customerDetails = {
+
+                name:
+                    name,
+
+                phone:
+                    cleanPhone,
+
+                email:
+                    email,
+
+                address:
+                    address,
+
+                city:
+                    city,
+
+                state:
+                    state,
+
+                pincode:
+                    cleanPincode,
+
+                landmark:
+                    landmark
+
+            };
+
+
+            localStorage.setItem(
+                CUSTOMER_KEY,
+                JSON.stringify(
+                    customerDetails
+                )
+            );
+
+
+            showCustomerMessage(
+                "Customer details saved successfully ✓",
+                "success"
+            );
+
+        }
+    );
+}
+
+
+/* =========================================
+   INPUT HELPERS
+========================================= */
+
+function getInputValue(id) {
+
+    const element =
+        document.getElementById(id);
+
+    if (!element) {
+        return "";
+    }
+
+    return element.value.trim();
+}
+
+
+function setInputValue(
+    id,
+    value
+) {
+
+    const element =
+        document.getElementById(id);
+
+    if (!element) {
+        return;
+    }
+
+    element.value =
+        value || "";
+}
+
+
+/* =========================================
+   CUSTOMER MESSAGE
+========================================= */
+
+function showCustomerMessage(
+    message,
+    type
+) {
+
+    const element =
+        document.getElementById(
+            "customerMessage"
+        );
+
+
+    if (!element) {
+        return;
+    }
+
+
+    element.textContent =
+        message;
+
+
+    element.classList.remove(
+        "customer-success",
+        "customer-error"
+    );
+
+
+    if (type === "success") {
+
+        element.classList.add(
+            "customer-success"
+        );
+
+    } else {
+
+        element.classList.add(
+            "customer-error"
+        );
+
+    }
+}
+
+
+/* =========================================
+   PAY WITH UPI
 ========================================= */
 
 function setupOpenUPI() {
@@ -597,7 +896,7 @@ function setupOpenUPI() {
 
 
 /* =========================================
-   PAYMENT CONFIRMATION BUTTON
+   PAYMENT CONFIRMATION
 ========================================= */
 
 function setupPaymentConfirmation() {
@@ -632,12 +931,24 @@ function setupPaymentConfirmation() {
             }
 
 
-            /*
-               This does NOT verify the UPI
-               transaction.
+            const customer =
+                getCustomerDetails();
 
-               It only records that the
-               customer confirmed payment.
+
+            if (!customer) {
+
+                setPaymentMessage(
+                    "Please save your customer details before confirming payment.",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            /*
+               This does NOT automatically
+               verify the UPI transaction.
             */
 
             localStorage.setItem(
@@ -674,23 +985,11 @@ function setupPaymentConfirmation() {
             }
 
 
-            const message =
-                document.getElementById(
-                    "paymentMessage"
-                );
+            setPaymentMessage(
+                "Thank you. You can now confirm your order.",
+                "success"
+            );
 
-
-            if (message) {
-
-                message.textContent =
-                    "Thank you. You can now confirm your order.";
-
-            }
-
-
-            /*
-               Hide UPI button
-            */
 
             const openButton =
                 document.getElementById(
@@ -706,18 +1005,9 @@ function setupPaymentConfirmation() {
             }
 
 
-            /*
-               Hide payment confirmation
-               button
-            */
-
             button.style.display =
                 "none";
 
-
-            /*
-               Show order confirmation
-            */
 
             const confirmButton =
                 document.getElementById(
@@ -787,7 +1077,7 @@ function setupConfirmOrder() {
             if (!customer) {
 
                 alert(
-                    "Customer details were not found. Please return to checkout and enter your details."
+                    "Please enter and save your customer details first."
                 );
 
                 return;
@@ -830,8 +1120,7 @@ function setupConfirmOrder() {
             const order = {
 
                 orderId:
-                    "TT" +
-                    Date.now(),
+                    "TT" + Date.now(),
 
                 customer:
                     customer,
@@ -872,6 +1161,17 @@ function setupConfirmOrder() {
 
             localStorage.setItem(
                 LAST_ORDER_KEY,
+                JSON.stringify(order)
+            );
+
+
+            /*
+               Also save order for admin/order
+               systems that use this key.
+            */
+
+            localStorage.setItem(
+                "threadedTrinketsLastOrder",
                 JSON.stringify(order)
             );
 
@@ -1026,6 +1326,8 @@ document.addEventListener(
 
         createQRCode();
 
+        setupCustomerForm();
+
         setupOpenUPI();
 
         setupPaymentConfirmation();
@@ -1034,4 +1336,3 @@ document.addEventListener(
 
     }
 );
-```
