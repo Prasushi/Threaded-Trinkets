@@ -11,428 +11,420 @@
 
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/checkout.css">
-
 </head>
+
 
 <body>
 
-    <!-- =========================================
-         HEADER
-    ========================================= -->
+<header class="site-header">
 
-    <header class="site-header">
+    <div class="container nav">
 
-        <div class="container nav">
+        <a href="index.html" class="logo">
+            Threaded <span>Trinkets</span>
+        </a>
 
-            <a href="index.html" class="logo">
-                Threaded <span>Trinkets</span>
-            </a>
+        <a href="cart.html"
+           class="cart-icon"
+           aria-label="Shopping Cart">
 
-            <a href="cart.html"
-               class="cart-icon"
-               aria-label="Shopping Cart">
+            🛒
+            <span id="cartCount">0</span>
 
-                🛒
-                <span id="cartCount">0</span>
+        </a>
 
-            </a>
+    </div>
 
-        </div>
-
-    </header>
+</header>
 
 
-    <!-- =========================================
-         CHECKOUT
-    ========================================= -->
 
-    <main>
+<main>
 
-        <section class="checkout-page">
+    <section class="checkout-page">
 
-            <div class="container">
+        <div class="container">
 
-                <div class="checkout-heading">
+            <div class="checkout-heading">
 
-                    <p>THREADED TRINKETS</p>
+                <p>THREADED TRINKETS</p>
 
-                    <h1>Checkout</h1>
+                <h1>Checkout</h1>
 
-                </div>
+            </div>
 
 
-                <div class="checkout-layout">
+
+            <div class="checkout-layout">
 
 
-                    <!-- =================================
-                         CUSTOMER DETAILS
-                    ================================= -->
+                <!-- =====================================
+                     CUSTOMER DETAILS
+                ====================================== -->
 
-                    <div class="checkout-left">
+                <div class="checkout-left">
+
+                    <div class="checkout-card">
+
+                        <h2>Customer Details</h2>
+
+                        <p class="form-note">
+                            Please enter your details so we can process and deliver your order.
+                        </p>
 
 
-                        <div class="checkout-card">
+                        <form id="customerForm">
 
-                            <h2>Customer Details</h2>
+                            <div class="form-group">
 
-                            <p class="form-note">
-                                Please enter your details so we can process and deliver your order.
-                            </p>
+                                <label for="customerName">
+                                    Full Name *
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="customerName"
+                                    name="customerName"
+                                    placeholder="Enter your full name"
+                                    required
+                                >
+
+                            </div>
 
 
-                            <form id="customerForm">
 
+                            <div class="form-row">
 
                                 <div class="form-group">
 
-                                    <label for="customerName">
-                                        Full Name *
+                                    <label for="customerPhone">
+                                        Phone Number *
                                     </label>
 
                                     <input
-                                        type="text"
-                                        id="customerName"
-                                        name="customerName"
-                                        placeholder="Enter your full name"
+                                        type="tel"
+                                        id="customerPhone"
+                                        name="customerPhone"
+                                        placeholder="Enter phone number"
+                                        maxlength="10"
                                         required
                                     >
 
                                 </div>
 
 
-                                <div class="form-row">
+                                <div class="form-group">
+
+                                    <label for="customerEmail">
+                                        Email Address
+                                    </label>
+
+                                    <input
+                                        type="email"
+                                        id="customerEmail"
+                                        name="customerEmail"
+                                        placeholder="Enter email address"
+                                    >
+
+                                </div>
+
+                            </div>
 
 
-                                    <div class="form-group">
 
-                                        <label for="customerPhone">
-                                            Phone Number *
-                                        </label>
+                            <div class="form-group">
 
-                                        <input
-                                            type="tel"
-                                            id="customerPhone"
-                                            name="customerPhone"
-                                            placeholder="Enter phone number"
-                                            maxlength="10"
-                                            required
-                                        >
+                                <label for="customerAddress">
+                                    Address *
+                                </label>
 
-                                    </div>
+                                <textarea
+                                    id="customerAddress"
+                                    name="customerAddress"
+                                    rows="3"
+                                    placeholder="House number, street, area"
+                                    required
+                                ></textarea>
+
+                            </div>
 
 
-                                    <div class="form-group">
 
-                                        <label for="customerEmail">
-                                            Email Address
-                                        </label>
+                            <div class="form-row">
 
-                                        <input
-                                            type="email"
-                                            id="customerEmail"
-                                            name="customerEmail"
-                                            placeholder="Enter email address"
-                                        >
+                                <div class="form-group">
 
-                                    </div>
+                                    <label for="customerCity">
+                                        City *
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        id="customerCity"
+                                        name="customerCity"
+                                        placeholder="Enter city"
+                                        required
+                                    >
 
                                 </div>
 
 
                                 <div class="form-group">
 
-                                    <label for="customerAddress">
-                                        Address *
+                                    <label for="customerState">
+                                        State *
                                     </label>
 
-                                    <textarea
-                                        id="customerAddress"
-                                        name="customerAddress"
-                                        rows="3"
-                                        placeholder="House number, street, area"
+                                    <input
+                                        type="text"
+                                        id="customerState"
+                                        name="customerState"
+                                        placeholder="Enter state"
                                         required
-                                    ></textarea>
+                                    >
+
+                                </div>
+
+                            </div>
+
+
+
+                            <div class="form-row">
+
+                                <div class="form-group">
+
+                                    <label for="customerPincode">
+                                        Pincode *
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        id="customerPincode"
+                                        name="customerPincode"
+                                        placeholder="Enter pincode"
+                                        maxlength="6"
+                                        required
+                                    >
 
                                 </div>
 
 
-                                <div class="form-row">
+                                <div class="form-group">
 
+                                    <label for="customerLandmark">
+                                        Landmark
+                                    </label>
 
-                                    <div class="form-group">
-
-                                        <label for="customerCity">
-                                            City *
-                                        </label>
-
-                                        <input
-                                            type="text"
-                                            id="customerCity"
-                                            name="customerCity"
-                                            placeholder="Enter city"
-                                            required
-                                        >
-
-                                    </div>
-
-
-                                    <div class="form-group">
-
-                                        <label for="customerState">
-                                            State *
-                                        </label>
-
-                                        <input
-                                            type="text"
-                                            id="customerState"
-                                            name="customerState"
-                                            placeholder="Enter state"
-                                            required
-                                        >
-
-                                    </div>
+                                    <input
+                                        type="text"
+                                        id="customerLandmark"
+                                        name="customerLandmark"
+                                        placeholder="Nearby landmark"
+                                    >
 
                                 </div>
 
-
-                                <div class="form-row">
-
-
-                                    <div class="form-group">
-
-                                        <label for="customerPincode">
-                                            Pincode *
-                                        </label>
-
-                                        <input
-                                            type="text"
-                                            id="customerPincode"
-                                            name="customerPincode"
-                                            placeholder="Enter pincode"
-                                            maxlength="6"
-                                            required
-                                        >
-
-                                    </div>
+                            </div>
 
 
-                                    <div class="form-group">
 
-                                        <label for="customerLandmark">
-                                            Landmark
-                                        </label>
-
-                                        <input
-                                            type="text"
-                                            id="customerLandmark"
-                                            name="customerLandmark"
-                                            placeholder="Nearby landmark"
-                                        >
-
-                                    </div>
-
-                                </div>
+                            <button
+                                type="submit"
+                                class="save-customer-btn"
+                            >
+                                Save Customer Details
+                            </button>
 
 
-                                <button
-                                    type="submit"
-                                    class="save-customer-btn"
-                                >
-                                    Save Customer Details
-                                </button>
+                            <p
+                                id="customerMessage"
+                                class="customer-message"
+                            ></p>
+
+                        </form>
+
+                    </div>
 
 
-                                <p
-                                    id="customerMessage"
-                                    class="customer-message"
-                                ></p>
 
-                            </form>
+                    <!-- =====================================
+                         PAYMENT
+                    ====================================== -->
 
-                        </div>
+                    <div class="checkout-card payment-card">
+
+                        <h2>Payment</h2>
+
+                        <p>
+                            Complete your payment using UPI.
+                        </p>
 
 
-                        <!-- =================================
-                             PAYMENT
-                        ================================= -->
+                        <h3 class="payment-method-title">
+                            UPI Payment
+                        </h3>
 
-                        <div class="checkout-card payment-card">
 
-                            <h2>Payment</h2>
+                        <div class="upi-box">
 
                             <p>
-                                Complete your payment using UPI.
+                                Pay to:
                             </p>
 
 
-                            <h3 class="payment-method-title">
-                                UPI Payment
-                            </h3>
+                            <div class="upi-id-box">
 
-
-                            <div class="upi-box">
-
-                                <p>
-                                    Pay to:
-                                </p>
-
-
-                                <div class="upi-id-box">
-
-                                    <span id="upiIdDisplay">
-                                        Loading...
-                                    </span>
-
-                                </div>
-
-
-                                <p class="upi-help">
-                                    Scan the QR code using
-                                    Google Pay, PhonePe,
-                                    Paytm or another UPI app.
-                                </p>
-
-
-                                <!-- QR CODE -->
-
-                                <div id="upiQRCode"></div>
-
-
-                                <p
-                                    id="qrMessage"
-                                    class="payment-error"
-                                ></p>
-
-
-                                <ol class="payment-instructions">
-
-                                    <li>
-                                        Scan the QR code or tap
-                                        <strong>Pay with UPI</strong>.
-                                    </li>
-
-                                    <li>
-                                        Complete the payment in
-                                        your UPI application.
-                                    </li>
-
-                                    <li>
-                                        Return to this page.
-                                    </li>
-
-                                    <li>
-                                        Tap
-                                        <strong>
-                                            I Have Completed Payment
-                                        </strong>.
-                                    </li>
-
-                                </ol>
-
-
-                                <a
-                                    id="openUpiBtn"
-                                    href="#"
-                                    class="payment-button"
-                                >
-                                    Pay with UPI
-                                </a>
-
-
-                                <button
-                                    id="paymentSuccessBtn"
-                                    type="button"
-                                    class="payment-button"
-                                    style="display:none;"
-                                >
-                                    ✓ I Have Completed Payment
-                                </button>
-
-
-                                <button
-                                    id="confirmOrderBtn"
-                                    type="button"
-                                    class="confirm-button"
-                                    style="display:none;"
-                                >
-                                    Confirm Order
-                                </button>
-
-
-                                <p id="paymentStatus"></p>
-
-                                <p id="paymentMessage"></p>
-
-
-                                <p class="payment-note">
-
-                                    Payment verification is not automatic
-                                    on this website. By selecting
-                                    "I Have Completed Payment", you confirm
-                                    that you completed the UPI payment.
-
-                                </p>
+                                <span id="upiIdDisplay">
+                                    Loading...
+                                </span>
 
                             </div>
+
+
+                            <p class="upi-help">
+                                Scan the QR code using
+                                Google Pay, PhonePe,
+                                Paytm or another UPI app.
+                            </p>
+
+
+                            <div id="upiQRCode"></div>
+
+
+                            <p
+                                id="qrMessage"
+                                class="payment-error"
+                            ></p>
+
+
+                            <ol class="payment-instructions">
+
+                                <li>
+                                    Scan the QR code or tap
+                                    <strong>Pay with UPI</strong>.
+                                </li>
+
+                                <li>
+                                    Complete the payment in
+                                    your UPI application.
+                                </li>
+
+                                <li>
+                                    Return to this page.
+                                </li>
+
+                                <li>
+                                    Tap
+                                    <strong>
+                                        I Have Completed Payment
+                                    </strong>.
+                                </li>
+
+                            </ol>
+
+
+                            <a
+                                id="openUpiBtn"
+                                href="#"
+                                class="payment-button"
+                            >
+                                Pay with UPI
+                            </a>
+
+
+                            <button
+                                id="paymentSuccessBtn"
+                                type="button"
+                                class="payment-button"
+                                style="display:none;"
+                            >
+                                ✓ I Have Completed Payment
+                            </button>
+
+
+                            <button
+                                id="confirmOrderBtn"
+                                type="button"
+                                class="confirm-button"
+                                style="display:none;"
+                            >
+                                Confirm Order
+                            </button>
+
+
+                            <p id="paymentStatus"></p>
+
+                            <p id="paymentMessage"></p>
+
+
+                            <p class="payment-note">
+
+                                Payment verification is not automatic
+                                on this website. By selecting
+                                "I Have Completed Payment", you confirm
+                                that you completed the UPI payment.
+
+                            </p>
 
                         </div>
 
                     </div>
 
-
-                    <!-- =================================
-                         ORDER SUMMARY
-                    ================================= -->
-
-                    <div class="checkout-card checkout-summary">
-
-                        <h2>Your Order</h2>
+                </div>
 
 
-                        <div id="checkoutItems">
 
-                            <!-- Items inserted by payment.js -->
+                <!-- =====================================
+                     ORDER SUMMARY
+                ====================================== -->
 
-                        </div>
+                <div class="checkout-card checkout-summary">
 
-
-                        <div class="summary-row">
-
-                            <span>
-                                Subtotal
-                            </span>
-
-                            <strong id="checkoutSubtotal">
-                                ₹0
-                            </strong>
-
-                        </div>
+                    <h2>Your Order</h2>
 
 
-                        <div class="summary-row">
+                    <div id="checkoutItems">
 
-                            <span>
-                                Delivery
-                            </span>
+                        <!-- Items inserted by payment.js -->
 
-                            <strong>
-                                Free
-                            </strong>
-
-                        </div>
+                    </div>
 
 
-                        <div class="summary-row summary-total">
+                    <div class="summary-row">
 
-                            <span>
-                                Total
-                            </span>
+                        <span>
+                            Subtotal
+                        </span>
 
-                            <strong id="checkoutTotal">
-                                ₹0
-                            </strong>
+                        <strong id="checkoutSubtotal">
+                            ₹0
+                        </strong>
 
-                        </div>
+                    </div>
+
+
+                    <div class="summary-row">
+
+                        <span>
+                            Delivery
+                        </span>
+
+                        <strong>
+                            Free
+                        </strong>
+
+                    </div>
+
+
+                    <div class="summary-row summary-total">
+
+                        <span>
+                            Total
+                        </span>
+
+                        <strong id="checkoutTotal">
+                            ₹0
+                        </strong>
 
                     </div>
 
@@ -440,23 +432,22 @@
 
             </div>
 
-        </section>
+        </div>
 
-    </main>
+    </section>
 
-
-    <!-- =========================================
-         QR CODE LIBRARY
-    ========================================= -->
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</main>
 
 
-    <!-- =========================================
-         PAYMENT JAVASCRIPT
-    ========================================= -->
 
-    <script src="js/payment.js"></script>
+<!-- QR CODE LIBRARY -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+
+<!-- PAYMENT JAVASCRIPT -->
+
+<script src="js/payment.js"></script>
 
 </body>
 
