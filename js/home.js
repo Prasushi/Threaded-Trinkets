@@ -50,89 +50,84 @@ document.addEventListener("DOMContentLoaded", function () {
     /* =====================================================
        CART COUNT
     ===================================================== */
+/* =====================================================
+   CART COUNT
+===================================================== */
 
-    function updateCartCount() {
+function updateCartCount() {
 
-        const cartCount =
-            document.getElementById("cartCount");
+    const cartCount =
+        document.getElementById("cartCount");
 
-        if (!cartCount) {
-            return;
-        }
+    if (!cartCount) {
+        return;
+    }
 
+    let cart = [];
 
-        let cart = [];
+    try {
 
-        try {
+        const storedCart =
+            localStorage.getItem("threadedTrinketsCart");
 
-            const storedCart =
-                localStorage.getItem("cart");
+        if (storedCart) {
 
-            if (storedCart) {
+            const parsedCart =
+                JSON.parse(storedCart);
 
-                const parsedCart =
-                    JSON.parse(storedCart);
-
-                if (Array.isArray(parsedCart)) {
-                    cart = parsedCart;
-                }
-
+            if (Array.isArray(parsedCart)) {
+                cart = parsedCart;
             }
-
-        } catch (error) {
-
-            console.warn(
-                "Unable to read cart:",
-                error
-            );
 
         }
 
+    } catch (error) {
 
-        let totalItems = 0;
-
-
-        cart.forEach(function (item) {
-
-            if (!item) {
-                return;
-            }
-
-
-            const quantity =
-                Number(item.quantity);
-
-
-            if (
-                Number.isFinite(quantity) &&
-                quantity > 0
-            ) {
-
-                totalItems += quantity;
-
-            } else {
-
-                totalItems += 1;
-
-            }
-
-        });
-
-
-        cartCount.textContent =
-            totalItems;
+        console.warn(
+            "Unable to read cart:",
+            error
+        );
 
     }
 
+    let totalItems = 0;
 
-    updateCartCount();
+    cart.forEach(function (item) {
+
+        if (!item) {
+            return;
+        }
+
+        const quantity =
+            Number(item.quantity);
+
+        if (
+            Number.isFinite(quantity) &&
+            quantity > 0
+        ) {
+
+            totalItems += quantity;
+
+        } else {
+
+            totalItems += 1;
+
+        }
+
+    });
+
+    cartCount.textContent =
+        totalItems;
+}
 
 
-    window.addEventListener(
-        "storage",
-        updateCartCount
-    );
+updateCartCount();
 
+
+window.addEventListener(
+    "storage",
+    updateCartCount
+);
 
     /* =====================================================
        CATEGORY DATA
