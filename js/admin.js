@@ -19,15 +19,14 @@ const ORDERS_KEY =
     "threadedTrinketsOrders";
 
 
-/* =========================================================
-   DATA
-========================================================= */
-
 let products = [];
+
 let categories = [];
+
 let orders = [];
 
 let editingProductId = null;
+
 let editingCategoryId = null;
 
 
@@ -50,8 +49,11 @@ const categoryForm =
    IMAGE STORAGE
 ========================================================= */
 
-window.threadedTrinketsProductImage = "";
-window.threadedTrinketsCategoryImage = "";
+window.threadedTrinketsProductImage =
+    "";
+
+window.threadedTrinketsCategoryImage =
+    "";
 
 
 /* =========================================================
@@ -103,12 +105,14 @@ function loadData() {
     } catch (error) {
 
         console.error(
-            "Error loading data:",
+            "Error loading admin data:",
             error
         );
 
         products = [];
+
         categories = [];
+
         orders = [];
 
     }
@@ -180,7 +184,7 @@ function createId() {
 
 function escapeHTML(value) {
 
-    return String(value || "")
+    return String(value ?? "")
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")
@@ -196,7 +200,7 @@ function escapeHTML(value) {
 
 function escapeAttribute(value) {
 
-    return String(value || "")
+    return String(value ?? "")
         .replace(/\\/g, "\\\\")
         .replace(/'/g, "\\'");
 
@@ -214,6 +218,7 @@ function updateCategoryDropdown() {
             "productCategory"
         );
 
+
     if (!dropdown) {
         return;
     }
@@ -224,7 +229,7 @@ function updateCategoryDropdown() {
 
 
     dropdown.innerHTML =
-        `<option value="">Select Category</option>`;
+        '<option value="">Select Category</option>';
 
 
     categories.forEach(
@@ -235,11 +240,14 @@ function updateCategoryDropdown() {
                     "option"
                 );
 
+
             option.value =
                 category.name;
 
+
             option.textContent =
                 category.name;
+
 
             dropdown.appendChild(
                 option
@@ -254,8 +262,10 @@ function updateCategoryDropdown() {
             "option"
         );
 
+
     other.value =
         "Other";
+
 
     other.textContent =
         "Other";
@@ -311,10 +321,14 @@ function displayProducts() {
 
         container.innerHTML = "";
 
+
         if (empty) {
+
             empty.style.display =
                 "block";
+
         }
+
 
         return;
 
@@ -329,7 +343,8 @@ function displayProducts() {
     }
 
 
-    container.innerHTML = "";
+    container.innerHTML =
+        "";
 
 
     products.forEach(
@@ -356,41 +371,32 @@ function displayProducts() {
 
                 <img
                     src="${escapeHTML(image)}"
-                    alt="${escapeHTML(
-                        product.name
-                    )}"
+                    alt="${escapeHTML(product.name)}"
                 >
 
 
                 <div class="admin-product-info">
 
                     <h3>
-                        ${escapeHTML(
-                            product.name
-                        )}
+                        ${escapeHTML(product.name)}
                     </h3>
 
 
                     <p>
                         ${escapeHTML(
-                            product.category ||
-                            "Other"
+                            product.category || "Other"
                         )}
                     </p>
 
 
                     <strong>
-                        ₹${Number(
-                            product.price || 0
-                        )}
+                        ₹${Number(product.price || 0)}
                     </strong>
 
 
                     <span>
                         Stock:
-                        ${Number(
-                            product.stock || 0
-                        )}
+                        ${Number(product.stock || 0)}
                     </span>
 
 
@@ -411,9 +417,7 @@ function displayProducts() {
 
                         <button
                             type="button"
-                            onclick="editProduct('${escapeAttribute(
-                                product.id
-                            )}')"
+                            onclick="editProduct('${escapeAttribute(product.id)}')"
                         >
                             Edit
                         </button>
@@ -421,9 +425,7 @@ function displayProducts() {
 
                         <button
                             type="button"
-                            onclick="deleteProduct('${escapeAttribute(
-                                product.id
-                            )}')"
+                            onclick="deleteProduct('${escapeAttribute(product.id)}')"
                         >
                             Delete
                         </button>
@@ -458,7 +460,10 @@ function resetProductForm() {
 
     productForm.reset();
 
-    editingProductId = null;
+
+    editingProductId =
+        null;
+
 
     window.threadedTrinketsProductImage =
         "";
@@ -621,20 +626,26 @@ function editProduct(id) {
 
 
     if (title) {
+
         title.textContent =
             "Edit Product";
+
     }
 
 
     if (button) {
+
         button.textContent =
             "Update Product";
+
     }
 
 
     if (cancel) {
+
         cancel.style.display =
             "inline-block";
+
     }
 
 
@@ -703,14 +714,14 @@ function deleteProduct(id) {
     }
 
 
-    const confirmed =
-        confirm(
+    if (
+        !confirm(
             `Delete "${product.name}"?`
-        );
+        )
+    ) {
 
-
-    if (!confirmed) {
         return;
+
     }
 
 
@@ -799,6 +810,7 @@ if (productForm) {
                 );
 
                 return;
+
             }
 
 
@@ -809,6 +821,7 @@ if (productForm) {
                 );
 
                 return;
+
             }
 
 
@@ -819,6 +832,7 @@ if (productForm) {
                 );
 
                 return;
+
             }
 
 
@@ -829,12 +843,12 @@ if (productForm) {
                 );
 
                 return;
+
             }
 
 
             const image =
-                window
-                    .threadedTrinketsProductImage ||
+                window.threadedTrinketsProductImage ||
                 "";
 
 
@@ -848,11 +862,8 @@ if (productForm) {
                     products.find(
                         function(item) {
 
-                            return String(
-                                item.id
-                            ) === String(
-                                editingProductId
-                            );
+                            return String(item.id) ===
+                                String(editingProductId);
 
                         }
                     );
@@ -959,7 +970,7 @@ if (cancelEditBtn) {
 
 
 /* =========================================================
-   PRODUCT IMAGE UPLOAD
+   PRODUCT IMAGE
 ========================================================= */
 
 const productImage =
@@ -990,19 +1001,7 @@ if (productImage) {
 
 
             if (!file) {
-
-                window.threadedTrinketsProductImage =
-                    "";
-
-                if (productPreviewBox) {
-
-                    productPreviewBox.style.display =
-                        "none";
-
-                }
-
                 return;
-
             }
 
 
@@ -1055,16 +1054,6 @@ if (productImage) {
                 };
 
 
-            reader.onerror =
-                function() {
-
-                    alert(
-                        "Unable to read the selected image."
-                    );
-
-                };
-
-
             reader.readAsDataURL(file);
 
         }
@@ -1110,12 +1099,17 @@ function displayCategories() {
 
     if (categories.length === 0) {
 
-        container.innerHTML = "";
+        container.innerHTML =
+            "";
+
 
         if (empty) {
+
             empty.style.display =
                 "block";
+
         }
+
 
         return;
 
@@ -1130,7 +1124,8 @@ function displayCategories() {
     }
 
 
-    container.innerHTML = "";
+    container.innerHTML =
+        "";
 
 
     categories.forEach(
@@ -1159,29 +1154,18 @@ function displayCategories() {
 
                     ${
                         image
-
                             ? `
-
                                 <img
-                                    src="${escapeHTML(
-                                        image
-                                    )}"
-                                    alt="${escapeHTML(
-                                        category.name
-                                    )}"
+                                    src="${escapeHTML(image)}"
+                                    alt="${escapeHTML(category.name)}"
                                 >
-
                               `
-
                             : `
-
                                 <div class="category-icon">
                                     ${escapeHTML(
-                                        category.icon ||
-                                        "✨"
+                                        category.icon || "✨"
                                     )}
                                 </div>
-
                               `
                     }
 
@@ -1191,9 +1175,7 @@ function displayCategories() {
                 <div class="admin-category-info">
 
                     <h3>
-                        ${escapeHTML(
-                            category.name
-                        )}
+                        ${escapeHTML(category.name)}
                     </h3>
 
 
@@ -1201,9 +1183,7 @@ function displayCategories() {
 
                         <button
                             type="button"
-                            onclick="editCategory('${escapeAttribute(
-                                category.id
-                            )}')"
+                            onclick="editCategory('${escapeAttribute(category.id)}')"
                         >
                             Edit
                         </button>
@@ -1211,9 +1191,7 @@ function displayCategories() {
 
                         <button
                             type="button"
-                            onclick="deleteCategory('${escapeAttribute(
-                                category.id
-                            )}')"
+                            onclick="deleteCategory('${escapeAttribute(category.id)}')"
                         >
                             Delete
                         </button>
@@ -1236,7 +1214,7 @@ function displayCategories() {
 
 
 /* =========================================================
-   RESET CATEGORY FORM
+   RESET CATEGORY
 ========================================================= */
 
 function resetCategoryForm() {
@@ -1248,7 +1226,8 @@ function resetCategoryForm() {
 
     categoryForm.reset();
 
-    editingCategoryId = null;
+    editingCategoryId =
+        null;
 
 
     window.threadedTrinketsCategoryImage =
@@ -1277,26 +1256,34 @@ function resetCategoryForm() {
 
 
     if (title) {
+
         title.textContent =
             "Add New Category";
+
     }
 
 
     if (button) {
+
         button.textContent =
             "Add Category";
+
     }
 
 
     if (cancel) {
+
         cancel.style.display =
             "none";
+
     }
 
 
     if (preview) {
+
         preview.style.display =
             "none";
+
     }
 
 }
@@ -1368,20 +1355,26 @@ function editCategory(id) {
 
 
     if (title) {
+
         title.textContent =
             "Edit Category";
+
     }
 
 
     if (button) {
+
         button.textContent =
             "Update Category";
+
     }
 
 
     if (cancel) {
+
         cancel.style.display =
             "inline-block";
+
     }
 
 
@@ -1411,11 +1404,6 @@ function editCategory(id) {
 
         previewBox.style.display =
             "block";
-
-    } else if (previewBox) {
-
-        previewBox.style.display =
-            "none";
 
     }
 
@@ -1473,11 +1461,7 @@ function deleteCategory(id) {
     }
 
 
-    const confirmed =
-        confirm(message);
-
-
-    if (!confirmed) {
+    if (!confirm(message)) {
         return;
     }
 
@@ -1567,6 +1551,7 @@ if (categoryForm) {
                 );
 
                 return;
+
             }
 
 
@@ -1580,9 +1565,7 @@ if (categoryForm) {
                             name.toLowerCase()
                         ) &&
                         String(category.id) !==
-                            String(
-                                editingCategoryId
-                            );
+                            String(editingCategoryId);
 
                     }
                 );
@@ -1595,12 +1578,12 @@ if (categoryForm) {
                 );
 
                 return;
+
             }
 
 
             const image =
-                window
-                    .threadedTrinketsCategoryImage ||
+                window.threadedTrinketsCategoryImage ||
                 "";
 
 
@@ -1614,11 +1597,8 @@ if (categoryForm) {
                     categories.find(
                         function(item) {
 
-                            return String(
-                                item.id
-                            ) === String(
-                                editingCategoryId
-                            );
+                            return String(item.id) ===
+                                String(editingCategoryId);
 
                         }
                     );
@@ -1632,6 +1612,7 @@ if (categoryForm) {
 
                     category.name =
                         name;
+
 
                     category.icon =
                         icon || "✨";
@@ -1717,7 +1698,7 @@ if (categoryForm) {
 
 
 /* =========================================================
-   CATEGORY IMAGE UPLOAD
+   CATEGORY IMAGE
 ========================================================= */
 
 const categoryImage =
@@ -1748,19 +1729,7 @@ if (categoryImage) {
 
 
             if (!file) {
-
-                window.threadedTrinketsCategoryImage =
-                    "";
-
-                if (categoryPreviewBox) {
-
-                    categoryPreviewBox.style.display =
-                        "none";
-
-                }
-
                 return;
-
             }
 
 
@@ -1813,16 +1782,6 @@ if (categoryImage) {
                 };
 
 
-            reader.onerror =
-                function() {
-
-                    alert(
-                        "Unable to read the selected image."
-                    );
-
-                };
-
-
             reader.readAsDataURL(file);
 
         }
@@ -1832,7 +1791,7 @@ if (categoryImage) {
 
 
 /* =========================================================
-   CANCEL CATEGORY EDIT
+   CANCEL CATEGORY
 ========================================================= */
 
 const cancelCategoryBtn =
@@ -1856,48 +1815,220 @@ if (cancelCategoryBtn) {
 
 
 /* =========================================================
-   ORDERS
+   ADMIN TABS
 ========================================================= */
 
-function getCustomerValue(
-    customer,
-    possibleNames
-) {
+const productsTab =
+    document.getElementById(
+        "productsTab"
+    );
 
-    if (
-        !customer ||
-        typeof customer !== "object"
-    ) {
-        return "";
-    }
+const categoriesTab =
+    document.getElementById(
+        "categoriesTab"
+    );
 
+const productsSection =
+    document.getElementById(
+        "productsSection"
+    );
 
-    for (
-        let i = 0;
-        i < possibleNames.length;
-        i++
-    ) {
-
-        const value =
-            customer[
-                possibleNames[i]
-            ];
+const categoriesSection =
+    document.getElementById(
+        "categoriesSection"
+    );
 
 
-        if (
-            value !== undefined &&
-            value !== null &&
-            String(value).trim() !== ""
-        ) {
+if (productsTab) {
 
-            return String(value);
+    productsTab.addEventListener(
+        "click",
+        function() {
+
+            productsTab.classList.add(
+                "active"
+            );
+
+
+            if (categoriesTab) {
+
+                categoriesTab.classList.remove(
+                    "active"
+                );
+
+            }
+
+
+            if (productsSection) {
+
+                productsSection.style.display =
+                    "grid";
+
+            }
+
+
+            if (categoriesSection) {
+
+                categoriesSection.style.display =
+                    "none";
+
+            }
 
         }
+    );
 
+}
+
+
+if (categoriesTab) {
+
+    categoriesTab.addEventListener(
+        "click",
+        function() {
+
+            categoriesTab.classList.add(
+                "active"
+            );
+
+
+            if (productsTab) {
+
+                productsTab.classList.remove(
+                    "active"
+                );
+
+            }
+
+
+            if (categoriesSection) {
+
+                categoriesSection.style.display =
+                    "block";
+
+            }
+
+
+            if (productsSection) {
+
+                productsSection.style.display =
+                    "none";
+
+            }
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   ORDERS SECTION
+   CREATED AUTOMATICALLY
+========================================================= */
+
+function createOrdersSection() {
+
+    const adminPage =
+        document.querySelector(
+            ".admin-page .container"
+        );
+
+
+    if (!adminPage) {
+        return;
     }
 
 
-    return "";
+    if (
+        document.getElementById(
+            "ordersSection"
+        )
+    ) {
+        return;
+    }
+
+
+    const section =
+        document.createElement(
+            "section"
+        );
+
+
+    section.id =
+        "ordersSection";
+
+
+    section.style.marginTop =
+        "40px";
+
+
+    section.innerHTML = `
+
+        <div class="admin-category-header">
+
+            <div>
+
+                <p>
+                    ORDER MANAGEMENT
+                </p>
+
+                <h2>
+                    Customer Orders
+                </h2>
+
+                <span>
+                    View customer details, products,
+                    payment and order information.
+                </span>
+
+            </div>
+
+
+            <div class="category-count">
+
+                <span id="orderCount">
+                    0
+                </span>
+
+                Orders
+
+            </div>
+
+        </div>
+
+
+        <div id="adminOrders">
+
+        </div>
+
+
+        <div
+            id="noOrders"
+            class="no-products"
+            style="display:none;"
+        >
+
+            <div>
+                📦
+            </div>
+
+            <h3>
+                No Orders Yet
+            </h3>
+
+            <p>
+                Customer orders will appear here
+                after they confirm an order.
+            </p>
+
+        </div>
+
+    `;
+
+
+    adminPage.appendChild(
+        section
+    );
 
 }
 
@@ -1939,12 +2070,17 @@ function displayOrders() {
 
     if (orders.length === 0) {
 
-        container.innerHTML = "";
+        container.innerHTML =
+            "";
+
 
         if (empty) {
+
             empty.style.display =
                 "block";
+
         }
+
 
         return;
 
@@ -1959,7 +2095,8 @@ function displayOrders() {
     }
 
 
-    container.innerHTML = "";
+    container.innerHTML =
+        "";
 
 
     orders.forEach(
@@ -1969,179 +2106,18 @@ function displayOrders() {
                 order.customer || {};
 
 
-            const name =
-                getCustomerValue(
-                    customer,
-                    [
-                        "name",
-                        "fullName",
-                        "customerName"
-                    ]
-                ) ||
-                "Customer";
+            const items =
+                Array.isArray(order.items)
+                    ? order.items
+                    : [];
 
 
-            const phone =
-                getCustomerValue(
-                    customer,
-                    [
-                        "phone",
-                        "mobile",
-                        "phoneNumber",
-                        "contact"
-                    ]
-                ) ||
-                "Not provided";
-
-
-            const email =
-                getCustomerValue(
-                    customer,
-                    [
-                        "email",
-                        "emailAddress"
-                    ]
-                ) ||
-                "Not provided";
-
-
-            const address =
-                getCustomerValue(
-                    customer,
-                    [
-                        "address",
-                        "fullAddress",
-                        "deliveryAddress"
-                    ]
-                ) ||
-                "Not provided";
-
-
-            const city =
-                getCustomerValue(
-                    customer,
-                    [
-                        "city"
-                    ]
-                );
-
-
-            const state =
-                getCustomerValue(
-                    customer,
-                    [
-                        "state"
-                    ]
-                );
-
-
-            const pincode =
-                getCustomerValue(
-                    customer,
-                    [
-                        "pincode",
-                        "pinCode",
-                        "postalCode",
-                        "zip"
-                    ]
-                );
-
-
-            const completeAddress =
-                [
-                    address,
-                    city,
-                    state,
-                    pincode
-                ]
-                .filter(function(value) {
-                    return value;
-                })
-                .join(", ");
-
-
-            const date =
+            const createdDate =
                 order.createdAt
                     ? new Date(
                         order.createdAt
-                    ).toLocaleString(
-                        "en-IN"
-                    )
-                    : "Not available";
-
-
-            let itemsHTML = "";
-
-
-            if (
-                Array.isArray(
-                    order.items
-                ) &&
-                order.items.length > 0
-            ) {
-
-                itemsHTML =
-                    order.items.map(
-                        function(item) {
-
-                            const quantity =
-                                Number(
-                                    item.quantity
-                                ) || 1;
-
-
-                            const price =
-                                Number(
-                                    item.price
-                                ) || 0;
-
-
-                            const itemTotal =
-                                price *
-                                quantity;
-
-
-                            return `
-
-                                <div
-                                    style="
-                                        display:flex;
-                                        justify-content:space-between;
-                                        gap:15px;
-                                        padding:8px 0;
-                                        border-bottom:1px solid #eee;
-                                    "
-                                >
-
-                                    <span>
-                                        ${escapeHTML(
-                                            item.name ||
-                                            "Product"
-                                        )}
-                                        ×
-                                        ${quantity}
-                                    </span>
-
-                                    <strong>
-                                        ₹${itemTotal.toLocaleString(
-                                            "en-IN"
-                                        )}
-                                    </strong>
-
-                                </div>
-
-                            `;
-
-                        }
-                    )
-                    .join("");
-
-            } else {
-
-                itemsHTML =
-                    "<p>No product details available.</p>";
-
-            }
+                    ).toLocaleString("en-IN")
+                    : "Unknown";
 
 
             const card =
@@ -2151,222 +2127,228 @@ function displayOrders() {
 
 
             card.className =
-                "admin-order-card";
+                "admin-form-card";
 
 
-            card.style.cssText = `
-                background:#fff;
-                border:1px solid #e5e5e5;
-                border-radius:14px;
-                padding:22px;
-                margin-bottom:20px;
-                box-shadow:0 5px 18px rgba(0,0,0,0.05);
-            `;
+            card.style.marginBottom =
+                "20px";
+
+
+            let itemsHTML =
+                "";
+
+
+            items.forEach(
+                function(item) {
+
+                    itemsHTML += `
+
+                        <div style="
+                            display:flex;
+                            justify-content:space-between;
+                            gap:20px;
+                            padding:8px 0;
+                            border-bottom:1px solid #eee;
+                        ">
+
+                            <span>
+                                ${escapeHTML(
+                                    item.name || "Product"
+                                )}
+                                ×
+                                ${Number(
+                                    item.quantity || 1
+                                )}
+                            </span>
+
+                            <strong>
+                                ₹${Number(
+                                    item.price || 0
+                                ) *
+                                Number(
+                                    item.quantity || 1
+                                )}
+                            </strong>
+
+                        </div>
+
+                    `;
+
+                }
+            );
 
 
             card.innerHTML = `
 
-                <div
-                    style="
-                        display:flex;
-                        justify-content:space-between;
-                        align-items:flex-start;
-                        gap:20px;
-                        flex-wrap:wrap;
-                        margin-bottom:20px;
-                    "
-                >
+                <div style="margin-bottom:20px;">
 
-                    <div>
-
-                        <p
-                            style="
-                                margin:0 0 5px;
-                                font-size:12px;
-                                letter-spacing:1px;
-                                opacity:.65;
-                            "
-                        >
-                            ORDER
-                        </p>
-
-                        <h3
-                            style="
-                                margin:0;
-                            "
-                        >
-                            ${escapeHTML(
-                                order.orderId ||
-                                "Order"
-                            )}
-                        </h3>
-
-                        <small>
-                            ${escapeHTML(date)}
-                        </small>
-
-                    </div>
-
-
-                    <div
-                        style="
-                            text-align:right;
-                        "
-                    >
-
-                        <strong
-                            style="
-                                font-size:20px;
-                            "
-                        >
-                            ₹${Number(
-                                order.total || 0
-                            ).toLocaleString(
-                                "en-IN"
-                            )}
+                    <p>
+                        <strong>
+                            Order ID:
                         </strong>
 
-                        <br>
-
-                        <span>
-                            ${escapeHTML(
-                                order.paymentMethod ||
-                                "UPI"
-                            )}
-                        </span>
-
-                    </div>
-
-                </div>
+                        ${escapeHTML(
+                            order.orderId
+                        )}
+                    </p>
 
 
-                <div
-                    style="
-                        display:grid;
-                        grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
-                        gap:18px;
-                        margin-bottom:20px;
-                    "
-                >
+                    <p>
+                        <strong>
+                            Order Date:
+                        </strong>
 
-                    <div>
-
-                        <h4>
-                            Customer Details
-                        </h4>
-
-                        <p>
-                            <strong>Name:</strong>
-                            ${escapeHTML(name)}
-                        </p>
-
-                        <p>
-                            <strong>Phone:</strong>
-                            ${escapeHTML(phone)}
-                        </p>
-
-                        <p>
-                            <strong>Email:</strong>
-                            ${escapeHTML(email)}
-                        </p>
-
-                    </div>
-
-
-                    <div>
-
-                        <h4>
-                            Delivery Address
-                        </h4>
-
-                        <p>
-                            ${escapeHTML(
-                                completeAddress ||
-                                "Not provided"
-                            )}
-                        </p>
-
-                    </div>
-
-
-                    <div>
-
-                        <h4>
-                            Payment
-                        </h4>
-
-                        <p>
-                            <strong>Method:</strong>
-                            ${escapeHTML(
-                                order.paymentMethod ||
-                                "UPI"
-                            )}
-                        </p>
-
-                        <p>
-                            <strong>Status:</strong>
-                            ${escapeHTML(
-                                order.paymentStatus ||
-                                "Unknown"
-                            )}
-                        </p>
-
-                        <p>
-                            <strong>UPI ID:</strong>
-                            ${escapeHTML(
-                                order.upiId ||
-                                "Not available"
-                            )}
-                        </p>
-
-                    </div>
+                        ${escapeHTML(
+                            createdDate
+                        )}
+                    </p>
 
                 </div>
 
 
-                <div>
+                <div style="margin-bottom:20px;">
 
-                    <h4>
-                        Products Ordered
-                    </h4>
+                    <h3>
+                        👤 Customer Details
+                    </h3>
+
+
+                    <p>
+                        <strong>Name:</strong>
+                        ${escapeHTML(
+                            customer.name
+                        )}
+                    </p>
+
+
+                    <p>
+                        <strong>Phone:</strong>
+                        ${escapeHTML(
+                            customer.phone
+                        )}
+                    </p>
+
+
+                    <p>
+                        <strong>Email:</strong>
+                        ${escapeHTML(
+                            customer.email ||
+                            "Not provided"
+                        )}
+                    </p>
+
+
+                    <p>
+                        <strong>Address:</strong>
+                        ${escapeHTML(
+                            customer.address
+                        )}
+                    </p>
+
+
+                    <p>
+                        <strong>City:</strong>
+                        ${escapeHTML(
+                            customer.city
+                        )}
+                    </p>
+
+
+                    <p>
+                        <strong>State:</strong>
+                        ${escapeHTML(
+                            customer.state
+                        )}
+                    </p>
+
+
+                    <p>
+                        <strong>Pincode:</strong>
+                        ${escapeHTML(
+                            customer.pincode
+                        )}
+                    </p>
+
+
+                    <p>
+                        <strong>Landmark:</strong>
+                        ${escapeHTML(
+                            customer.landmark ||
+                            "Not provided"
+                        )}
+                    </p>
+
+                </div>
+
+
+                <div style="margin-bottom:20px;">
+
+                    <h3>
+                        🛍️ Ordered Products
+                    </h3>
+
 
                     ${itemsHTML}
 
                 </div>
 
 
-                <div
-                    style="
-                        display:flex;
-                        justify-content:space-between;
-                        align-items:center;
-                        gap:15px;
-                        flex-wrap:wrap;
-                        margin-top:20px;
-                        padding-top:15px;
-                        border-top:1px solid #eee;
-                    "
-                >
+                <div style="margin-bottom:20px;">
 
-                    <strong>
+                    <h3>
+                        💳 Payment
+                    </h3>
+
+
+                    <p>
+                        <strong>
+                            Method:
+                        </strong>
+
+                        ${escapeHTML(
+                            order.paymentMethod ||
+                            "UPI"
+                        )}
+                    </p>
+
+
+                    <p>
+                        <strong>
+                            UPI ID:
+                        </strong>
+
+                        ${escapeHTML(
+                            order.upiId ||
+                            ""
+                        )}
+                    </p>
+
+
+                    <p>
+                        <strong>
+                            Payment Status:
+                        </strong>
+
+                        ${escapeHTML(
+                            order.paymentStatus ||
+                            "Unknown"
+                        )}
+                    </p>
+
+                </div>
+
+
+                <div style="
+                    padding-top:15px;
+                    border-top:1px solid #ddd;
+                ">
+
+                    <h3>
                         Total:
                         ₹${Number(
                             order.total || 0
-                        ).toLocaleString(
-                            "en-IN"
-                        )}
-                    </strong>
-
-
-                    <button
-                        type="button"
-                        class="admin-cancel-btn"
-                        onclick="deleteOrder('${escapeAttribute(
-                            order.orderId
-                        )}')"
-                    >
-                        Delete Order
-                    </button>
+                        ).toLocaleString("en-IN")}
+                    </h3>
 
                 </div>
 
@@ -2376,269 +2358,6 @@ function displayOrders() {
             container.appendChild(
                 card
             );
-
-        }
-    );
-
-}
-
-
-/* =========================================================
-   DELETE ORDER
-========================================================= */
-
-function deleteOrder(orderId) {
-
-    const order =
-        orders.find(
-            function(item) {
-
-                return String(
-                    item.orderId
-                ) === String(orderId);
-
-            }
-        );
-
-
-    if (!order) {
-        return;
-    }
-
-
-    const confirmed =
-        confirm(
-            `Delete order "${order.orderId}"?`
-        );
-
-
-    if (!confirmed) {
-        return;
-    }
-
-
-    orders =
-        orders.filter(
-            function(item) {
-
-                return String(
-                    item.orderId
-                ) !== String(orderId);
-
-            }
-        );
-
-
-    saveOrders();
-
-    displayOrders();
-
-}
-
-
-/* =========================================================
-   TABS
-========================================================= */
-
-const productsTab =
-    document.getElementById(
-        "productsTab"
-    );
-
-const categoriesTab =
-    document.getElementById(
-        "categoriesTab"
-    );
-
-const ordersTab =
-    document.getElementById(
-        "ordersTab"
-    );
-
-
-const productsSection =
-    document.getElementById(
-        "productsSection"
-    );
-
-const categoriesSection =
-    document.getElementById(
-        "categoriesSection"
-    );
-
-const ordersSection =
-    document.getElementById(
-        "ordersSection"
-    );
-
-
-/* =========================================================
-   SHOW PRODUCTS
-========================================================= */
-
-function showProducts() {
-
-    if (productsTab) {
-        productsTab.classList.add(
-            "active"
-        );
-    }
-
-
-    if (categoriesTab) {
-        categoriesTab.classList.remove(
-            "active"
-        );
-    }
-
-
-    if (ordersTab) {
-        ordersTab.classList.remove(
-            "active"
-        );
-    }
-
-
-    if (productsSection) {
-
-        productsSection.style.display =
-            "grid";
-
-    }
-
-
-    if (categoriesSection) {
-
-        categoriesSection.style.display =
-            "none";
-
-    }
-
-
-    if (ordersSection) {
-
-        ordersSection.style.display =
-            "none";
-
-    }
-
-}
-
-
-/* =========================================================
-   PRODUCTS TAB
-========================================================= */
-
-if (productsTab) {
-
-    productsTab.addEventListener(
-        "click",
-        showProducts
-    );
-
-}
-
-
-/* =========================================================
-   CATEGORIES TAB
-========================================================= */
-
-if (categoriesTab) {
-
-    categoriesTab.addEventListener(
-        "click",
-        function() {
-
-            if (productsTab) {
-                productsTab.classList.remove(
-                    "active"
-                );
-            }
-
-
-            categoriesTab.classList.add(
-                "active"
-            );
-
-
-            if (ordersTab) {
-                ordersTab.classList.remove(
-                    "active"
-                );
-            }
-
-
-            if (productsSection) {
-                productsSection.style.display =
-                    "none";
-            }
-
-
-            if (categoriesSection) {
-                categoriesSection.style.display =
-                    "block";
-            }
-
-
-            if (ordersSection) {
-                ordersSection.style.display =
-                    "none";
-            }
-
-        }
-    );
-
-}
-
-
-/* =========================================================
-   ORDERS TAB
-========================================================= */
-
-if (ordersTab) {
-
-    ordersTab.addEventListener(
-        "click",
-        function() {
-
-            if (productsTab) {
-                productsTab.classList.remove(
-                    "active"
-                );
-            }
-
-
-            if (categoriesTab) {
-                categoriesTab.classList.remove(
-                    "active"
-                );
-            }
-
-
-            ordersTab.classList.add(
-                "active"
-            );
-
-
-            if (productsSection) {
-                productsSection.style.display =
-                    "none";
-            }
-
-
-            if (categoriesSection) {
-                categoriesSection.style.display =
-                    "none";
-            }
-
-
-            if (ordersSection) {
-                ordersSection.style.display =
-                    "block";
-            }
-
-
-            displayOrders();
 
         }
     );
@@ -2671,12 +2390,9 @@ window.editCategory =
 window.deleteCategory =
     deleteCategory;
 
-window.deleteOrder =
-    deleteOrder;
-
 
 /* =========================================================
-   START
+   START ADMIN
 ========================================================= */
 
 document.addEventListener(
@@ -2690,6 +2406,8 @@ document.addEventListener(
         displayProducts();
 
         displayCategories();
+
+        createOrdersSection();
 
         displayOrders();
 
