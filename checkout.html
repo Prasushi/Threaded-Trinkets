@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 
@@ -11,9 +12,263 @@
 
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/checkout.css">
+
+    <style>
+        /* =========================================
+           CHECKOUT PAGE
+        ========================================= */
+
+        .checkout-page {
+            padding: 50px 0 80px;
+            min-height: 70vh;
+        }
+
+        .checkout-page h1 {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .checkout-layout {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 30px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .checkout-card {
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 25px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .checkout-card h2 {
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        /* ORDER ITEMS */
+
+        .checkout-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 0;
+            border-bottom: 1px solid #eeeeee;
+        }
+
+        .checkout-item:last-child {
+            border-bottom: none;
+        }
+
+        .checkout-item-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .checkout-item-quantity {
+            font-size: 14px;
+            opacity: 0.7;
+        }
+
+        .checkout-item-price {
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        /* SUMMARY */
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 12px 0;
+        }
+
+        .summary-total {
+            font-size: 20px;
+            font-weight: 700;
+            padding-top: 15px;
+            margin-top: 15px;
+            border-top: 1px solid #eeeeee;
+        }
+
+        /* PAYMENT */
+
+        .payment-method-title {
+            margin-top: 30px;
+        }
+
+        .upi-box {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 15px;
+            background: #faf7f9;
+            text-align: center;
+        }
+
+        .upi-id-box {
+            display: inline-block;
+            margin: 10px 0 18px;
+            padding: 10px 15px;
+            border-radius: 8px;
+            background: #ffffff;
+            font-weight: 600;
+            word-break: break-all;
+        }
+
+        #upiQRCode {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px auto;
+            min-height: 20px;
+        }
+
+        #upiQRCode img,
+        #upiQRCode canvas {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .payment-instructions {
+            text-align: left;
+            margin: 20px 0;
+            padding-left: 20px;
+        }
+
+        .payment-instructions li {
+            margin-bottom: 10px;
+        }
+
+        /* BUTTONS */
+
+        .payment-button,
+        .confirm-button {
+            display: block;
+            width: 100%;
+            border: none;
+            border-radius: 10px;
+            padding: 14px 20px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        .payment-button {
+            background: #111111;
+            color: #ffffff;
+            margin-top: 15px;
+        }
+
+        .payment-button:hover {
+            opacity: 0.9;
+        }
+
+        .confirm-button {
+            background: #8f4f70;
+            color: #ffffff;
+            margin-top: 15px;
+        }
+
+        .confirm-button:hover {
+            opacity: 0.9;
+        }
+
+        .payment-button:disabled,
+        .confirm-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* STATUS */
+
+        #paymentStatus {
+            margin-top: 20px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        #paymentMessage {
+            margin-top: 10px;
+            text-align: center;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .payment-success {
+            color: #218838;
+        }
+
+        .payment-warning {
+            color: #b7791f;
+        }
+
+        .payment-error {
+            color: #c53030;
+        }
+
+        .payment-note {
+            margin-top: 18px;
+            font-size: 13px;
+            line-height: 1.5;
+            opacity: 0.75;
+            text-align: center;
+        }
+
+        /* EMPTY CART */
+
+        .checkout-empty {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .checkout-empty a {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 768px) {
+
+            .checkout-page {
+                padding: 30px 15px 60px;
+            }
+
+            .checkout-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .checkout-card {
+                padding: 20px;
+            }
+
+            .checkout-item {
+                align-items: flex-start;
+            }
+
+            .checkout-item-price {
+                font-size: 14px;
+            }
+        }
+    </style>
+
 </head>
 
 <body>
+
+    <!-- =========================================
+         HEADER
+    ========================================= -->
 
     <header class="site-header">
 
@@ -23,13 +278,23 @@
                 Threaded <span>Trinkets</span>
             </a>
 
-            <a href="cart.html" class="cart-icon">
-                🛒 <span id="cartCount">0</span>
+            <a href="cart.html"
+               class="cart-icon"
+               aria-label="Shopping Cart">
+
+                🛒
+                <span id="cartCount">0</span>
+
             </a>
 
         </div>
 
     </header>
+
+
+    <!-- =========================================
+         MAIN CHECKOUT
+    ========================================= -->
 
     <main>
 
@@ -39,49 +304,186 @@
 
                 <h1>Checkout</h1>
 
-                <div id="paymentItems"></div>
 
-                <div class="checkout-summary">
+                <div class="checkout-layout">
 
-                    <p>
-                        Subtotal:
-                        <span id="paymentSubtotal">₹0</span>
-                    </p>
 
-                    <p>
-                        Total:
-                        <span id="paymentTotal">₹0</span>
-                    </p>
+                    <!-- =================================
+                         ORDER SUMMARY
+                    ================================= -->
 
-                    <h3>
-                        UPI Payment
-                    </h3>
+                    <div class="checkout-card">
 
-                    <p>
-                        UPI ID:
-                        <span id="upiIdDisplay"></span>
-                    </p>
+                        <h2>Your Order</h2>
 
-                    <div id="upiQRCode"></div>
+                        <div id="paymentItems">
 
-                    <p id="paymentStatus"></p>
+                            <!-- Items inserted by payment.js -->
 
-                    <p id="paymentMessage"></p>
+                        </div>
 
-                    <a id="openUpiBtn"
-                       href="#">
-                        Pay with UPI
-                    </a>
 
-                    <button id="paymentSuccessBtn"
-                            style="display:none;">
-                        Payment Successful
-                    </button>
+                        <div class="summary-row">
 
-                    <button id="confirmOrderBtn"
-                            style="display:none;">
-                        Confirm Order
-                    </button>
+                            <span>
+                                Subtotal
+                            </span>
+
+                            <strong id="paymentSubtotal">
+                                ₹0
+                            </strong>
+
+                        </div>
+
+
+                        <div class="summary-row">
+
+                            <span>
+                                Delivery
+                            </span>
+
+                            <strong>
+                                Free
+                            </strong>
+
+                        </div>
+
+
+                        <div class="summary-row summary-total">
+
+                            <span>
+                                Total
+                            </span>
+
+                            <strong id="paymentTotal">
+                                ₹0
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =================================
+                         PAYMENT
+                    ================================= -->
+
+                    <div class="checkout-card">
+
+                        <h2>
+                            Payment
+                        </h2>
+
+                        <p>
+                            Complete your payment using UPI.
+                        </p>
+
+
+                        <h3 class="payment-method-title">
+                            UPI Payment
+                        </h3>
+
+
+                        <div class="upi-box">
+
+                            <p>
+                                Pay to:
+                            </p>
+
+
+                            <div class="upi-id-box">
+
+                                <span id="upiIdDisplay">
+                                    Loading...
+                                </span>
+
+                            </div>
+
+
+                            <p>
+                                Scan the QR code using
+                                Google Pay, PhonePe,
+                                Paytm or another UPI app.
+                            </p>
+
+
+                            <div id="upiQRCode">
+                                <!-- QR code generated by JavaScript -->
+                            </div>
+
+
+                            <ol class="payment-instructions">
+
+                                <li>
+                                    Scan the QR code or tap
+                                    <strong>Pay with UPI</strong>.
+                                </li>
+
+                                <li>
+                                    Complete the payment in
+                                    your UPI application.
+                                </li>
+
+                                <li>
+                                    Return to this page.
+                                </li>
+
+                                <li>
+                                    Tap
+                                    <strong>
+                                        I Have Completed Payment
+                                    </strong>.
+                                </li>
+
+                            </ol>
+
+
+                            <a id="openUpiBtn"
+                               href="#"
+                               class="payment-button">
+
+                                Pay with UPI
+
+                            </a>
+
+
+                            <button id="paymentSuccessBtn"
+                                    type="button"
+                                    class="payment-button"
+                                    style="display:none;">
+
+                                ✓ I Have Completed Payment
+
+                            </button>
+
+
+                            <button id="confirmOrderBtn"
+                                    type="button"
+                                    class="confirm-button"
+                                    style="display:none;">
+
+                                Confirm Order
+
+                            </button>
+
+
+                            <p id="paymentStatus"></p>
+
+                            <p id="paymentMessage"></p>
+
+
+                            <p class="payment-note">
+
+                                Payment verification is not automatic
+                                on this website. By selecting
+                                "I Have Completed Payment", you confirm
+                                that you completed the UPI payment.
+
+                            </p>
+
+                        </div>
+
+                    </div>
 
                 </div>
 
@@ -91,10 +493,21 @@
 
     </main>
 
+
+    <!-- =========================================
+         QR CODE LIBRARY
+    ========================================= -->
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+
+    <!-- =========================================
+         PAYMENT JAVASCRIPT
+    ========================================= -->
 
     <script src="js/payment.js"></script>
 
 </body>
 
 </html>
+```
