@@ -1,7 +1,8 @@
 /* =========================================================
-   THREADED TRINKETS - ADMIN ORDERS FIX
-   Only fixes the existing Orders tab and order actions.
-   Products and Categories remain controlled by admin.js.
+   THREADED TRINKETS
+   ADMIN ORDERS
+   Orders tab + customer details + accept/decline
+   Does NOT modify Products or Categories.
 ========================================================= */
 
 (function () {
@@ -12,8 +13,8 @@
 
     function readArray(key) {
         try {
-            const value = JSON.parse(localStorage.getItem(key) || "[]");
-            return Array.isArray(value) ? value : [];
+            const data = JSON.parse(localStorage.getItem(key) || "[]");
+            return Array.isArray(data) ? data : [];
         } catch (error) {
             console.error("Unable to read " + key, error);
             return [];
@@ -37,12 +38,11 @@
         return "₹" + Number(value || 0).toLocaleString("en-IN");
     }
 
-    function firstValue(source, keys) {
-        if (!source || typeof source !== "object") return "";
+    function valueFrom(object, keys) {
+        if (!object || typeof object !== "object") return "";
 
         for (const key of keys) {
-            const value = source[key];
-
+            const value = object[key];
             if (
                 value !== undefined &&
                 value !== null &&
@@ -55,7 +55,7 @@
         return "";
     }
 
-    function getCustomer(order) {
+    function customerDetails(order) {
         const customer =
             order.customer ||
             order.customerDetails ||
@@ -63,99 +63,68 @@
             {};
 
         return {
-            name: firstValue(customer, ["name", "fullName", "customerName"]),
-            phone: firstValue(customer, ["phone", "customerPhone"]),
-            email: firstValue(customer, ["email", "customerEmail"]),
-            address: firstValue(customer, ["address", "customerAddress"]),
-            city: firstValue(customer, ["city", "customerCity"]),
-            state: firstValue(customer, ["state", "customerState"]),
-            pincode: firstValue(customer, ["pincode", "customerPincode", "pinCode"]),
-            landmark: firstValue(customer, ["landmark", "customerLandmark"])
+            name: valueFrom(customer, ["name", "fullName", "customerName"]),
+            phone: valueFrom(customer, ["phone", "customerPhone"]),
+            email: valueFrom(customer, ["email", "customerEmail"]),
+            address: valueFrom(customer, ["address", "customerAddress"]),
+            city: valueFrom(customer, ["city", "customerCity"]),
+            state: valueFrom(customer, ["state", "customerState"]),
+            pincode: valueFrom(customer, ["pincode", "customerPincode", "pinCode"]),
+            landmark: valueFrom(customer, ["landmark", "customerLandmark"])
         };
     }
 
-    function getOrderId(order) {
+    function orderId(order) {
         return String(order.orderId || order.id || "");
     }
 
-    function getStatus(order) {
+    function statusOf(order) {
         return String(order.orderStatus || order.status || "Pending");
     }
 
     function isPending(status) {
         const value = String(status).toLowerCase();
-
-        return (
-            value === "pending" ||
-            value === "new" ||
-            value === "payment pending"
-        );
+        return value === "new" || value === "pending" || value === "payment pending";
     }
 
-    function setSection(section, display) {
-        if (section) section.style.display = display;
+    function setDisplay(element, value) {
+        if (element) {
+            element.style.setProperty("display", value, "important");
+        }
     }
 
-    function showOrdersTab() {
-        const productsTab = document.getElementById("productsTab");
-        const categoriesTab = document.getElementById("categoriesTab");
-        const ordersTab = document.getElementById("ordersTab");
-
-        const productsSection = document.getElementById("productsSection");
-        const categoriesSection = document.getElementById("categoriesSection");
-        const ordersSection = document.getElementById("ordersSection");
-
-        [productsTab, categoriesTab, ordersTab].forEach(function (tab) {
+    function setActiveTab(activeTab) {
+        [
+            document.getElementById("productsTab"),
+            document.getElementById("categoriesTab"),
+            document.getElementById("ordersTab")
+        ].forEach(function (tab) {
             if (tab) tab.classList.remove("active");
         });
 
-        if (ordersTab) ordersTab.classList.add("active");
+        if (activeTab) activeTab.classList.add("active");
+    }
 
-        setSection(productsSection, "none");
-        setSection(categoriesSection, "none");
-        setSection(ordersSection, "block");
-
+    function showOrders() {
+        setDisplay(document.getElementById("productsSection"), "none");
+        setDisplay(document.getElementById("categoriesSection"), "none");
+        setDisplay(document.getElementById("ordersSection"), "block");
+        setActiveTab(document.getElementById("ordersTab"));
         renderOrders();
     }
 
-    function showProductsTab() {
-        const productsTab = document.getElementById("productsTab");
-        const categoriesTab = document.getElementById("categoriesTab");
-        const ordersTab = document.getElementById("ordersTab");
-
-        const productsSection = document.getElementById("productsSection");
-        const categoriesSection = document.getElementById("categoriesSection");
-        const ordersSection = document.getElementById("ordersSection");
-
-        [productsTab, categoriesTab, ordersTab].forEach(function (tab) {
-            if (tab) tab.classList.remove("active");
-        });
-
-        if (productsTab) productsTab.classList.add("active");
-
-        setSection(productsSection, "grid");
-        setSection(categoriesSection, "none");
-        setSection(ordersSection, "none");
+    function showProducts() {
+        setDisplay(document.getElementById("productsSection"), "grid");
+        setDisplay(document.getElementById("categoriesSection"), "none");
+        setDisplay(document.getElementById("ordersSection"), "none");
+        setActiveTab(document.getElementById("productsTab"));
     }
 
-    function showCategoriesTab() {
-        const productsTab = document.getElementById("productsTab");
-        const categoriesTab = document.getElementById("categoriesTab");
-        const ordersTab = document.getElementById("ordersTab");
-
-        const productsSection = document.getElementById("productsSection");
-        const categoriesSection = document.getElementById("categoriesSection");
-        const ordersSection = document.getElementById("ordersSection");
-
-        [productsTab, categoriesTab, ordersTab].forEach(function (tab) {
-            if (tab) tab.classList.remove("active");
-        });
-
-        if (categoriesTab) categoriesTab.classList.add("active");
-
-        setSection(productsSection, "none");
-        setSection(categoriesSection, "block");
-        setSection(ordersSection, "none");
+    function showCategories() {
+        setDisplay(document.getElementById("productsSection"), "none");
+        setDisplay(document.getElementById("categoriesSection"), "block");
+        setDisplay(document.getElementById("ordersSection"), "none");
+        setActiveTab(document.getElementById("categoriesTab"));
     }
 
     function renderOrders() {
@@ -171,20 +140,17 @@
 
         if (orders.length === 0) {
             container.innerHTML = "";
-
             if (empty) empty.style.display = "block";
-
             return;
         }
 
         if (empty) empty.style.display = "none";
 
         container.innerHTML = orders.map(function (order) {
-            const customer = getCustomer(order);
+            const customer = customerDetails(order);
             const items = Array.isArray(order.items) ? order.items : [];
-            const status = getStatus(order);
-            const orderId = getOrderId(order);
-
+            const status = statusOf(order);
+            const id = orderId(order);
             const date = order.createdAt
                 ? new Date(order.createdAt).toLocaleString("en-IN")
                 : "Not available";
@@ -195,7 +161,7 @@
                     const price = Number(item.price) || 0;
 
                     return `
-                        <div class="admin-order-item" style="display:flex;justify-content:space-between;gap:20px;padding:10px 0;border-bottom:1px solid #eee;">
+                        <div style="display:flex;justify-content:space-between;gap:20px;padding:10px 0;border-bottom:1px solid #eee;">
                             <span>${escapeHTML(item.name || "Product")} × ${quantity}</span>
                             <strong>${money(price * quantity)}</strong>
                         </div>
@@ -203,15 +169,34 @@
                 }).join("")
                 : "<p>No product information available.</p>";
 
+            const actions = isPending(status)
+                ? `
+                    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:20px;">
+                        <button type="button" class="admin-save-btn" data-order-action="accept" data-order-id="${escapeHTML(id)}">
+                            ✓ Accept Order
+                        </button>
+                        <button type="button" class="admin-cancel-btn" data-order-action="reject" data-order-id="${escapeHTML(id)}">
+                            ✕ Decline Order
+                        </button>
+                    </div>
+                    <p style="margin-top:12px;font-size:13px;opacity:.75;">
+                        Verify the UPI payment manually before accepting.
+                    </p>
+                `
+                : "";
+
+            const rejection =
+                String(status).toLowerCase() === "rejected" && order.rejectionReason
+                    ? `<p style="margin-top:12px;"><strong>Rejection reason:</strong> ${escapeHTML(order.rejectionReason)}</p>`
+                    : "";
+
             return `
                 <article class="admin-form-card admin-order-card" style="margin-bottom:20px;">
-
                     <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap;margin-bottom:20px;">
                         <div>
-                            <p><strong>Order ID:</strong> ${escapeHTML(orderId || "Not available")}</p>
+                            <p><strong>Order ID:</strong> ${escapeHTML(id || "Not available")}</p>
                             <p><strong>Order Date:</strong> ${escapeHTML(date)}</p>
                         </div>
-
                         <div style="padding:8px 14px;border-radius:20px;background:#f8e8ef;font-weight:700;">
                             ${escapeHTML(status)}
                         </div>
@@ -246,59 +231,23 @@
                         <h3>Total: ${money(order.total)}</h3>
                     </div>
 
-                    ${isPending(status) ? `
-                        <div class="admin-order-actions" style="display:flex;gap:12px;flex-wrap:wrap;margin-top:20px;">
-                            <button
-                                type="button"
-                                class="admin-save-btn"
-                                data-order-action="accept"
-                                data-order-id="${escapeHTML(orderId)}"
-                            >
-                                ✓ Accept Order
-                            </button>
-
-                            <button
-                                type="button"
-                                class="admin-cancel-btn"
-                                data-order-action="reject"
-                                data-order-id="${escapeHTML(orderId)}"
-                            >
-                                ✕ Reject / Decline
-                            </button>
-                        </div>
-
-                        <p style="margin-top:12px;font-size:14px;opacity:.8;">
-                            Verify the UPI payment and product stock manually before accepting.
-                        </p>
-                    ` : ""}
-
-                    ${String(status).toLowerCase() === "rejected" && order.rejectionReason ? `
-                        <p style="margin-top:12px;">
-                            <strong>Rejection reason:</strong>
-                            ${escapeHTML(order.rejectionReason)}
-                        </p>
-                    ` : ""}
-
+                    ${actions}
+                    ${rejection}
                 </article>
             `;
         }).join("");
     }
 
-    function findOrder(orderId) {
+    function findOrder(id) {
         const orders = readArray(ORDERS_KEY);
-
         const index = orders.findIndex(function (order) {
-            return getOrderId(order) === String(orderId);
+            return orderId(order) === String(id);
         });
-
-        return {
-            orders: orders,
-            index: index
-        };
+        return { orders: orders, index: index };
     }
 
-    function acceptOrder(orderId) {
-        const result = findOrder(orderId);
+    function acceptOrder(id) {
+        const result = findOrder(id);
 
         if (result.index < 0) {
             alert("Order could not be found.");
@@ -307,17 +256,15 @@
 
         const order = result.orders[result.index];
 
-        if (!isPending(getStatus(order))) {
+        if (!isPending(statusOf(order))) {
             alert("This order has already been processed.");
             renderOrders();
             return;
         }
 
-        const verified = confirm(
-            "Before accepting this order, confirm that you have manually verified the UPI payment and the required products are available.\n\nClick OK to accept the order."
-        );
-
-        if (!verified) return;
+        if (!confirm(
+            "Please verify the UPI payment manually.\n\nClick OK to accept this order."
+        )) return;
 
         const products = readArray(PRODUCTS_KEY);
         const items = Array.isArray(order.items) ? order.items : [];
@@ -333,9 +280,7 @@
             const quantity = Math.max(1, Number(item.quantity) || 1);
 
             if (Number.isFinite(stock) && stock < quantity) {
-                alert(
-                    `Cannot accept the order. Only ${stock} ${product.name} available, but ${quantity} ordered.`
-                );
+                alert(`Cannot accept the order. Only ${stock} ${product.name} available, but ${quantity} ordered.`);
                 return;
             }
         }
@@ -359,10 +304,6 @@
         order.status = "Accepted";
         order.acceptedAt = new Date().toISOString();
 
-        if (!order.paymentStatus) {
-            order.paymentStatus = "Customer Confirmed Payment";
-        }
-
         saveArray(ORDERS_KEY, result.orders);
         saveArray(PRODUCTS_KEY, products);
 
@@ -375,8 +316,8 @@
         alert("Order accepted successfully.");
     }
 
-    function rejectOrder(orderId) {
-        const result = findOrder(orderId);
+    function rejectOrder(id) {
+        const result = findOrder(id);
 
         if (result.index < 0) {
             alert("Order could not be found.");
@@ -385,14 +326,14 @@
 
         const order = result.orders[result.index];
 
-        if (!isPending(getStatus(order))) {
+        if (!isPending(statusOf(order))) {
             alert("This order has already been processed.");
             renderOrders();
             return;
         }
 
         const reason = prompt(
-            "Reason for rejecting/declining this order (optional):",
+            "Reason for declining the order (optional):",
             "Payment not verified / Product unavailable"
         );
 
@@ -406,63 +347,35 @@
         saveArray(ORDERS_KEY, result.orders);
         renderOrders();
 
-        alert("Order rejected/declined.");
+        alert("Order declined successfully.");
     }
 
-    function setupTabs() {
+    function start() {
         const productsTab = document.getElementById("productsTab");
         const categoriesTab = document.getElementById("categoriesTab");
         const ordersTab = document.getElementById("ordersTab");
 
-        if (ordersTab) {
-            ordersTab.addEventListener("click", showOrdersTab);
-        }
+        if (productsTab) productsTab.onclick = showProducts;
+        if (categoriesTab) categoriesTab.onclick = showCategories;
+        if (ordersTab) ordersTab.onclick = showOrders;
 
-        if (productsTab) {
-            productsTab.addEventListener("click", showProductsTab);
-        }
-
-        if (categoriesTab) {
-            categoriesTab.addEventListener("click", showCategoriesTab);
-        }
-    }
-
-    function setupOrderActions() {
         const container = document.getElementById("adminOrders");
 
-        if (!container || container.dataset.ordersActionsReady === "true") {
-            return;
+        if (container && container.dataset.ordersReady !== "true") {
+            container.dataset.ordersReady = "true";
+
+            container.addEventListener("click", function (event) {
+                const button = event.target.closest("[data-order-action]");
+                if (!button) return;
+
+                const id = button.getAttribute("data-order-id") || "";
+                const action = button.getAttribute("data-order-action");
+
+                if (action === "accept") acceptOrder(id);
+                if (action === "reject") rejectOrder(id);
+            });
         }
 
-        container.dataset.ordersActionsReady = "true";
-
-        container.addEventListener("click", function (event) {
-            const button = event.target.closest("[data-order-action]");
-
-            if (!button) return;
-
-            const orderId = button.getAttribute("data-order-id") || "";
-            const action = button.getAttribute("data-order-action");
-
-            if (action === "accept") {
-                acceptOrder(orderId);
-            } else if (action === "reject") {
-                rejectOrder(orderId);
-            }
-        });
-    }
-
-    function refreshOrders() {
-        const ordersSection = document.getElementById("ordersSection");
-
-        if (ordersSection && ordersSection.style.display !== "none") {
-            renderOrders();
-        }
-    }
-
-    function start() {
-        setupTabs();
-        setupOrderActions();
         renderOrders();
     }
 
@@ -474,7 +387,7 @@
 
     window.addEventListener("storage", function (event) {
         if (event.key === ORDERS_KEY || event.key === PRODUCTS_KEY) {
-            refreshOrders();
+            renderOrders();
         }
     });
 
