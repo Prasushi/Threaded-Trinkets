@@ -1,350 +1,226 @@
 /* =========================================================
-   THREADED TRINKETS - ADMIN ORDERS FIX
-   Orders tab + customer details + accept / decline.
-   Does NOT clear or modify Products / Categories.
-   Also reads the shared Netlify cloud orders store so orders
-   created on another device can appear in Admin.
+   THREADED TRINKETS - ORDERS ADMIN ONLY
+   Fixes Orders tab + cloud orders + customer details +
+   Accept / Decline. Does NOT modify Products or Categories.
 ========================================================= */
-
 (function () {
     "use strict";
-
     const ORDERS_KEY = "threadedTrinketsOrders";
-    const CLOUD_ORDERS_URL = "/.netlify/functions/orders";
-    let initialized = false;
-    let cloudLoading = false;
-
-    function text(value) {
-        return String(value ?? "").trim();
-    }
+    const API_URL = "/.netlify/functions/orders";
+    let loading = false;
+    const $ = id => document.getElementById(id);
+    const clean = value => String(value ?? "").trim();
 
     function escapeHTML(value) {
-        return String(value ?? "")
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
+        return String(value ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
     }
-
-    function money(value) {
-        return "₹" + Number(value || 0).toLocaleString("en-IN");
-    }
-
-    function readOrders() {
+    function money(value) { return "₹" + Number(value || 0).toLocaleString("en-IN"); }
+    function localOrders() {
         try {
-            const raw = localStorage.getItem(ORDERS_KEY);
-            if (!raw) return [];
-            const parsed = JSON.parse(raw);
-            return Array.isArray(parsed) ? parsed : [];
-        } catch (error) {
-            console.error("Unable to read orders:", error);
-            return [];
-        }
+            const value = localStorage.getItem(ORDERS_KEY);
+            const data = value ? JSON.parse(value) : [];
+            return Array.isArray(data) ? data : [];
+        } catch (error) { console.error("Orders: local read failed", error); return []; }
     }
-
-    function saveOrders(orders) {
-        try {
-            localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
-            return true;
-        } catch (error) {
-            console.error("Unable to save orders:", error);
-            return false;
-        }
+    function saveLocal(orders) {
+        try { localStorage.setItem(ORDERS_KEY, JSON.stringify(orders)); return true; }
+        catch (error) { console.error("Orders: local save failed", error); return false; }
     }
-
-    function orderId(order) {
-        return text(order.orderId || order.id) || "Not available";
-    }
-
-    function orderStatus(order) {
-        return text(order.orderStatus || order.status) || "New";
-    }
-
-    function isPending(order) {
-        const value = orderStatus(order).toLowerCase();
-        return value === "new" || value === "pending" || value === "payment pending";
-    }
+    function idOf(order) { return clean(order && (order.orderId || order.id)); }
+    function statusOf(order) { return clean(order && (order.orderStatus || order.status)) || "New"; }
+    function isPending(order) { return ["new", "pending", "payment pending"].includes(statusOf(order).toLowerCase()); }
 
     function customerValue(order, keys) {
         const customer = order.customer || order.customerDetails || order.customerInfo || {};
         for (const key of keys) {
-            if (text(customer[key])) return customer[key];
-            if (text(order[key])) return order[key];
+            if (clean(customer[key])) return customer[key];
+            if (clean(order[key])) return order[key];
         }
         return "Not provided";
     }
 
-    function showSection(id, display) {
-        const element = document.getElementById(id);
-        if (element) {
-            element.hidden = display === "none";
-            element.style.setProperty("display", display, "important");
-        }
+    function show(id, display) {
+        const element = $(id);
+        if (!element) return;
+        element.hidden = display === "none";
+        element.style.setProperty("display", display, "important");
     }
 
-    function activateTab(tabId) {
-        ["productsTab", "categoriesTab", "ordersTab"].forEach(function (id) {
-            const tab = document.getElementById(id);
-            if (tab) tab.classList.toggle("active", id === tabId);
+    function tabs(active) {
+        ["productsTab", "categoriesTab", "ordersTab"].forEach(id => {
+            const tab = $(id);
+            if (tab) tab.classList.toggle("active", id === active);
         });
     }
 
     function openProducts() {
-        showSection("productsSection", "grid");
-        showSection("categoriesSection", "none");
-        showSection("ordersSection", "none");
-        activateTab("productsTab");
+        show("productsSection", "grid");
+        show("categoriesSection", "none");
+        show("ordersSection", "none");
+        tabs("productsTab");
     }
 
     function openCategories() {
-        showSection("productsSection", "none");
-        showSection("categoriesSection", "block");
-        showSection("ordersSection", "none");
-        activateTab("categoriesTab");
+        show("productsSection", "none");
+        show("categoriesSection", "block");
+        show("ordersSection", "none");
+        tabs("categoriesTab");
     }
 
-    async function loadCloudOrders() {
-        if (cloudLoading) return;
-        cloudLoading = true;
+    async function getCloudOrders() {
+        const response = await fetch(API_URL + "?t=" + Date.now(), { method: "GET", cache: "no-store", headers: { Accept: "application/json" } });
+        if (!response.ok) throw new Error("Orders API HTTP " + response.status);
+        const data = await response.json();
+        return Array.isArray(data.orders) ? data.orders : [];
+    }
 
+    async function saveCloudOrder(order) {
+        const response = await fetch(API_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(order)
+        });
+        if (!response.ok) throw new Error("Orders API HTTP " + response.status);
+    }
+
+    async function syncCloudToLocal() {
+        if (loading) return;
+        loading = true;
         try {
-            const response = await fetch(CLOUD_ORDERS_URL + "?t=" + Date.now(), {
-                method: "GET",
-                cache: "no-store",
-                headers: { "Accept": "application/json" }
-            });
-
-            if (!response.ok) {
-                throw new Error("Orders service returned HTTP " + response.status);
-            }
-
-            const data = await response.json();
-            const cloudOrders = Array.isArray(data.orders) ? data.orders : [];
-            const localOrders = readOrders();
-            const merged = new Map();
-
-            localOrders.forEach(function (order) {
-                const id = orderId(order);
-                if (id && id !== "Not available") merged.set(id, order);
-            });
-
-            cloudOrders.forEach(function (order) {
-                const id = orderId(order);
-                if (id && id !== "Not available") merged.set(id, order);
-            });
-
-            const finalOrders = Array.from(merged.values()).sort(function (a, b) {
-                return new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime();
-            });
-
-            if (JSON.stringify(finalOrders) !== JSON.stringify(localOrders)) {
-                saveOrders(finalOrders);
-            }
-
+            const cloud = await getCloudOrders();
+            const local = localOrders();
+            const map = new Map();
+            local.forEach(order => { if (idOf(order)) map.set(idOf(order), order); });
+            cloud.forEach(order => { if (idOf(order)) map.set(idOf(order), order); });
+            const merged = Array.from(map.values()).sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime());
+            saveLocal(merged);
             renderOrders();
         } catch (error) {
-            console.error("Unable to load cloud orders:", error);
-            // Keep the existing local orders working if the cloud service is unavailable.
+            console.error("Orders: cloud sync failed", error);
             renderOrders();
-        } finally {
-            cloudLoading = false;
-        }
-    }
-
-    function openOrders() {
-        showSection("productsSection", "none");
-        showSection("categoriesSection", "none");
-        showSection("ordersSection", "block");
-        activateTab("ordersTab");
-        renderOrders();
-        loadCloudOrders();
-        window.scrollTo({ top: 0, behavior: "smooth" });
+        } finally { loading = false; }
     }
 
     function renderOrders() {
-        const container = document.getElementById("adminOrders");
-        const count = document.getElementById("orderCount");
-        const empty = document.getElementById("noOrders");
+        const container = $("adminOrders");
+        const count = $("orderCount");
+        const empty = $("noOrders");
         if (!container) return;
-
-        const orders = readOrders();
+        const orders = localOrders();
         if (count) count.textContent = orders.length;
-
         if (!orders.length) {
             container.innerHTML = "";
             if (empty) empty.style.setProperty("display", "block", "important");
             return;
         }
-
         if (empty) empty.style.setProperty("display", "none", "important");
 
-        container.innerHTML = orders.map(function (order) {
-            const id = orderId(order);
-            const currentStatus = orderStatus(order);
-            const created = order.createdAt ? new Date(order.createdAt).toLocaleString("en-IN") : "Not available";
-            const name = customerValue(order, ["name", "fullName", "customerName"]);
-            const phone = customerValue(order, ["phone", "customerPhone"]);
-            const email = customerValue(order, ["email", "customerEmail"]);
-            const address = customerValue(order, ["address", "customerAddress"]);
-            const city = customerValue(order, ["city", "customerCity"]);
-            const state = customerValue(order, ["state", "customerState"]);
-            const pincode = customerValue(order, ["pincode", "customerPincode", "pinCode"]);
-            const landmark = customerValue(order, ["landmark", "customerLandmark"]);
+        container.innerHTML = orders.map(order => {
+            const id = idOf(order) || "Not available";
+            const currentStatus = statusOf(order);
+            const customer = {
+                name: customerValue(order, ["name", "fullName", "customerName"]),
+                phone: customerValue(order, ["phone", "customerPhone"]),
+                email: customerValue(order, ["email", "customerEmail"]),
+                address: customerValue(order, ["address", "customerAddress"]),
+                city: customerValue(order, ["city", "customerCity"]),
+                state: customerValue(order, ["state", "customerState"]),
+                pincode: customerValue(order, ["pincode", "customerPincode", "pinCode"]),
+                landmark: customerValue(order, ["landmark", "customerLandmark"])
+            };
             const items = Array.isArray(order.items) ? order.items : [];
-
-            const itemsHTML = items.length ? items.map(function (item) {
-                const quantity = Math.max(1, Number(item.quantity) || 1);
+            const itemsHTML = items.length ? items.map(item => {
+                const qty = Math.max(1, Number(item.quantity) || 1);
                 const price = Number(item.price) || 0;
-                return `<div style="display:flex;justify-content:space-between;gap:20px;padding:10px 0;border-bottom:1px solid #eee;"><span>${escapeHTML(item.name || "Product")} × ${quantity}</span><strong>${money(price * quantity)}</strong></div>`;
+                return `<div style="display:flex;justify-content:space-between;gap:20px;padding:10px 0;border-bottom:1px solid #eee"><span>${escapeHTML(item.name || "Product")} × ${qty}</span><strong>${money(price * qty)}</strong></div>`;
             }).join("") : "<p>No product information available.</p>";
-
-            const actions = isPending(order) ? `
-                <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:20px;">
-                    <button type="button" class="admin-save-btn" data-order-action="accept" data-order-id="${escapeHTML(id)}">✓ Accept Order</button>
-                    <button type="button" class="admin-cancel-btn" data-order-action="decline" data-order-id="${escapeHTML(id)}">✕ Decline Order</button>
-                </div>
-                <p style="margin-top:10px;font-size:13px;opacity:.75;">Verify the UPI payment manually before accepting.</p>` : "";
-
-            const rejection = currentStatus.toLowerCase() === "rejected" && order.rejectionReason
-                ? `<p><strong>Decline Reason:</strong> ${escapeHTML(order.rejectionReason)}</p>` : "";
-
-            return `<article class="admin-form-card admin-order-card" style="margin-bottom:20px;">
-                <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap;margin-bottom:20px;">
-                    <div><p><strong>Order ID:</strong> ${escapeHTML(id)}</p><p><strong>Order Date:</strong> ${escapeHTML(created)}</p></div>
-                    <div style="padding:8px 14px;border-radius:20px;background:#f8e8ef;font-weight:700;">${escapeHTML(currentStatus)}</div>
-                </div>
-                <div style="margin-bottom:25px;"><h3>👤 Customer Details</h3>
-                    <p><strong>Name:</strong> ${escapeHTML(name)}</p>
-                    <p><strong>Phone:</strong> ${escapeHTML(phone)}</p>
-                    <p><strong>Email:</strong> ${escapeHTML(email)}</p>
-                    <p><strong>Address:</strong> ${escapeHTML(address)}</p>
-                    <p><strong>City:</strong> ${escapeHTML(city)}</p>
-                    <p><strong>State:</strong> ${escapeHTML(state)}</p>
-                    <p><strong>Pincode:</strong> ${escapeHTML(pincode)}</p>
-                    <p><strong>Landmark:</strong> ${escapeHTML(landmark)}</p>
-                </div>
-                <div style="margin-bottom:25px;"><h3>🛍️ Ordered Products</h3>${itemsHTML}</div>
-                <div style="margin-bottom:25px;"><h3>💳 Payment Information</h3>
-                    <p><strong>Method:</strong> ${escapeHTML(order.paymentMethod || "UPI")}</p>
-                    <p><strong>UPI ID:</strong> ${escapeHTML(order.upiId || "7842391877@ibl")}</p>
-                    <p><strong>Payment Status:</strong> ${escapeHTML(order.paymentStatus || "Payment Pending")}</p>
-                    <p><strong>Verification:</strong> ${escapeHTML(order.paymentVerification || "Manual verification required.")}</p>
-                </div>
-                <div style="padding-top:15px;border-top:1px solid #ddd;"><h3>Total: ${money(order.total)}</h3></div>
-                ${actions}${rejection}
-            </article>`;
+            const actions = isPending(order) ? `<div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:20px"><button type="button" class="admin-save-btn" data-order-action="accept" data-order-id="${escapeHTML(id)}">✓ Accept Order</button><button type="button" class="admin-cancel-btn" data-order-action="decline" data-order-id="${escapeHTML(id)}">✕ Decline Order</button></div><p style="margin-top:10px;font-size:13px;opacity:.75">Verify the UPI payment manually before accepting.</p>` : "";
+            const reason = currentStatus.toLowerCase() === "rejected" && order.rejectionReason ? `<p><strong>Decline Reason:</strong> ${escapeHTML(order.rejectionReason)}</p>` : "";
+            return `<article class="admin-form-card admin-order-card" style="margin-bottom:20px"><div style="display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:20px"><div><p><strong>Order ID:</strong> ${escapeHTML(id)}</p><p><strong>Order Date:</strong> ${escapeHTML(order.createdAt ? new Date(order.createdAt).toLocaleString("en-IN") : "Not available")}</p></div><div style="padding:8px 14px;border-radius:20px;background:#f8e8ef;font-weight:700">${escapeHTML(currentStatus)}</div></div><div style="margin-bottom:25px"><h3>👤 Customer Details</h3><p><strong>Name:</strong> ${escapeHTML(customer.name)}</p><p><strong>Phone:</strong> ${escapeHTML(customer.phone)}</p><p><strong>Email:</strong> ${escapeHTML(customer.email)}</p><p><strong>Address:</strong> ${escapeHTML(customer.address)}</p><p><strong>City:</strong> ${escapeHTML(customer.city)}</p><p><strong>State:</strong> ${escapeHTML(customer.state)}</p><p><strong>Pincode:</strong> ${escapeHTML(customer.pincode)}</p><p><strong>Landmark:</strong> ${escapeHTML(customer.landmark)}</p></div><div style="margin-bottom:25px"><h3>🛍️ Ordered Products</h3>${itemsHTML}</div><div style="margin-bottom:25px"><h3>💳 Payment Information</h3><p><strong>Method:</strong> ${escapeHTML(order.paymentMethod || "UPI")}</p><p><strong>UPI ID:</strong> ${escapeHTML(order.upiId || "7842391877@ibl")}</p><p><strong>Payment Status:</strong> ${escapeHTML(order.paymentStatus || "Payment Pending")}</p><p><strong>Verification:</strong> ${escapeHTML(order.paymentVerification || "Manual verification required.")}</p></div><div style="padding-top:15px;border-top:1px solid #ddd"><h3>Total: ${money(order.total)}</h3></div>${actions}${reason}</article>`;
         }).join("");
     }
 
-    async function updateOrderStatus(id, newStatus) {
-        const orders = readOrders();
-        const index = orders.findIndex(function (order) { return orderId(order) === String(id); });
-        if (index < 0) { alert("Order could not be found."); return; }
-        if (!isPending(orders[index])) { alert("This order has already been processed."); renderOrders(); return; }
-
+    async function processOrder(id, action) {
+        const orders = localOrders();
+        const index = orders.findIndex(order => idOf(order) === String(id));
+        if (index < 0) { await syncCloudToLocal(); alert("Order could not be found. Please try again."); return; }
         const order = orders[index];
-        if (newStatus === "Accepted") {
+        if (!isPending(order)) { alert("This order has already been processed."); renderOrders(); return; }
+        if (action === "accept") {
             if (!confirm("Verify the UPI payment manually.\n\nClick OK to accept this order.")) return;
             order.orderStatus = "Accepted";
             order.status = "Accepted";
+            order.paymentVerification = "Manually verified by admin";
             order.acceptedAt = new Date().toISOString();
         } else {
             const reason = prompt("Reason for declining the order:", "Payment not verified / Product unavailable");
             if (reason === null) return;
             order.orderStatus = "Rejected";
             order.status = "Rejected";
+            order.rejectionReason = clean(reason) || "No reason provided";
             order.rejectedAt = new Date().toISOString();
-            order.rejectionReason = text(reason) || "No reason provided";
         }
-
-        if (!saveOrders(orders)) return;
+        saveLocal(orders);
         renderOrders();
-
-        // Keep the admin decision synchronized across devices.
-        try {
-            await fetch(CLOUD_ORDERS_URL, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(order)
-            });
-        } catch (error) {
-            console.error("Unable to sync order status to cloud:", error);
+        try { await saveCloudOrder(order); }
+        catch (error) {
+            console.error("Orders: status cloud sync failed", error);
+            alert("The order was changed on this admin device, but cloud synchronization failed. Please check Netlify deployment.");
+            return;
         }
-
-        alert(newStatus === "Accepted" ? "Order accepted successfully." : "Order declined successfully.");
+        alert(action === "accept" ? "Order accepted successfully." : "Order declined successfully.");
     }
 
-    function bindTabs() {
-        const productsTab = document.getElementById("productsTab");
-        const categoriesTab = document.getElementById("categoriesTab");
-        const ordersTab = document.getElementById("ordersTab");
+    function openOrders() {
+        show("productsSection", "none");
+        show("categoriesSection", "none");
+        show("ordersSection", "block");
+        tabs("ordersTab");
+        renderOrders();
+        syncCloudToLocal();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }
 
-        if (productsTab && productsTab.dataset.ordersFixBound !== "1") {
-            productsTab.dataset.ordersFixBound = "1";
-            productsTab.addEventListener("click", function (event) {
-                event.preventDefault();
-                openProducts();
-            }, true);
-        }
-
-        if (categoriesTab && categoriesTab.dataset.ordersFixBound !== "1") {
-            categoriesTab.dataset.ordersFixBound = "1";
-            categoriesTab.addEventListener("click", function (event) {
-                event.preventDefault();
-                openCategories();
-            }, true);
-        }
-
-        if (ordersTab && ordersTab.dataset.ordersFixBound !== "1") {
-            ordersTab.dataset.ordersFixBound = "1";
+    function bind() {
+        const ordersTab = $("ordersTab");
+        if (ordersTab && ordersTab.dataset.ordersOnlyBound !== "1") {
+            ordersTab.dataset.ordersOnlyBound = "1";
             ordersTab.addEventListener("click", function (event) {
                 event.preventDefault();
                 event.stopImmediatePropagation();
                 openOrders();
             }, true);
-            ordersTab.onclick = function (event) {
-                event.preventDefault();
-                event.stopPropagation();
-                openOrders();
-                return false;
-            };
+        }
+        const productsTab = $("productsTab");
+        if (productsTab && productsTab.dataset.ordersOnlyBound !== "1") {
+            productsTab.dataset.ordersOnlyBound = "1";
+            productsTab.addEventListener("click", function (event) { event.preventDefault(); openProducts(); }, true);
+        }
+        const categoriesTab = $("categoriesTab");
+        if (categoriesTab && categoriesTab.dataset.ordersOnlyBound !== "1") {
+            categoriesTab.dataset.ordersOnlyBound = "1";
+            categoriesTab.addEventListener("click", function (event) { event.preventDefault(); openCategories(); }, true);
+        }
+        const container = $("adminOrders");
+        if (container && container.dataset.ordersActionsBound !== "1") {
+            container.dataset.ordersActionsBound = "1";
+            container.addEventListener("click", function (event) {
+                const button = event.target.closest("[data-order-action]");
+                if (!button) return;
+                processOrder(button.getAttribute("data-order-id"), button.getAttribute("data-order-action"));
+            });
         }
     }
 
-    function bindOrderButtons() {
-        const container = document.getElementById("adminOrders");
-        if (!container || container.dataset.ordersBound === "1") return;
-        container.dataset.ordersBound = "1";
-        container.addEventListener("click", function (event) {
-            const button = event.target.closest("[data-order-action]");
-            if (!button) return;
-            const id = button.getAttribute("data-order-id");
-            const action = button.getAttribute("data-order-action");
-            if (action === "accept") updateOrderStatus(id, "Accepted");
-            if (action === "decline") updateOrderStatus(id, "Rejected");
-        });
-    }
-
     function start() {
-        if (initialized) return;
-        initialized = true;
-        bindTabs();
-        bindOrderButtons();
+        bind();
         openProducts();
-        loadCloudOrders();
-        setInterval(loadCloudOrders, 5000);
+        syncCloudToLocal();
+        setInterval(syncCloudToLocal, 5000);
     }
 
-    if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", start, { once: true });
-    } else {
-        start();
-    }
-
-    window.addEventListener("storage", function (event) {
-        if (event.key === ORDERS_KEY) renderOrders();
-    });
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start, { once: true });
+    else start();
 
     window.threadedTrinketsOpenOrders = openOrders;
     window.threadedTrinketsRefreshOrders = renderOrders;
