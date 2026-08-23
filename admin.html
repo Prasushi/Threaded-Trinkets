@@ -11,7 +11,11 @@
 <header class="header"><div class="container nav"><a href="index.html" class="logo">Threaded <span>Trinkets</span></a><nav class="navigation"><a href="index.html">View Website</a><a href="products.html">Shop</a></nav></div></header>
 <main class="admin-page"><div class="container">
 <div class="admin-heading"><p>STORE MANAGEMENT</p><h1>Admin Panel</h1><span>Manage your Threaded Trinkets store.</span></div>
-<div class="admin-tabs"><button type="button" id="productsTab" class="admin-tab active">🛍️ Products</button><button type="button" id="categoriesTab" class="admin-tab">📂 Categories</button><button type="button" id="ordersTab" class="admin-tab">📦 Orders</button></div>
+<div class="admin-tabs">
+<button type="button" id="productsTab" class="admin-tab active">🛍️ Products</button>
+<button type="button" id="categoriesTab" class="admin-tab">📂 Categories</button>
+<button type="button" id="ordersTab" class="admin-tab" onclick="event.preventDefault();event.stopPropagation();document.getElementById('productsSection').style.setProperty('display','none','important');document.getElementById('categoriesSection').style.setProperty('display','none','important');document.getElementById('ordersSection').style.setProperty('display','block','important');document.getElementById('productsSection').hidden=true;document.getElementById('categoriesSection').hidden=true;document.getElementById('ordersSection').hidden=false;document.querySelectorAll('.admin-tab').forEach(function(t){t.classList.remove('active')});this.classList.add('active');if(window.threadedTrinketsOpenOrders)window.threadedTrinketsOpenOrders();else if(window.threadedTrinketsRefreshOrders)window.threadedTrinketsRefreshOrders();">📦 Orders</button>
+</div>
 <div class="admin-layout" id="productsSection">
 <section class="admin-form-card"><h2 id="formTitle">Add New Product</h2><form id="productForm"><div class="admin-form-group"><label for="productName">Product Name *</label><input type="text" id="productName" placeholder="Example: Pearl Charm Bangle" required></div><div class="admin-form-group"><label for="productCategory">Category *</label><select id="productCategory" required><option value="">Select Category</option></select><small>Categories are managed from the Categories tab.</small></div><div class="admin-form-row"><div class="admin-form-group"><label for="productPrice">Price (₹) *</label><input type="number" id="productPrice" min="0" placeholder="399" required></div><div class="admin-form-group"><label for="productStock">Stock *</label><input type="number" id="productStock" min="0" placeholder="10" required></div></div><div class="admin-form-group"><label for="productImage">Product Image</label><input type="file" id="productImage" accept="image/*"><small>Choose a product image from your computer.</small><div id="productImagePreview" class="image-preview" style="display:none;"><img id="productPreviewImg" src="" alt="Product Preview"></div></div><div class="admin-form-group"><label for="productDescription">Description</label><textarea id="productDescription" rows="4" placeholder="Describe your product..."></textarea></div><div class="admin-form-buttons"><button type="submit" class="admin-save-btn" id="saveButton">Add Product</button><button type="button" id="cancelEditBtn" class="admin-cancel-btn" style="display:none;">Cancel Edit</button></div></form></section>
 <section class="admin-products-card"><div class="admin-products-header"><div><h2>Products</h2><p>Manage your store inventory.</p></div><div class="product-count"><span id="productCount">0</span> Products</div></div><div id="adminProducts"></div><div id="noProducts" class="no-products"><div>🛍️</div><h3>No Products Yet</h3><p>Add your first product using the form.</p></div></section></div>
@@ -20,8 +24,8 @@
 </div></main>
 <footer class="footer"><div class="container footer-grid"><div class="footer-brand"><h2>Threaded <span>Trinkets</span></h2><p>Handmade accessories created with love and creativity.</p></div><div class="footer-column"><h3>Website</h3><a href="index.html">Home</a><a href="products.html">Shop</a></div><div class="footer-column"><h3>Admin</h3><a href="admin.html">Products</a><a href="admin.html">Orders</a></div></div><div class="footer-bottom"><p>© 2026 Threaded Trinkets. Admin Panel.</p></div></footer>
 <script src="js/admin.js"></script>
-<script src="js/orders-admin-fix.js?v=20260823-7"></script>
-<script src="js/cloud-orders.js?v=20260823-5"></script>
+<script src="js/orders-admin-fix.js?v=20260823-8"></script>
+<script src="js/cloud-orders.js?v=20260823-6"></script>
 <script>
 (function(){
 function bind(){
