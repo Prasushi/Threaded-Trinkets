@@ -8,22 +8,7 @@
     "use strict";
 
     const ORDERS_KEY = "threadedTrinketsOrders";
-
-    function readOrders() {
-        try {
-            const raw = localStorage.getItem(ORDERS_KEY);
-            if (!raw) return [];
-            const parsed = JSON.parse(raw);
-            return Array.isArray(parsed) ? parsed : [];
-        } catch (error) {
-            console.error("Unable to read orders:", error);
-            return [];
-        }
-    }
-
-    function saveOrders(orders) {
-        localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
-    }
+    let initialized = false;
 
     function text(value) {
         return String(value ?? "").trim();
@@ -42,6 +27,42 @@
         return "₹" + Number(value || 0).toLocaleString("en-IN");
     }
 
+    function readOrders() {
+        try {
+            const raw = localStorage.getItem(ORDERS_KEY);
+            if (!raw) return [];
+            const parsed = JSON.parse(raw);
+            return Array.isArray(parsed) ? parsed : [];
+        } catch (error) {
+            console.error("Unable to read orders:", error);
+            return [];
+        }
+    }
+
+    function saveOrders(orders) {
+        try {
+            localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
+            return true;
+        } catch (error) {
+            console.error("Unable to save orders:", error);
+            alert("Unable to save the order status in this browser.");
+            return false;
+        }
+    }
+
+    function orderId(order) {
+        return text(order.orderId || order.id) || "Not available";
+    }
+
+    function orderStatus(order) {
+        return text(order.orderStatus || order.status) || "New";
+    }
+
+    function isPending(order) {
+        const value = orderStatus(order).toLowerCase();
+        return value === "new" || value === "pending" || value === "payment pending";
+    }
+
     function customerValue(order, keys) {
         const customer =
             order.customer ||
@@ -55,19 +76,6 @@
         }
 
         return "Not provided";
-    }
-
-    function orderId(order) {
-        return text(order.orderId || order.id) || "Not available";
-    }
-
-    function status(order) {
-        return text(order.orderStatus || order.status) || "New";
-    }
-
-    function pending(order) {
-        const value = status(order).toLowerCase();
-        return value === "new" || value === "pending" || value === "payment pending";
     }
 
     function showSection(id, display) {
@@ -127,7 +135,7 @@
 
         container.innerHTML = orders.map(function (order) {
             const id = orderId(order);
-            const currentStatus = status(order);
+            const currentStatus = orderStatus(order);
             const created = order.createdAt
                 ? new Date(order.createdAt).toLocaleString("en-IN")
                 : "Not available";
@@ -155,7 +163,7 @@
                 }).join("")
                 : "<p>No product information available.</p>";
 
-            const actions = pending(order)
+            const actions = isPending(order)
                 ? `
                     <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:20px;">
                         <button type="button" class="admin-save-btn" data-order-action="accept" data-order-id="${escapeHTML(id)}">✓ Accept Order</button>
@@ -217,68 +225,50 @@
         }).join("");
     }
 
-    function findOrder(id) {
+    function updateOrderStatus(id, newStatus) {
         const orders = readOrders();
         const index = orders.findIndex(function (order) {
             return orderId(order) === String(id);
         });
-        return { orders, index };
-    }
 
-    function acceptOrder(id) {
-        const result = findOrder(id);
-        if (result.index < 0) {
+        if (index < 0) {
             alert("Order could not be found.");
             return;
         }
 
-        const order = result.orders[result.index];
-        if (!pending(order)) {
+        if (!isPending(orders[index])) {
             alert("This order has already been processed.");
             renderOrders();
             return;
         }
 
-        if (!confirm("Verify the UPI payment manually.\n\nClick OK to accept this order.")) return;
+        const order = orders[index];
 
-        order.orderStatus = "Accepted";
-        order.status = "Accepted";
-        order.acceptedAt = new Date().toISOString();
+        if (newStatus === "Accepted") {
+            if (!confirm("Verify the UPI payment manually.\n\nClick OK to accept this order.")) return;
+            order.orderStatus = "Accepted";
+            order.status = "Accepted";
+            order.acceptedAt = new Date().toISOString();
+        } else {
+            const reason = prompt(
+                "Reason for declining the order:",
+                "Payment not verified / Product unavailable"
+            );
 
-        saveOrders(result.orders);
-        renderOrders();
-        alert("Order accepted successfully.");
-    }
+            if (reason === null) return;
 
-    function declineOrder(id) {
-        const result = findOrder(id);
-        if (result.index < 0) {
-            alert("Order could not be found.");
-            return;
+            order.orderStatus = "Rejected";
+            order.status = "Rejected";
+            order.rejectedAt = new Date().toISOString();
+            order.rejectionReason = text(reason) || "No reason provided";
         }
 
-        const order = result.orders[result.index];
-        if (!pending(order)) {
-            alert("This order has already been processed.");
+        if (saveOrders(orders)) {
             renderOrders();
-            return;
+            alert(newStatus === "Accepted"
+                ? "Order accepted successfully."
+                : "Order declined successfully.");
         }
-
-        const reason = prompt(
-            "Reason for declining the order:",
-            "Payment not verified / Product unavailable"
-        );
-
-        if (reason === null) return;
-
-        order.orderStatus = "Rejected";
-        order.status = "Rejected";
-        order.rejectedAt = new Date().toISOString();
-        order.rejectionReason = text(reason) || "No reason provided";
-
-        saveOrders(result.orders);
-        renderOrders();
-        alert("Order declined successfully.");
     }
 
     function bindTabs() {
@@ -286,25 +276,29 @@
         const categoriesTab = document.getElementById("categoriesTab");
         const ordersTab = document.getElementById("ordersTab");
 
-        if (productsTab) {
-            productsTab.onclick = function (event) {
-                if (event) event.preventDefault();
+        if (productsTab && productsTab.dataset.ordersFixBound !== "1") {
+            productsTab.dataset.ordersFixBound = "1";
+            productsTab.addEventListener("click", function (event) {
+                event.preventDefault();
                 openProducts();
-            };
+            }, true);
         }
 
-        if (categoriesTab) {
-            categoriesTab.onclick = function (event) {
-                if (event) event.preventDefault();
+        if (categoriesTab && categoriesTab.dataset.ordersFixBound !== "1") {
+            categoriesTab.dataset.ordersFixBound = "1";
+            categoriesTab.addEventListener("click", function (event) {
+                event.preventDefault();
                 openCategories();
-            };
+            }, true);
         }
 
-        if (ordersTab) {
-            ordersTab.onclick = function (event) {
-                if (event) event.preventDefault();
+        if (ordersTab && ordersTab.dataset.ordersFixBound !== "1") {
+            ordersTab.dataset.ordersFixBound = "1";
+            ordersTab.addEventListener("click", function (event) {
+                event.preventDefault();
+                event.stopPropagation();
                 openOrders();
-            };
+            }, true);
         }
     }
 
@@ -320,19 +314,21 @@
             const id = button.getAttribute("data-order-id");
             const action = button.getAttribute("data-order-action");
 
-            if (action === "accept") acceptOrder(id);
-            if (action === "decline") declineOrder(id);
+            if (action === "accept") updateOrderStatus(id, "Accepted");
+            if (action === "decline") updateOrderStatus(id, "Rejected");
         });
     }
 
     function start() {
+        if (initialized) return;
+        initialized = true;
         bindTabs();
         bindOrderButtons();
         openProducts();
     }
 
     if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", start);
+        document.addEventListener("DOMContentLoaded", start, { once: true });
     } else {
         start();
     }
