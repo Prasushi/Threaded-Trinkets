@@ -123,43 +123,8 @@
 </footer>
 
 <script src="js/admin.js"></script>
-<script src="js/orders-admin-fix.js?v=20260823-3"></script>
-<script src="js/cloud-orders.js?v=20260823-1"></script>
-
-<!-- FINAL ORDERS TAB HANDLER: intentionally isolated from Products/Categories code. -->
-<script>
-(function () {
-    function forceOrdersTab() {
-        var ordersTab = document.getElementById('ordersTab');
-        var productsSection = document.getElementById('productsSection');
-        var categoriesSection = document.getElementById('categoriesSection');
-        var ordersSection = document.getElementById('ordersSection');
-        if (!ordersTab || !productsSection || !categoriesSection || !ordersSection) return;
-
-        ordersTab.addEventListener('click', function (event) {
-            event.preventDefault();
-            event.stopImmediatePropagation();
-            productsSection.style.setProperty('display', 'none', 'important');
-            categoriesSection.style.setProperty('display', 'none', 'important');
-            ordersSection.style.setProperty('display', 'block', 'important');
-            productsSection.hidden = true;
-            categoriesSection.hidden = true;
-            ordersSection.hidden = false;
-            document.querySelectorAll('.admin-tab').forEach(function (tab) { tab.classList.remove('active'); });
-            ordersTab.classList.add('active');
-            if (typeof window.threadedTrinketsRefreshOrders === 'function') {
-                window.threadedTrinketsRefreshOrders();
-            }
-        }, true);
-    }
-
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', forceOrdersTab, { once: true });
-    } else {
-        forceOrdersTab();
-    }
-})();
-</script>
+<script src="js/orders-admin-fix.js?v=20260823-4"></script>
+<script src="js/cloud-orders.js?v=20260823-2"></script>
 
 </body>
 </html>
