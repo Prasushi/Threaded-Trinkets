@@ -2,13 +2,17 @@
    THREADED TRINKETS - ADMIN ORDERS FIX
    Orders tab + customer details + accept / decline.
    Does NOT clear or modify Products / Categories.
+   Also reads the shared Netlify cloud orders store so orders
+   created on another device can appear in Admin.
 ========================================================= */
 
 (function () {
     "use strict";
 
     const ORDERS_KEY = "threadedTrinketsOrders";
+    const CLOUD_ORDERS_URL = "/.netlify/functions/orders";
     let initialized = false;
+    let cloudLoading = false;
 
     function text(value) {
         return String(value ?? "").trim();
@@ -45,7 +49,6 @@
             return true;
         } catch (error) {
             console.error("Unable to save orders:", error);
-            alert("Unable to save the order status in this browser.");
             return false;
         }
     }
@@ -75,8 +78,8 @@
     function showSection(id, display) {
         const element = document.getElementById(id);
         if (element) {
-            element.style.setProperty("display", display, "important");
             element.hidden = display === "none";
+            element.style.setProperty("display", display, "important");
         }
     }
 
@@ -101,12 +104,61 @@
         activateTab("categoriesTab");
     }
 
+    async function loadCloudOrders() {
+        if (cloudLoading) return;
+        cloudLoading = true;
+
+        try {
+            const response = await fetch(CLOUD_ORDERS_URL + "?t=" + Date.now(), {
+                method: "GET",
+                cache: "no-store",
+                headers: { "Accept": "application/json" }
+            });
+
+            if (!response.ok) {
+                throw new Error("Orders service returned HTTP " + response.status);
+            }
+
+            const data = await response.json();
+            const cloudOrders = Array.isArray(data.orders) ? data.orders : [];
+            const localOrders = readOrders();
+            const merged = new Map();
+
+            localOrders.forEach(function (order) {
+                const id = orderId(order);
+                if (id && id !== "Not available") merged.set(id, order);
+            });
+
+            cloudOrders.forEach(function (order) {
+                const id = orderId(order);
+                if (id && id !== "Not available") merged.set(id, order);
+            });
+
+            const finalOrders = Array.from(merged.values()).sort(function (a, b) {
+                return new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime();
+            });
+
+            if (JSON.stringify(finalOrders) !== JSON.stringify(localOrders)) {
+                saveOrders(finalOrders);
+            }
+
+            renderOrders();
+        } catch (error) {
+            console.error("Unable to load cloud orders:", error);
+            // Keep the existing local orders working if the cloud service is unavailable.
+            renderOrders();
+        } finally {
+            cloudLoading = false;
+        }
+    }
+
     function openOrders() {
         showSection("productsSection", "none");
         showSection("categoriesSection", "none");
         showSection("ordersSection", "block");
         activateTab("ordersTab");
         renderOrders();
+        loadCloudOrders();
         window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
@@ -185,7 +237,7 @@
         }).join("");
     }
 
-    function updateOrderStatus(id, newStatus) {
+    async function updateOrderStatus(id, newStatus) {
         const orders = readOrders();
         const index = orders.findIndex(function (order) { return orderId(order) === String(id); });
         if (index < 0) { alert("Order could not be found."); return; }
@@ -206,10 +258,21 @@
             order.rejectionReason = text(reason) || "No reason provided";
         }
 
-        if (saveOrders(orders)) {
-            renderOrders();
-            alert(newStatus === "Accepted" ? "Order accepted successfully." : "Order declined successfully.");
+        if (!saveOrders(orders)) return;
+        renderOrders();
+
+        // Keep the admin decision synchronized across devices.
+        try {
+            await fetch(CLOUD_ORDERS_URL, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(order)
+            });
+        } catch (error) {
+            console.error("Unable to sync order status to cloud:", error);
         }
+
+        alert(newStatus === "Accepted" ? "Order accepted successfully." : "Order declined successfully.");
     }
 
     function bindTabs() {
@@ -219,12 +282,18 @@
 
         if (productsTab && productsTab.dataset.ordersFixBound !== "1") {
             productsTab.dataset.ordersFixBound = "1";
-            productsTab.addEventListener("click", function (event) { event.preventDefault(); openProducts(); }, true);
+            productsTab.addEventListener("click", function (event) {
+                event.preventDefault();
+                openProducts();
+            }, true);
         }
 
         if (categoriesTab && categoriesTab.dataset.ordersFixBound !== "1") {
             categoriesTab.dataset.ordersFixBound = "1";
-            categoriesTab.addEventListener("click", function (event) { event.preventDefault(); openCategories(); }, true);
+            categoriesTab.addEventListener("click", function (event) {
+                event.preventDefault();
+                openCategories();
+            }, true);
         }
 
         if (ordersTab && ordersTab.dataset.ordersFixBound !== "1") {
@@ -263,6 +332,8 @@
         bindTabs();
         bindOrderButtons();
         openProducts();
+        loadCloudOrders();
+        setInterval(loadCloudOrders, 5000);
     }
 
     if (document.readyState === "loading") {
