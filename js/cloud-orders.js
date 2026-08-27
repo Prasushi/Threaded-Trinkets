@@ -1,22 +1,16 @@
 /* =========================================================
    THREADED TRINKETS - SHARED CLOUD ORDERS
-   Uses the Netlify Function + Netlify Blobs so orders are
-   available across customer and admin devices.
-   Does not touch Products or Categories storage.
+   Google Apps Script backend for GitHub Pages.
+   Products and Categories are not touched.
 ========================================================= */
 
 (function () {
     "use strict";
 
     const ORDERS_KEY = "threadedTrinketsOrders";
-    const NETLIFY_API_URL = "https://threadedtrinkets.netlify.app/.netlify/functions/orders";
-    const API_URL = window.location.hostname.endsWith("github.io")
-        ? NETLIFY_API_URL
-        : "/.netlify/functions/orders";
+    const ORDERS_API_URL = "https://script.google.com/macros/s/AKfycbxWnapTLFStJ7VYJd4XqWPi-QArun6dSP_ws7WiN0_-FgcAqmN-g2v_fbW6Q2_fYbfE0A/exec";
     const isAdmin = /(^|\/)admin(?:\.html)?\/?$/i.test(window.location.pathname);
-    let lastAdminSnapshot = "";
-    let syncingAdmin = false;
-    let syncingCustomer = false;
+    let syncing = false;
 
     function readLocalOrders() {
         try {
@@ -38,134 +32,86 @@
     }
 
     function orderId(order) {
-        return String(order?.orderId || order?.id || "").trim();
+        return String(order && (order.orderId || order.id) || "").trim();
     }
 
-    function signature(orders) {
-        return JSON.stringify((orders || []).map(function (order) {
-            return {
-                id: orderId(order),
-                status: order.orderStatus || order.status || "New",
-                rejectionReason: order.rejectionReason || "",
-                acceptedAt: order.acceptedAt || "",
-                rejectedAt: order.rejectedAt || ""
-            };
-        }).sort(function (a, b) {
-            return a.id.localeCompare(b.id);
-        }));
+    async function getCloudOrders() {
+        const response = await fetch(ORDERS_API_URL + "?t=" + Date.now(), {
+            method: "GET",
+            cache: "no-store"
+        });
+        if (!response.ok) throw new Error("Orders API HTTP " + response.status);
+        const data = await response.json();
+        return Array.isArray(data) ? data : [];
     }
 
     async function sendOrder(order) {
         if (!orderId(order)) return false;
-        try {
-            const response = await fetch(API_URL, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(order)
-            });
-            if (!response.ok) throw new Error("HTTP " + response.status);
-            return true;
-        } catch (error) {
-            console.error("Cloud orders: upload failed", error);
-            return false;
-        }
-    }
 
-    async function getCloudOrders() {
-        const response = await fetch(API_URL + "?t=" + Date.now(), {
-            method: "GET",
-            cache: "no-store"
+        const response = await fetch(ORDERS_API_URL, {
+            method: "POST",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify(order)
         });
-        if (!response.ok) throw new Error("HTTP " + response.status);
-        const data = await response.json();
-        return Array.isArray(data.orders) ? data.orders : [];
+
+        if (!response.ok) throw new Error("Orders API HTTP " + response.status);
+        return true;
     }
 
-    async function syncCustomerOrders() {
-        if (syncingCustomer) return;
-        syncingCustomer = true;
-        try {
-            const orders = readLocalOrders();
-            if (!orders.length) return;
-            for (const order of orders) await sendOrder(order);
-        } catch (error) {
-            console.error("Cloud orders: customer sync failed", error);
-        } finally {
-            syncingCustomer = false;
-        }
-    }
+    async function syncOrders() {
+        if (syncing) return;
+        syncing = true;
 
-    async function syncAdminOrders() {
-        if (syncingAdmin) return;
-        syncingAdmin = true;
         try {
-            const localOrdersBeforeFetch = readLocalOrders();
-            const cloudOrders = await getCloudOrders();
-            const cloudMap = new Map();
+            const localOrders = readLocalOrders();
+            let cloudOrders = await getCloudOrders();
+
+            const cloudIds = new Set(cloudOrders.map(orderId));
+
+            for (const order of localOrders) {
+                if (orderId(order) && !cloudIds.has(orderId(order))) {
+                    await sendOrder(order);
+                }
+            }
+
+            cloudOrders = await getCloudOrders();
+
+            const merged = new Map();
+
             cloudOrders.forEach(function (order) {
-                cloudMap.set(orderId(order), order);
+                const id = orderId(order);
+                if (id) merged.set(id, order);
             });
 
-            if (!lastAdminSnapshot && localOrdersBeforeFetch.length) {
-                for (const localOrder of localOrdersBeforeFetch) {
-                    if (orderId(localOrder) && !cloudMap.has(orderId(localOrder))) {
-                        await sendOrder(localOrder);
-                    }
-                }
-            }
-
-            const refreshedCloudOrders = await getCloudOrders();
-            const mergedMap = new Map();
-            refreshedCloudOrders.forEach(function (order) {
-                mergedMap.set(orderId(order), order);
+            localOrders.forEach(function (order) {
+                const id = orderId(order);
+                if (id && !merged.has(id)) merged.set(id, order);
             });
 
-            if (lastAdminSnapshot) {
-                const currentLocalSignature = signature(localOrdersBeforeFetch);
-                if (currentLocalSignature !== lastAdminSnapshot) {
-                    for (const localOrder of localOrdersBeforeFetch) {
-                        const id = orderId(localOrder);
-                        if (!id) continue;
-                        const cloudOrder = mergedMap.get(id);
-                        if (!cloudOrder || signature([localOrder]) !== signature([cloudOrder])) {
-                            await sendOrder(localOrder);
-                        }
-                    }
-                    const finalCloudOrders = await getCloudOrders();
-                    finalCloudOrders.forEach(function (order) {
-                        mergedMap.set(orderId(order), order);
-                    });
-                }
-            }
-
-            const finalOrders = Array.from(mergedMap.values()).sort(function (a, b) {
-                return new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime();
+            const finalOrders = Array.from(merged.values()).sort(function (a, b) {
+                return new Date(b.createdAt || 0).getTime() -
+                       new Date(a.createdAt || 0).getTime();
             });
 
-            const before = signature(readLocalOrders());
-            const after = signature(finalOrders);
-            if (before !== after) {
-                saveLocalOrders(finalOrders);
-                if (typeof window.threadedTrinketsRefreshOrders === "function") {
-                    window.threadedTrinketsRefreshOrders();
-                }
+            saveLocalOrders(finalOrders);
+
+            if (typeof window.threadedTrinketsRefreshOrders === "function") {
+                window.threadedTrinketsRefreshOrders();
             }
-            lastAdminSnapshot = signature(finalOrders);
+
+            if (isAdmin) {
+                console.log("Cloud orders: sync successful (" + finalOrders.length + " orders)");
+            }
         } catch (error) {
-            console.error("Cloud orders: admin sync failed", error);
+            console.error("Cloud orders: sync failed", error);
         } finally {
-            syncingAdmin = false;
+            syncing = false;
         }
     }
 
     function start() {
-        if (isAdmin) {
-            syncAdminOrders();
-            setInterval(syncAdminOrders, 3000);
-        } else {
-            setTimeout(syncCustomerOrders, 1000);
-            setInterval(syncCustomerOrders, 3000);
-        }
+        syncOrders();
+        setInterval(syncOrders, 5000);
     }
 
     if (document.readyState === "loading") {
