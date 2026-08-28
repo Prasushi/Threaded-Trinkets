@@ -15,7 +15,7 @@
     "use strict";
 
     const ORDERS_KEY = "threadedTrinketsOrders";
-    const API_URL = "/.netlify/functions/orders";
+    const API_URL = "https://script.google.com/macros/s/AKfycbxWnapTLFStJ7VYJd4XqWPi-QArun6dSP_ws7WiN0_-FgcAqmN-g2v_fbW6Q2_fYbfE0A/exec";
 
     function byId(id) {
         return document.getElementById(id);
@@ -246,13 +246,13 @@
         }
 
         const data = await response.json();
-        return Array.isArray(data.orders) ? data.orders : [];
+        return Array.isArray(data) ? data : (Array.isArray(data.orders) ? data.orders : []);
     }
 
     async function postCloudOrder(order) {
         const response = await fetch(API_URL, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
             body: JSON.stringify(order)
         });
 
