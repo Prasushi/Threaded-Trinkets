@@ -2397,7 +2397,11 @@ window.deleteCategory =
 
 document.addEventListener(
     "DOMContentLoaded",
-    function() {
+    async function() {
+
+        if (window.threadedTrinketsCatalogReady) {
+            await window.threadedTrinketsCatalogReady;
+        }
 
         loadData();
 
