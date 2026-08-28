@@ -1186,31 +1186,28 @@ function setupConfirmOrder() {
             );
 
             /* =====================================
-               SAVE TO CLOUD ORDERS (GOOGLE SHEETS)
-               This is awaited before leaving checkout
-               so the order is not lost between devices.
+               SAVE ORDER TO GOOGLE SHEETS
             ===================================== */
             try {
                 const ordersApi =
                     "https://script.google.com/macros/s/AKfycbxWnapTLFStJ7VYJd4XqWPi-QArun6dSP_ws7WiN0_-FgcAqmN-g2v_fbW6Q2_fYbfE0A/exec";
 
-                const cloudResponse = await fetch(ordersApi, {
+                /*
+                 * Google Apps Script may redirect its response.
+                 * no-cors lets the browser submit the order without
+                 * the GitHub Pages origin blocking the response.
+                 */
+                await fetch(ordersApi, {
                     method: "POST",
+                    mode: "no-cors",
                     headers: {
                         "Content-Type": "text/plain;charset=utf-8"
                     },
                     body: JSON.stringify(order)
                 });
-
-                if (!cloudResponse.ok) {
-                    throw new Error("Orders API HTTP " + cloudResponse.status);
-                }
             } catch (cloudError) {
                 console.error("Cloud order save failed:", cloudError);
-
-                alert(
-                    "Your order was saved on this device, but could not be sent to the online Orders system. Please try again."
-                );
+                alert("The order could not be sent to the online Orders sheet. Please try again.");
                 return;
             }
 
