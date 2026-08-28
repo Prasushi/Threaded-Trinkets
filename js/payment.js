@@ -217,7 +217,7 @@ function setupCustomerForm() {
 
     form.addEventListener(
         "submit",
-        function (event) {
+        async function (event) {
 
             event.preventDefault();
 
@@ -313,6 +313,71 @@ function setupCustomerForm() {
                 CUSTOMER_KEY,
                 JSON.stringify(customer)
             );
+
+            /*
+             * Create an order as soon as customer details are saved.
+             * Payment remains a separate status and can be updated later.
+             * This ensures Admin can see the order even before payment.
+             */
+            try {
+                const cart = getPaymentCart();
+                if (cart.length > 0) {
+                    const existingOrders = JSON.parse(
+                        localStorage.getItem(ORDERS_KEY) || "[]"
+                    );
+                    const existingCustomerOrder = existingOrders.find(function(order) {
+                        return order.customer &&
+                            order.customer.phone === customer.phone &&
+                            order.orderStatus !== "Rejected";
+                    });
+
+                    if (!existingCustomerOrder) {
+                        const pendingOrder = {
+                            orderId: "TT" + Date.now(),
+                            customer: customer,
+                            items: cart,
+                            subtotal: getPaymentTotal(),
+                            delivery: 0,
+                            total: getPaymentTotal(),
+                            paymentMethod: "UPI",
+                            paymentStatus: "Payment Pending",
+                            paymentVerification: "Awaiting customer payment confirmation.",
+                            upiId: UPI_ID,
+                            createdAt: new Date().toISOString(),
+                            orderStatus: "New"
+                        };
+
+                        existingOrders.unshift(pendingOrder);
+                        localStorage.setItem(
+                            ORDERS_KEY,
+                            JSON.stringify(existingOrders)
+                        );
+
+                        localStorage.setItem(
+                            LAST_ORDER_KEY,
+                            JSON.stringify(pendingOrder)
+                        );
+
+                        try {
+                            await fetch(
+                                "https://script.google.com/macros/s/AKfycbxWnapTLFStJ7VYJd4XqWPi-QArun6dSP_ws7WiN0_-FgcAqmN-g2v_fbW6Q2_fYbfE0A/exec",
+                                {
+                                    method: "POST",
+                                    mode: "no-cors",
+                                    headers: {
+                                        "Content-Type": "text/plain;charset=utf-8"
+                                    },
+                                    body: JSON.stringify(pendingOrder)
+                                }
+                            );
+                        } catch (cloudError) {
+                            console.warn("Pending order cloud save failed:", cloudError);
+                        }
+                    }
+                }
+            } catch (orderError) {
+                console.error("Pending order creation failed:", orderError);
+            }
 
 
             showCustomerMessage(
