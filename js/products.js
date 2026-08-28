@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", async function () {\n\n    if (window.threadedTrinketsCatalogReady) {\n        await window.threadedTrinketsCatalogReady;\n    }
 
     const productsGrid =
         document.getElementById("productsGrid");
