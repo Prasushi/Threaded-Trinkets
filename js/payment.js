@@ -819,7 +819,7 @@ function setupOpenUPI() {
 
     button.addEventListener(
         "click",
-        async function() {
+        function() {
 
             setPaymentMessage(
                 "UPI payment opened. Complete the payment and return here.",
@@ -1036,7 +1036,7 @@ function setupConfirmOrder() {
 
     button.addEventListener(
         "click",
-        function() {
+        async function() {
 
             const cart =
                 getPaymentCart();
