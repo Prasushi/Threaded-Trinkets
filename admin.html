@@ -14,7 +14,7 @@
 <div class="admin-tabs">
 <button type="button" id="productsTab" class="admin-tab active">🛍️ Products</button>
 <button type="button" id="categoriesTab" class="admin-tab">📂 Categories</button>
-<button type="button" id="ordersTab" class="admin-tab" onclick="event.preventDefault();event.stopPropagation();document.getElementById('productsSection').style.setProperty('display','none','important');document.getElementById('categoriesSection').style.setProperty('display','none','important');document.getElementById('ordersSection').style.setProperty('display','block','important');document.getElementById('productsSection').hidden=true;document.getElementById('categoriesSection').hidden=true;document.getElementById('ordersSection').hidden=false;document.querySelectorAll('.admin-tab').forEach(function(t){t.classList.remove('active')});this.classList.add('active');if(window.threadedTrinketsOpenOrders)window.threadedTrinketsOpenOrders();else if(window.threadedTrinketsRefreshOrders)window.threadedTrinketsRefreshOrders();">📦 Orders</button>
+<button type="button" id="ordersTab" class="admin-tab">📦 Orders</button>
 </div>
 <div class="admin-layout" id="productsSection">
 <section class="admin-form-card"><h2 id="formTitle">Add New Product</h2><form id="productForm"><div class="admin-form-group"><label for="productName">Product Name *</label><input type="text" id="productName" placeholder="Example: Pearl Charm Bangle" required></div><div class="admin-form-group"><label for="productCategory">Category *</label><select id="productCategory" required><option value="">Select Category</option></select><small>Categories are managed from the Categories tab.</small></div><div class="admin-form-row"><div class="admin-form-group"><label for="productPrice">Price (₹) *</label><input type="number" id="productPrice" min="0" placeholder="399" required></div><div class="admin-form-group"><label for="productStock">Stock *</label><input type="number" id="productStock" min="0" placeholder="10" required></div></div><div class="admin-form-group"><label for="productImage">Product Image</label><input type="file" id="productImage" accept="image/*"><small>Choose a product image from your computer.</small><div id="productImagePreview" class="image-preview" style="display:none;"><img id="productPreviewImg" src="" alt="Product Preview"></div></div><div class="admin-form-group"><label for="productDescription">Description</label><textarea id="productDescription" rows="4" placeholder="Describe your product..."></textarea></div><div class="admin-form-buttons"><button type="submit" class="admin-save-btn" id="saveButton">Add Product</button><button type="button" id="cancelEditBtn" class="admin-cancel-btn" style="display:none;">Cancel Edit</button></div></form></section>
@@ -27,24 +27,4 @@
 <script src="js/admin.js"></script>
 <script src="js/orders-admin-fix.js?v=20260823-8"></script>
 <script src="js/cloud-orders.js?v=20260823-6"></script>
-<script>
-(function(){
-function bind(){
- var t=document.getElementById('ordersTab');
- if(!t||t.dataset.finalOrdersBound==='1')return;
- t.dataset.finalOrdersBound='1';
- t.addEventListener('click',function(e){
-  e.preventDefault();e.stopPropagation();if(e.stopImmediatePropagation)e.stopImmediatePropagation();
-  var p=document.getElementById('productsSection'),c=document.getElementById('categoriesSection'),o=document.getElementById('ordersSection');
-  if(p){p.hidden=true;p.style.setProperty('display','none','important');}
-  if(c){c.hidden=true;c.style.setProperty('display','none','important');}
-  if(o){o.hidden=false;o.style.setProperty('display','block','important');}
-  document.querySelectorAll('.admin-tab').forEach(function(x){x.classList.remove('active');});t.classList.add('active');
-  if(typeof window.threadedTrinketsOpenOrders==='function')window.threadedTrinketsOpenOrders();else if(typeof window.threadedTrinketsRefreshOrders==='function')window.threadedTrinketsRefreshOrders();
- },true);
-}
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind,{once:true});else bind();
-setTimeout(bind,300);setTimeout(bind,1000);
-})();
-</script>
 </body></html>
