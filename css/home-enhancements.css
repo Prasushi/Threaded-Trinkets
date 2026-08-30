@@ -1,0 +1,238 @@
+/* =========================================================
+   THREADED TRINKETS - HOMEPAGE SIZE & STYLE ENHANCEMENTS
+   This file only overrides homepage styling.
+========================================================= */
+
+/* Wider page content */
+.hero .container,
+.features .container,
+.categories-section .container,
+.about-section .container,
+.cta-section .container,
+.site-footer .container {
+    width: min(1400px, calc(100% - 56px));
+    max-width: 1400px;
+}
+
+/* Larger hero */
+.hero {
+    min-height: 720px;
+}
+
+.hero-content {
+    max-width: 760px;
+    padding: 105px 0;
+}
+
+.hero h1 {
+    font-size: clamp(58px, 7vw, 94px);
+    line-height: 1.02;
+}
+
+.hero-text {
+    max-width: 650px;
+    font-size: 19px;
+    line-height: 1.85;
+}
+
+.primary-btn,
+.secondary-btn,
+.white-btn {
+    min-height: 56px;
+    padding: 14px 34px;
+    font-size: 15px;
+    border-radius: 9px;
+}
+
+/* Larger feature area */
+.features {
+    padding: 78px 0;
+}
+
+.feature-grid {
+    gap: 34px;
+}
+
+.feature {
+    padding: 30px 20px;
+}
+
+.feature-icon {
+    width: 70px;
+    height: 70px;
+    margin-bottom: 20px;
+    font-size: 30px;
+}
+
+.feature h3 {
+    font-size: 23px;
+}
+
+.feature p {
+    font-size: 15px;
+}
+
+/* Larger, more premium category section */
+.categories-section {
+    padding: 115px 0 125px;
+}
+
+.section-heading {
+    margin-bottom: 55px;
+}
+
+.section-heading > p {
+    font-size: 13px;
+    letter-spacing: 3px;
+    margin-bottom: 12px;
+}
+
+.section-heading h2 {
+    font-size: clamp(42px, 5vw, 58px);
+    margin-bottom: 12px;
+}
+
+.category-subtitle {
+    font-size: 16px;
+}
+
+.category-carousel-wrapper {
+    gap: 24px;
+}
+
+.category-carousel {
+    min-height: 390px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 24px;
+}
+
+.category-card {
+    min-height: 370px;
+    border-radius: 18px;
+    box-shadow: 0 14px 38px rgba(80, 45, 55, 0.10);
+}
+
+.category-image {
+    height: 285px;
+}
+
+.category-name {
+    min-height: 84px;
+    padding: 16px 14px;
+    font-size: 22px;
+    line-height: 1.25;
+}
+
+.category-card:hover {
+    transform: translateY(-9px);
+    box-shadow: 0 22px 48px rgba(80, 45, 55, 0.16);
+}
+
+.category-arrow {
+    width: 54px;
+    height: 54px;
+    font-size: 24px;
+}
+
+/* Larger about section */
+.about-section {
+    padding: 125px 0;
+}
+
+.about-content {
+    gap: 90px;
+}
+
+.about-image {
+    min-height: 560px;
+}
+
+/* Larger CTA */
+.cta-section {
+    padding: 105px 0;
+}
+
+/* Desktop polish */
+@media (min-width: 1200px) {
+    .site-header .container {
+        width: min(1400px, calc(100% - 56px));
+        max-width: 1400px;
+    }
+}
+
+/* Tablet */
+@media (max-width: 1000px) {
+    .hero {
+        min-height: 650px;
+    }
+
+    .category-carousel {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .category-image {
+        height: 260px;
+    }
+}
+
+/* Mobile */
+@media (max-width: 650px) {
+    .hero .container,
+    .features .container,
+    .categories-section .container,
+    .about-section .container,
+    .cta-section .container,
+    .site-footer .container {
+        width: min(100% - 32px, 1400px);
+    }
+
+    .hero {
+        min-height: 600px;
+    }
+
+    .hero-content {
+        padding: 75px 0;
+    }
+
+    .hero h1 {
+        font-size: clamp(48px, 13vw, 68px);
+    }
+
+    .hero-text {
+        font-size: 16px;
+    }
+
+    .categories-section {
+        padding: 80px 0 90px;
+    }
+
+    .category-carousel {
+        grid-template-columns: 1fr;
+        min-height: 0;
+    }
+
+    .category-card {
+        min-height: 360px;
+    }
+
+    .category-image {
+        height: 275px;
+    }
+
+    .category-name {
+        font-size: 21px;
+    }
+
+    .category-arrow {
+        width: 46px;
+        height: 46px;
+    }
+
+    .about-section {
+        padding: 85px 0;
+    }
+
+    .about-image {
+        min-height: 380px;
+    }
+}
