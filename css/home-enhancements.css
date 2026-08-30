@@ -1,6 +1,5 @@
 /* =========================================================
    THREADED TRINKETS - HOMEPAGE SIZE & STYLE ENHANCEMENTS
-   Premium category styling inspired by the store aesthetic.
 ========================================================= */
 
 .hero .container,
@@ -81,67 +80,65 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 18px 28px;
+    padding: 18px 48px;
     text-align: center;
     font-size: 22px;
     line-height: 1.25;
     font-weight: 700;
     position: relative;
     z-index: 2;
+    overflow: visible;
 }
 
 .category-card:hover { transform: translateY(-8px); }
 .category-card:hover .category-image img { transform: scale(1.06); }
 
-/* =========================================================
-   REMOVE TOP BADGES / LABELS
-   The photos should stay clean and unobstructed.
-========================================================= */
+/* No badges or labels over the photographs */
 .category-card::before {
     content: none !important;
     display: none !important;
 }
 
 /* =========================================================
-   ELEGANT CORNER ORNAMENTS AROUND THE CATEGORY NAME
+   DELICATE CORNER ORNAMENTS BESIDE CATEGORY NAMES
+   These are intentionally small and elegant, not badges.
 ========================================================= */
 .category-name::before,
 .category-name::after {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 30px;
-    line-height: 1;
+    display: block !important;
+    width: 42px;
+    height: 42px;
     font-family: Georgia, "Times New Roman", serif;
+    font-size: 28px;
     font-weight: 400;
-    opacity: 0.72;
+    line-height: 42px;
+    text-align: center;
     pointer-events: none;
+    z-index: 5;
+    opacity: 0.88;
 }
 
-.category-name::before { left: 12px; }
-.category-name::after { right: 12px; }
+.category-name::before { left: 4px; }
+.category-name::after { right: 4px; }
 
-/* Bangles — delicate gold vine ornaments */
+/* Bangles — gold jewellery flourish */
 .category-card:nth-child(1) {
-    background: linear-gradient(180deg, #fff 0%, #fff8e8 100%);
+    background: linear-gradient(180deg, #ffffff 0%, #fff8e8 100%);
     border: 2px solid rgba(183, 134, 38, 0.28);
     box-shadow: 0 15px 38px rgba(130, 86, 25, 0.14);
 }
-.category-card:nth-child(1) .category-name {
-    color: #7c4f18;
-    letter-spacing: 0.3px;
-}
+.category-card:nth-child(1) .category-name { color: #7c4f18; letter-spacing: 0.3px; }
 .category-card:nth-child(1) .category-name::before,
 .category-card:nth-child(1) .category-name::after {
     content: "❧";
     color: #d49a2a;
 }
-.category-card:nth-child(1):hover {
-    border-color: rgba(183, 134, 38, 0.55);
-    box-shadow: 0 24px 52px rgba(130, 86, 25, 0.20);
-}
+.category-card:nth-child(1):hover { border-color: rgba(183, 134, 38, 0.55); box-shadow: 0 24px 52px rgba(130, 86, 25, 0.20); }
 
-/* Bracelets — playful lavender floral ornaments */
+/* Bracelets — lavender handmade flourish */
 .category-card:nth-child(2) {
     background: linear-gradient(180deg, #ffffff 0%, #f8f3ff 100%);
     border: 2px solid rgba(123, 91, 166, 0.20);
@@ -149,37 +146,21 @@
 }
 .category-card:nth-child(2) .category-name { color: #69478d; }
 .category-card:nth-child(2) .category-name::before,
-.category-card:nth-child(2) .category-name::after {
-    content: "❧";
-    color: #a66bd0;
-}
-.category-card:nth-child(2):hover {
-    border-color: rgba(123, 91, 166, 0.45);
-    box-shadow: 0 24px 52px rgba(112, 82, 150, 0.19);
-}
+.category-card:nth-child(2) .category-name::after { content: "❦"; color: #9d6ac8; }
+.category-card:nth-child(2):hover { border-color: rgba(123, 91, 166, 0.45); box-shadow: 0 24px 52px rgba(112, 82, 150, 0.19); }
 
-/* Daisy — soft pink botanical ornaments */
+/* Daisy — soft botanical flourish */
 .category-card:nth-child(3) {
     background: linear-gradient(180deg, #ffffff 0%, #fff5f8 100%);
     border: 2px solid rgba(224, 102, 143, 0.24);
     box-shadow: 0 15px 38px rgba(205, 89, 126, 0.13);
 }
-.category-card:nth-child(3) .category-name {
-    color: #c84c78;
-    font-family: Georgia, "Times New Roman", serif;
-    font-style: italic;
-}
+.category-card:nth-child(3) .category-name { color: #c84c78; font-family: Georgia, "Times New Roman", serif; font-style: italic; }
 .category-card:nth-child(3) .category-name::before,
-.category-card:nth-child(3) .category-name::after {
-    content: "❧";
-    color: #ed91ad;
-}
-.category-card:nth-child(3):hover {
-    border-color: rgba(224, 102, 143, 0.48);
-    box-shadow: 0 24px 52px rgba(205, 89, 126, 0.19);
-}
+.category-card:nth-child(3) .category-name::after { content: "❧"; color: #e98eaa; }
+.category-card:nth-child(3):hover { border-color: rgba(224, 102, 143, 0.48); box-shadow: 0 24px 52px rgba(205, 89, 126, 0.19); }
 
-/* Kundan — refined gold ornamental corners */
+/* Kundan — refined traditional gold flourish */
 .category-card:nth-child(4) {
     background: linear-gradient(180deg, #ffffff 0%, #fff8ef 100%);
     border: 2px solid rgba(190, 137, 45, 0.28);
@@ -187,14 +168,8 @@
 }
 .category-card:nth-child(4) .category-name { color: #713f24; }
 .category-card:nth-child(4) .category-name::before,
-.category-card:nth-child(4) .category-name::after {
-    content: "❧";
-    color: #d4a34a;
-}
-.category-card:nth-child(4):hover {
-    border-color: rgba(190, 137, 45, 0.54);
-    box-shadow: 0 24px 52px rgba(143, 91, 26, 0.21);
-}
+.category-card:nth-child(4) .category-name::after { content: "❧"; color: #d4a34a; }
+.category-card:nth-child(4):hover { border-color: rgba(190, 137, 45, 0.54); box-shadow: 0 24px 52px rgba(143, 91, 26, 0.21); }
 
 .category-arrow {
     width: 54px;
@@ -205,7 +180,6 @@
 }
 .category-arrow:hover:not(:disabled) { transform: scale(1.08); }
 
-/* Larger about section */
 .about-section { padding: 125px 0; }
 .about-content { gap: 90px; }
 .about-image { min-height: 560px; }
@@ -227,9 +201,7 @@
     .categories-section .container,
     .about-section .container,
     .cta-section .container,
-    .site-footer .container {
-        width: min(100% - 32px, 1400px);
-    }
+    .site-footer .container { width: min(100% - 32px, 1400px); }
     .hero { min-height: 600px; }
     .hero-content { padding: 75px 0; }
     .hero h1 { font-size: clamp(48px, 13vw, 68px); }
@@ -239,6 +211,8 @@
     .category-card { min-height: 360px; }
     .category-image { height: 275px; }
     .category-name { font-size: 21px; }
+    .category-name::before,
+    .category-name::after { font-size: 24px; width: 34px; }
     .category-arrow { width: 46px; height: 46px; }
     .about-section { padding: 85px 0; }
     .about-image { min-height: 380px; }
