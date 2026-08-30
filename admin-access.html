@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Access | Threaded Trinkets</title>
+    <link rel="stylesheet" href="css/admin-access.css">
+</head>
+<body>
+    <main class="access-page">
+        <div class="access-card">
+            <div class="access-icon">🔐</div>
+            <p class="access-label">THREADed TRINKETS</p>
+            <h1>Admin Access</h1>
+            <p class="access-subtitle">Sign in to manage your store.</p>
+
+            <form id="adminLoginForm" autocomplete="off">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" placeholder="Enter username" autocomplete="username" required>
+
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter password" autocomplete="current-password" required>
+
+                <button type="submit">Login to Admin Panel</button>
+                <p id="loginError" class="login-error" aria-live="polite"></p>
+            </form>
+
+            <a href="index.html" class="back-link">← Back to website</a>
+        </div>
+    </main>
+
+    <script src="js/admin-access.js"></script>
+</body>
+</html>
