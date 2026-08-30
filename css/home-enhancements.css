@@ -80,7 +80,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 18px 48px;
+    padding: 18px 62px;
     text-align: center;
     font-size: 22px;
     line-height: 1.25;
@@ -93,15 +93,16 @@
 .category-card:hover { transform: translateY(-8px); }
 .category-card:hover .category-image img { transform: scale(1.06); }
 
-/* No badges or labels over the photographs */
+/* Never place badges, ribbons or labels over the photographs. */
 .category-card::before {
     content: none !important;
     display: none !important;
 }
 
 /* =========================================================
-   DELICATE CORNER ORNAMENTS BESIDE CATEGORY NAMES
-   These are intentionally small and elegant, not badges.
+   SUBTLE ORNAMENTS AROUND THE CATEGORY NAME
+   Inspired by delicate jewellery / floral corner artwork.
+   No badges, icons or buttons are used here.
 ========================================================= */
 .category-name::before,
 .category-name::after {
@@ -109,22 +110,22 @@
     top: 50%;
     transform: translateY(-50%);
     display: block !important;
-    width: 42px;
-    height: 42px;
-    font-family: Georgia, "Times New Roman", serif;
-    font-size: 28px;
-    font-weight: 400;
-    line-height: 42px;
-    text-align: center;
+    width: 48px;
+    height: 58px;
     pointer-events: none;
     z-index: 5;
-    opacity: 0.88;
+    opacity: 0.78;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 31px;
+    font-weight: 400;
+    line-height: 58px;
+    text-align: center;
 }
 
-.category-name::before { left: 4px; }
-.category-name::after { right: 4px; }
+.category-name::before { left: 5px; }
+.category-name::after { right: 5px; transform: translateY(-50%) scaleX(-1); }
 
-/* Bangles — gold jewellery flourish */
+/* Bangles — delicate gold jewellery leaves */
 .category-card:nth-child(1) {
     background: linear-gradient(180deg, #ffffff 0%, #fff8e8 100%);
     border: 2px solid rgba(183, 134, 38, 0.28);
@@ -138,7 +139,7 @@
 }
 .category-card:nth-child(1):hover { border-color: rgba(183, 134, 38, 0.55); box-shadow: 0 24px 52px rgba(130, 86, 25, 0.20); }
 
-/* Bracelets — lavender handmade flourish */
+/* Bracelets — soft lavender botanical leaves */
 .category-card:nth-child(2) {
     background: linear-gradient(180deg, #ffffff 0%, #f8f3ff 100%);
     border: 2px solid rgba(123, 91, 166, 0.20);
@@ -149,7 +150,7 @@
 .category-card:nth-child(2) .category-name::after { content: "❦"; color: #9d6ac8; }
 .category-card:nth-child(2):hover { border-color: rgba(123, 91, 166, 0.45); box-shadow: 0 24px 52px rgba(112, 82, 150, 0.19); }
 
-/* Daisy — soft botanical flourish */
+/* Daisy — delicate pink flower flourish */
 .category-card:nth-child(3) {
     background: linear-gradient(180deg, #ffffff 0%, #fff5f8 100%);
     border: 2px solid rgba(224, 102, 143, 0.24);
@@ -210,9 +211,9 @@
     .category-carousel { grid-template-columns: 1fr; min-height: 0; }
     .category-card { min-height: 360px; }
     .category-image { height: 275px; }
-    .category-name { font-size: 21px; }
+    .category-name { font-size: 21px; padding-left: 48px; padding-right: 48px; }
     .category-name::before,
-    .category-name::after { font-size: 24px; width: 34px; }
+    .category-name::after { font-size: 25px; width: 34px; }
     .category-arrow { width: 46px; height: 46px; }
     .about-section { padding: 85px 0; }
     .about-image { min-height: 380px; }
