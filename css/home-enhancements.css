@@ -1,6 +1,6 @@
 /* =========================================================
    THREADED TRINKETS - HOMEPAGE SIZE & STYLE ENHANCEMENTS
-   Category cards have individual store-inspired styling.
+   Premium category styling inspired by the store aesthetic.
 ========================================================= */
 
 .hero .container,
@@ -13,102 +13,44 @@
     max-width: 1400px;
 }
 
-.hero {
-    min-height: 720px;
-}
-
-.hero-content {
-    max-width: 760px;
-    padding: 105px 0;
-}
-
-.hero h1 {
-    font-size: clamp(58px, 7vw, 94px);
-    line-height: 1.02;
-}
-
-.hero-text {
-    max-width: 650px;
-    font-size: 19px;
-    line-height: 1.85;
-}
-
+.hero { min-height: 720px; }
+.hero-content { max-width: 760px; padding: 105px 0; }
+.hero h1 { font-size: clamp(58px, 7vw, 94px); line-height: 1.02; }
+.hero-text { max-width: 650px; font-size: 19px; line-height: 1.85; }
 .primary-btn,
 .secondary-btn,
-.white-btn {
-    min-height: 56px;
-    padding: 14px 34px;
-    font-size: 15px;
-    border-radius: 9px;
-}
+.white-btn { min-height: 56px; padding: 14px 34px; font-size: 15px; border-radius: 9px; }
 
-.features {
-    padding: 78px 0;
-}
-
-.feature-grid {
-    gap: 34px;
-}
-
-.feature {
-    padding: 30px 20px;
-}
-
-.feature-icon {
-    width: 70px;
-    height: 70px;
-    margin-bottom: 20px;
-    font-size: 30px;
-}
-
-.feature h3 {
-    font-size: 23px;
-}
-
-.feature p {
-    font-size: 15px;
-}
+.features { padding: 78px 0; }
+.feature-grid { gap: 34px; }
+.feature { padding: 30px 20px; }
+.feature-icon { width: 70px; height: 70px; margin-bottom: 20px; font-size: 30px; }
+.feature h3 { font-size: 23px; }
+.feature p { font-size: 15px; }
 
 /* =========================================================
-   CATEGORY SECTION
+   FIND YOUR FAVOURITE
 ========================================================= */
-
 .categories-section {
     padding: 105px 0 120px;
     background: linear-gradient(180deg, #fffdfc 0%, #fff8fa 100%);
 }
 
-.section-heading {
-    margin-bottom: 52px;
-}
+.section-heading { margin-bottom: 52px; }
+.section-heading > p { font-size: 13px; letter-spacing: 3px; margin-bottom: 12px; }
+.section-heading h2 { font-size: clamp(42px, 5vw, 58px); margin-bottom: 12px; }
+.category-subtitle { font-size: 16px; }
 
-.section-heading > p {
-    font-size: 13px;
-    letter-spacing: 3px;
-    margin-bottom: 12px;
-}
-
-.section-heading h2 {
-    font-size: clamp(42px, 5vw, 58px);
-    margin-bottom: 12px;
-}
-
-.category-subtitle {
-    font-size: 16px;
-}
-
-.category-carousel-wrapper {
-    gap: 24px;
-    align-items: center;
-}
-
+.category-carousel-wrapper { gap: 24px; align-items: center; }
 .category-carousel {
     min-height: 410px;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 24px;
 }
 
-/* Base card */
+/* =========================================================
+   PREMIUM CATEGORY CARD BASE
+========================================================= */
 .category-card {
     position: relative;
     min-height: 395px;
@@ -117,6 +59,7 @@
     background: #fff;
     border: 1px solid rgba(95, 55, 70, 0.10);
     box-shadow: 0 12px 34px rgba(75, 45, 55, 0.10);
+    text-decoration: none;
     transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
 }
 
@@ -138,7 +81,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 16px 14px;
+    padding: 18px 28px;
     text-align: center;
     font-size: 22px;
     line-height: 1.25;
@@ -147,152 +90,110 @@
     z-index: 2;
 }
 
-.category-card:hover {
-    transform: translateY(-8px);
-}
+.category-card:hover { transform: translateY(-8px); }
+.category-card:hover .category-image img { transform: scale(1.06); }
 
-.category-card:hover .category-image img {
-    transform: scale(1.06);
+/* =========================================================
+   REMOVE TOP BADGES / LABELS
+   The photos should stay clean and unobstructed.
+========================================================= */
+.category-card::before {
+    content: none !important;
+    display: none !important;
 }
 
 /* =========================================================
-   BANGLES - rich festive jewellery look
+   ELEGANT CORNER ORNAMENTS AROUND THE CATEGORY NAME
 ========================================================= */
+.category-name::before,
+.category-name::after {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 30px;
+    line-height: 1;
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: 400;
+    opacity: 0.72;
+    pointer-events: none;
+}
 
+.category-name::before { left: 12px; }
+.category-name::after { right: 12px; }
+
+/* Bangles — delicate gold vine ornaments */
 .category-card:nth-child(1) {
     background: linear-gradient(180deg, #fff 0%, #fff8e8 100%);
     border: 2px solid rgba(183, 134, 38, 0.28);
     box-shadow: 0 15px 38px rgba(130, 86, 25, 0.14);
 }
-
-.category-card:nth-child(1)::before {
-    content: "✦  FESTIVE  ✦";
-    position: absolute;
-    top: 14px;
-    left: 14px;
-    z-index: 3;
-    padding: 7px 11px;
-    border-radius: 20px;
-    background: rgba(255, 248, 221, 0.94);
-    color: #9b6b18;
-    font-size: 10px;
-    font-weight: 800;
-    letter-spacing: 1.5px;
-}
-
 .category-card:nth-child(1) .category-name {
     color: #7c4f18;
     letter-spacing: 0.3px;
 }
-
+.category-card:nth-child(1) .category-name::before,
+.category-card:nth-child(1) .category-name::after {
+    content: "❧";
+    color: #d49a2a;
+}
 .category-card:nth-child(1):hover {
     border-color: rgba(183, 134, 38, 0.55);
     box-shadow: 0 24px 52px rgba(130, 86, 25, 0.20);
 }
 
-/* =========================================================
-   BRACELETS - colourful, playful handmade look
-========================================================= */
-
+/* Bracelets — playful lavender floral ornaments */
 .category-card:nth-child(2) {
     background: linear-gradient(180deg, #ffffff 0%, #f8f3ff 100%);
     border: 2px solid rgba(123, 91, 166, 0.20);
     box-shadow: 0 15px 38px rgba(112, 82, 150, 0.13);
 }
-
-.category-card:nth-child(2)::before {
-    content: "♡  HANDMADE  ♡";
-    position: absolute;
-    top: 14px;
-    left: 14px;
-    z-index: 3;
-    padding: 7px 11px;
-    border-radius: 20px;
-    background: rgba(250, 246, 255, 0.94);
-    color: #76519b;
-    font-size: 10px;
-    font-weight: 800;
-    letter-spacing: 1.4px;
+.category-card:nth-child(2) .category-name { color: #69478d; }
+.category-card:nth-child(2) .category-name::before,
+.category-card:nth-child(2) .category-name::after {
+    content: "❧";
+    color: #a66bd0;
 }
-
-.category-card:nth-child(2) .category-name {
-    color: #69478d;
-}
-
 .category-card:nth-child(2):hover {
     border-color: rgba(123, 91, 166, 0.45);
     box-shadow: 0 24px 52px rgba(112, 82, 150, 0.19);
 }
 
-/* =========================================================
-   DAISY - soft floral / fresh garden look
-========================================================= */
-
+/* Daisy — soft pink botanical ornaments */
 .category-card:nth-child(3) {
-    background: linear-gradient(180deg, #ffffff 0%, #f5fff7 100%);
-    border: 2px solid rgba(89, 145, 89, 0.20);
-    box-shadow: 0 15px 38px rgba(70, 115, 70, 0.12);
+    background: linear-gradient(180deg, #ffffff 0%, #fff5f8 100%);
+    border: 2px solid rgba(224, 102, 143, 0.24);
+    box-shadow: 0 15px 38px rgba(205, 89, 126, 0.13);
 }
-
-.category-card:nth-child(3)::before {
-    content: "✿  FLOWER EDIT  ✿";
-    position: absolute;
-    top: 14px;
-    left: 14px;
-    z-index: 3;
-    padding: 7px 11px;
-    border-radius: 20px;
-    background: rgba(246, 255, 247, 0.94);
-    color: #4d8955;
-    font-size: 10px;
-    font-weight: 800;
-    letter-spacing: 1.3px;
-}
-
 .category-card:nth-child(3) .category-name {
-    color: #397043;
+    color: #c84c78;
     font-family: Georgia, "Times New Roman", serif;
     font-style: italic;
 }
-
+.category-card:nth-child(3) .category-name::before,
+.category-card:nth-child(3) .category-name::after {
+    content: "❧";
+    color: #ed91ad;
+}
 .category-card:nth-child(3):hover {
-    border-color: rgba(89, 145, 89, 0.45);
-    box-shadow: 0 24px 52px rgba(70, 115, 70, 0.18);
+    border-color: rgba(224, 102, 143, 0.48);
+    box-shadow: 0 24px 52px rgba(205, 89, 126, 0.19);
 }
 
-/* =========================================================
-   KUNDAN RUBBERBANDS - bridal / premium jewellery look
-========================================================= */
-
+/* Kundan — refined gold ornamental corners */
 .category-card:nth-child(4) {
-    background: linear-gradient(180deg, #ffffff 0%, #fff7fb 100%);
-    border: 2px solid rgba(151, 79, 116, 0.24);
-    box-shadow: 0 15px 38px rgba(125, 65, 100, 0.14);
+    background: linear-gradient(180deg, #ffffff 0%, #fff8ef 100%);
+    border: 2px solid rgba(190, 137, 45, 0.28);
+    box-shadow: 0 15px 38px rgba(143, 91, 26, 0.14);
 }
-
-.category-card:nth-child(4)::before {
-    content: "✧  KUNDAN  ✧";
-    position: absolute;
-    top: 14px;
-    left: 14px;
-    z-index: 3;
-    padding: 7px 11px;
-    border-radius: 20px;
-    background: rgba(255, 247, 252, 0.95);
-    color: #944f73;
-    font-size: 10px;
-    font-weight: 800;
-    letter-spacing: 1.5px;
+.category-card:nth-child(4) .category-name { color: #713f24; }
+.category-card:nth-child(4) .category-name::before,
+.category-card:nth-child(4) .category-name::after {
+    content: "❧";
+    color: #d4a34a;
 }
-
-.category-card:nth-child(4) .category-name {
-    color: #713852;
-    letter-spacing: 0.1px;
-}
-
 .category-card:nth-child(4):hover {
-    border-color: rgba(151, 79, 116, 0.52);
-    box-shadow: 0 24px 52px rgba(125, 65, 100, 0.21);
+    border-color: rgba(190, 137, 45, 0.54);
+    box-shadow: 0 24px 52px rgba(143, 91, 26, 0.21);
 }
 
 .category-arrow {
@@ -302,48 +203,22 @@
     border-radius: 50%;
     transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
-
-.category-arrow:hover:not(:disabled) {
-    transform: scale(1.08);
-}
+.category-arrow:hover:not(:disabled) { transform: scale(1.08); }
 
 /* Larger about section */
-.about-section {
-    padding: 125px 0;
-}
-
-.about-content {
-    gap: 90px;
-}
-
-.about-image {
-    min-height: 560px;
-}
-
-/* Larger CTA */
-.cta-section {
-    padding: 105px 0;
-}
+.about-section { padding: 125px 0; }
+.about-content { gap: 90px; }
+.about-image { min-height: 560px; }
+.cta-section { padding: 105px 0; }
 
 @media (min-width: 1200px) {
-    .site-header .container {
-        width: min(1400px, calc(100% - 56px));
-        max-width: 1400px;
-    }
+    .site-header .container { width: min(1400px, calc(100% - 56px)); max-width: 1400px; }
 }
 
 @media (max-width: 1000px) {
-    .hero {
-        min-height: 650px;
-    }
-
-    .category-carousel {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .category-image {
-        height: 270px;
-    }
+    .hero { min-height: 650px; }
+    .category-carousel { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .category-image { height: 270px; }
 }
 
 @media (max-width: 650px) {
@@ -355,54 +230,16 @@
     .site-footer .container {
         width: min(100% - 32px, 1400px);
     }
-
-    .hero {
-        min-height: 600px;
-    }
-
-    .hero-content {
-        padding: 75px 0;
-    }
-
-    .hero h1 {
-        font-size: clamp(48px, 13vw, 68px);
-    }
-
-    .hero-text {
-        font-size: 16px;
-    }
-
-    .categories-section {
-        padding: 80px 0 90px;
-    }
-
-    .category-carousel {
-        grid-template-columns: 1fr;
-        min-height: 0;
-    }
-
-    .category-card {
-        min-height: 360px;
-    }
-
-    .category-image {
-        height: 275px;
-    }
-
-    .category-name {
-        font-size: 21px;
-    }
-
-    .category-arrow {
-        width: 46px;
-        height: 46px;
-    }
-
-    .about-section {
-        padding: 85px 0;
-    }
-
-    .about-image {
-        min-height: 380px;
-    }
+    .hero { min-height: 600px; }
+    .hero-content { padding: 75px 0; }
+    .hero h1 { font-size: clamp(48px, 13vw, 68px); }
+    .hero-text { font-size: 16px; }
+    .categories-section { padding: 80px 0 90px; }
+    .category-carousel { grid-template-columns: 1fr; min-height: 0; }
+    .category-card { min-height: 360px; }
+    .category-image { height: 275px; }
+    .category-name { font-size: 21px; }
+    .category-arrow { width: 46px; height: 46px; }
+    .about-section { padding: 85px 0; }
+    .about-image { min-height: 380px; }
 }
