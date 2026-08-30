@@ -1,9 +1,8 @@
 /* =========================================================
    THREADED TRINKETS - HOMEPAGE SIZE & STYLE ENHANCEMENTS
-   This file only overrides homepage styling.
+   Category cards have individual store-inspired styling.
 ========================================================= */
 
-/* Wider page content */
 .hero .container,
 .features .container,
 .categories-section .container,
@@ -14,7 +13,6 @@
     max-width: 1400px;
 }
 
-/* Larger hero */
 .hero {
     min-height: 720px;
 }
@@ -44,7 +42,6 @@
     border-radius: 9px;
 }
 
-/* Larger feature area */
 .features {
     padding: 78px 0;
 }
@@ -72,13 +69,17 @@
     font-size: 15px;
 }
 
-/* Larger, more premium category section */
+/* =========================================================
+   CATEGORY SECTION
+========================================================= */
+
 .categories-section {
-    padding: 115px 0 125px;
+    padding: 105px 0 120px;
+    background: linear-gradient(180deg, #fffdfc 0%, #fff8fa 100%);
 }
 
 .section-heading {
-    margin-bottom: 55px;
+    margin-bottom: 52px;
 }
 
 .section-heading > p {
@@ -98,40 +99,212 @@
 
 .category-carousel-wrapper {
     gap: 24px;
+    align-items: center;
 }
 
 .category-carousel {
-    min-height: 390px;
+    min-height: 410px;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 24px;
 }
 
+/* Base card */
 .category-card {
-    min-height: 370px;
-    border-radius: 18px;
-    box-shadow: 0 14px 38px rgba(80, 45, 55, 0.10);
+    position: relative;
+    min-height: 395px;
+    overflow: hidden;
+    border-radius: 22px;
+    background: #fff;
+    border: 1px solid rgba(95, 55, 70, 0.10);
+    box-shadow: 0 12px 34px rgba(75, 45, 55, 0.10);
+    transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
 }
 
 .category-image {
-    height: 285px;
+    height: 305px;
+    overflow: hidden;
+    position: relative;
+}
+
+.category-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.55s ease, filter 0.35s ease;
 }
 
 .category-name {
-    min-height: 84px;
+    min-height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     padding: 16px 14px;
+    text-align: center;
     font-size: 22px;
     line-height: 1.25;
+    font-weight: 700;
+    position: relative;
+    z-index: 2;
 }
 
 .category-card:hover {
-    transform: translateY(-9px);
-    box-shadow: 0 22px 48px rgba(80, 45, 55, 0.16);
+    transform: translateY(-8px);
+}
+
+.category-card:hover .category-image img {
+    transform: scale(1.06);
+}
+
+/* =========================================================
+   BANGLES - rich festive jewellery look
+========================================================= */
+
+.category-card:nth-child(1) {
+    background: linear-gradient(180deg, #fff 0%, #fff8e8 100%);
+    border: 2px solid rgba(183, 134, 38, 0.28);
+    box-shadow: 0 15px 38px rgba(130, 86, 25, 0.14);
+}
+
+.category-card:nth-child(1)::before {
+    content: "✦  FESTIVE  ✦";
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    z-index: 3;
+    padding: 7px 11px;
+    border-radius: 20px;
+    background: rgba(255, 248, 221, 0.94);
+    color: #9b6b18;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+}
+
+.category-card:nth-child(1) .category-name {
+    color: #7c4f18;
+    letter-spacing: 0.3px;
+}
+
+.category-card:nth-child(1):hover {
+    border-color: rgba(183, 134, 38, 0.55);
+    box-shadow: 0 24px 52px rgba(130, 86, 25, 0.20);
+}
+
+/* =========================================================
+   BRACELETS - colourful, playful handmade look
+========================================================= */
+
+.category-card:nth-child(2) {
+    background: linear-gradient(180deg, #ffffff 0%, #f8f3ff 100%);
+    border: 2px solid rgba(123, 91, 166, 0.20);
+    box-shadow: 0 15px 38px rgba(112, 82, 150, 0.13);
+}
+
+.category-card:nth-child(2)::before {
+    content: "♡  HANDMADE  ♡";
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    z-index: 3;
+    padding: 7px 11px;
+    border-radius: 20px;
+    background: rgba(250, 246, 255, 0.94);
+    color: #76519b;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.4px;
+}
+
+.category-card:nth-child(2) .category-name {
+    color: #69478d;
+}
+
+.category-card:nth-child(2):hover {
+    border-color: rgba(123, 91, 166, 0.45);
+    box-shadow: 0 24px 52px rgba(112, 82, 150, 0.19);
+}
+
+/* =========================================================
+   DAISY - soft floral / fresh garden look
+========================================================= */
+
+.category-card:nth-child(3) {
+    background: linear-gradient(180deg, #ffffff 0%, #f5fff7 100%);
+    border: 2px solid rgba(89, 145, 89, 0.20);
+    box-shadow: 0 15px 38px rgba(70, 115, 70, 0.12);
+}
+
+.category-card:nth-child(3)::before {
+    content: "✿  FLOWER EDIT  ✿";
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    z-index: 3;
+    padding: 7px 11px;
+    border-radius: 20px;
+    background: rgba(246, 255, 247, 0.94);
+    color: #4d8955;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.3px;
+}
+
+.category-card:nth-child(3) .category-name {
+    color: #397043;
+    font-family: Georgia, "Times New Roman", serif;
+    font-style: italic;
+}
+
+.category-card:nth-child(3):hover {
+    border-color: rgba(89, 145, 89, 0.45);
+    box-shadow: 0 24px 52px rgba(70, 115, 70, 0.18);
+}
+
+/* =========================================================
+   KUNDAN RUBBERBANDS - bridal / premium jewellery look
+========================================================= */
+
+.category-card:nth-child(4) {
+    background: linear-gradient(180deg, #ffffff 0%, #fff7fb 100%);
+    border: 2px solid rgba(151, 79, 116, 0.24);
+    box-shadow: 0 15px 38px rgba(125, 65, 100, 0.14);
+}
+
+.category-card:nth-child(4)::before {
+    content: "✧  KUNDAN  ✧";
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    z-index: 3;
+    padding: 7px 11px;
+    border-radius: 20px;
+    background: rgba(255, 247, 252, 0.95);
+    color: #944f73;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+}
+
+.category-card:nth-child(4) .category-name {
+    color: #713852;
+    letter-spacing: 0.1px;
+}
+
+.category-card:nth-child(4):hover {
+    border-color: rgba(151, 79, 116, 0.52);
+    box-shadow: 0 24px 52px rgba(125, 65, 100, 0.21);
 }
 
 .category-arrow {
     width: 54px;
     height: 54px;
     font-size: 24px;
+    border-radius: 50%;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.category-arrow:hover:not(:disabled) {
+    transform: scale(1.08);
 }
 
 /* Larger about section */
@@ -152,7 +325,6 @@
     padding: 105px 0;
 }
 
-/* Desktop polish */
 @media (min-width: 1200px) {
     .site-header .container {
         width: min(1400px, calc(100% - 56px));
@@ -160,7 +332,6 @@
     }
 }
 
-/* Tablet */
 @media (max-width: 1000px) {
     .hero {
         min-height: 650px;
@@ -171,11 +342,10 @@
     }
 
     .category-image {
-        height: 260px;
+        height: 270px;
     }
 }
 
-/* Mobile */
 @media (max-width: 650px) {
     .hero .container,
     .features .container,
